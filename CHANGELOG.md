@@ -1,5 +1,18 @@
 # CHANGELOG
 
+All notable changes to the Austin Trading Engine (ATE) are recorded in this file.
+
+The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/).
+
+## [Unreleased]
+
+### Added
+
+- Full repository folder structure (specifications, laboratory, research, backtests, tests, tools).
+- Documentation suite: Project Charter, Architecture, Coding Standards, Research Methodology, Release Process, Hermes Integration.
+- Engine specifications: Trend, Structure, Momentum, Volatility, Confidence, Risk, Decision, Dashboard.
+- Placeholder Pine scripts: `pine/development/ATE_Current.pine`, `pine/releases/ATE_v2.0.pine`.
+
 ## v0.1.0
 
 ### Added
@@ -8,3 +21,7 @@
 - Folder structure
 - Documentation framework
 - Pine Script project
+
+## v0.1.0-pre
+
+- Initial ATT Trading Framework project bootstrap.
