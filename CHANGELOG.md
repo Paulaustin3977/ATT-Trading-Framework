@@ -86,9 +86,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - VolatilityEngine v1.0.0-draft preserved from ATE v2.1.
   - Existing ATE alerts preserved.
   - No RiskEngine alerts added.
-  - No ConfidenceEngine impact, DecisionEngine impact, entry/exit impact, position sizing impact, or stop logic impact.
+  - No ConfidenceEngine impact, DecisionEngine impact, entry/exit, position sizing, or stop logic impact.
   - ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
   - RDR-003 and RDR-003W validation cycles remain scheduled future work.
+- ATE v2.2 preserved `confidenceBear` alertcondition restored.
+  - The user-provided v2.2 source paste ended at `confidenceBull` (9 alertcondition calls); ATE v2.1 contained 10 including `alertcondition(confidenceBear, "ATE Low Confidence Bear", "...")`.
+  - Paul Austin authorised restoration of the missing alert to preserve full ATE v2.1 alert behaviour.
+  - Restored alertcondition added at the end of the Alerts block in `pine/releases/ATE_v2.2.pine` and `pine/development/ATE_Current.pine` (byte-identical, new SHA-256 `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`).
+  - 10 alertcondition titles in v2.2 now match the 10 titles in ATE v2.1 exactly.
+  - No RiskEngine logic modified. No RiskEngine alerts added. No other Pine logic altered.
+  - ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
+  - TradingView re-compile confirmation by Paul Austin pending after restoration.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 

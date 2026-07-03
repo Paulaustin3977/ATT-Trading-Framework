@@ -702,3 +702,4 @@ alertcondition(bosBear, "ATE Bearish BOS", "Austin Trading Engine: Bearish Break
 alertcondition(momentumBull, "ATE Momentum Bullish", "Austin Trading Engine: Momentum became bullish")
 alertcondition(momentumBear, "ATE Momentum Bearish", "Austin Trading Engine: Momentum became bearish")
 alertcondition(confidenceBull, "ATE High Confidence Bull", "Austin Trading Engine: Confidence crossed bullish threshold")
+alertcondition(confidenceBear, "ATE Low Confidence Bear", "Austin Trading Engine: Confidence crossed bearish threshold")

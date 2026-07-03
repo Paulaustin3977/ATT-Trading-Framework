@@ -23,6 +23,9 @@
 | Position sizing impact | None |
 | Stop logic impact | None |
 | Alert impact | Existing ATE alerts preserved; no RiskEngine alerts added |
+| ATE v2.2 alert titles | 10 alertcondition titles, matching ATE v2.1 exactly |
+| ATE v2.2 release SHA-256 | `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239` |
+| ATE v2.1 release SHA-256 (preserved) | `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893` |
 | VolatilityEngine impact | None (VolatilityEngine v1.0.0-draft preserved) |
 
 ---
