@@ -54,6 +54,12 @@ Evidence: Paul Austin approved RDR-001 after final amendment application.
 
 Knowledge entry: RDR-001 is the active ATOS v1.1 research storage and reporting baseline. Core CSV schema is locked; additions must be appended and documented in manifests; breaking schema changes require versioned templates; raw data remains mostly untracked with manifests committed.
 
+### RDR-002 VolatilityEngine diagnostic validation
+
+Evidence: `research/Reports/RDR/RDR-002-volatility-diagnostic-validation.md` validated ATE v2.1 VolatilityEngine diagnostic behaviour across daily multi-asset data.
+
+Knowledge entry: VolatilityEngine v1.0.0-draft is weakly supported as a diagnostic-only module. It should remain available for DashboardEngine and Research Mode, but RiskEngine and ConfidenceEngine integration remain deferred pending stronger evidence. The validation found useful regime diagnostics, low redundancy with Trend/Momentum, and no material hidden directional bias, but threshold/state-frequency concerns justify retesting before any downstream use.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

@@ -26,6 +26,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - TradingView compile confirmed clean by Paul Austin.
   - ATE v2.1 stored as rollback baseline.
   - VolatilityEngine added as diagnostic-only dashboard and Research Mode module.
+- RDR-002 VolatilityEngine diagnostic validation completed.
+  - Classification: Weakly Supported.
+  - Recommendation: Keep Diagnostic; RiskEngine and ConfidenceEngine integration remain deferred.
+  - Artefacts stored under `research/Reports/RDR/` and `backtests/Hermes/ATE_v2.1/Daily/Diagnostic_Validation/RDR-002/`.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 

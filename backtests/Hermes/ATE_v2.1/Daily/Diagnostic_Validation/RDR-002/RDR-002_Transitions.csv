@@ -1,0 +1,113 @@
+symbol,asset_name,asset_class,transition,count,pct_of_bars
+GC=F,Gold futures,Metals,compressed->expanding,0,0.0
+GC=F,Gold futures,Metals,normal->expanding,27,1.262862488306829
+GC=F,Gold futures,Metals,expanding->elevated,7,0.32740879326473343
+GC=F,Gold futures,Metals,elevated->unstable,0,0.0
+GC=F,Gold futures,Metals,unstable->normal,0,0.0
+GC=F,Gold futures,Metals,shock->normal,27,1.262862488306829
+GC=F,Gold futures,Metals,shock->elevated,5,0.23386342376052385
+GC=F,Gold futures,Metals,shock->unstable,1,0.04677268475210477
+SI=F,Silver futures,Metals,compressed->expanding,0,0.0
+SI=F,Silver futures,Metals,normal->expanding,26,1.216089803554724
+SI=F,Silver futures,Metals,expanding->elevated,5,0.23386342376052385
+SI=F,Silver futures,Metals,elevated->unstable,0,0.0
+SI=F,Silver futures,Metals,unstable->normal,0,0.0
+SI=F,Silver futures,Metals,shock->normal,41,1.9176800748362957
+SI=F,Silver futures,Metals,shock->elevated,8,0.37418147801683815
+SI=F,Silver futures,Metals,shock->unstable,2,0.09354536950420954
+NQ=F,Nasdaq futures,Index proxies,compressed->expanding,0,0.0
+NQ=F,Nasdaq futures,Index proxies,normal->expanding,33,1.542056074766355
+NQ=F,Nasdaq futures,Index proxies,expanding->elevated,8,0.3738317757009346
+NQ=F,Nasdaq futures,Index proxies,elevated->unstable,0,0.0
+NQ=F,Nasdaq futures,Index proxies,unstable->normal,0,0.0
+NQ=F,Nasdaq futures,Index proxies,shock->normal,11,0.5140186915887851
+NQ=F,Nasdaq futures,Index proxies,shock->elevated,3,0.14018691588785046
+NQ=F,Nasdaq futures,Index proxies,shock->unstable,1,0.04672897196261683
+SPY,S&P 500 ETF,Index proxies,compressed->expanding,0,0.0
+SPY,S&P 500 ETF,Index proxies,normal->expanding,35,1.6385767790262171
+SPY,S&P 500 ETF,Index proxies,expanding->elevated,6,0.2808988764044944
+SPY,S&P 500 ETF,Index proxies,elevated->unstable,2,0.09363295880149813
+SPY,S&P 500 ETF,Index proxies,unstable->normal,0,0.0
+SPY,S&P 500 ETF,Index proxies,shock->normal,17,0.7958801498127341
+SPY,S&P 500 ETF,Index proxies,shock->elevated,5,0.23408239700374533
+SPY,S&P 500 ETF,Index proxies,shock->unstable,4,0.18726591760299627
+NVDA,NVIDIA,Major equities,compressed->expanding,0,0.0
+NVDA,NVIDIA,Major equities,normal->expanding,32,1.4981273408239701
+NVDA,NVIDIA,Major equities,expanding->elevated,3,0.1404494382022472
+NVDA,NVIDIA,Major equities,elevated->unstable,2,0.09363295880149813
+NVDA,NVIDIA,Major equities,unstable->normal,0,0.0
+NVDA,NVIDIA,Major equities,shock->normal,12,0.5617977528089888
+NVDA,NVIDIA,Major equities,shock->elevated,1,0.04681647940074907
+NVDA,NVIDIA,Major equities,shock->unstable,1,0.04681647940074907
+MSFT,Microsoft,Major equities,compressed->expanding,0,0.0
+MSFT,Microsoft,Major equities,normal->expanding,33,1.544943820224719
+MSFT,Microsoft,Major equities,expanding->elevated,9,0.42134831460674155
+MSFT,Microsoft,Major equities,elevated->unstable,1,0.04681647940074907
+MSFT,Microsoft,Major equities,unstable->normal,0,0.0
+MSFT,Microsoft,Major equities,shock->normal,9,0.42134831460674155
+MSFT,Microsoft,Major equities,shock->elevated,2,0.09363295880149813
+MSFT,Microsoft,Major equities,shock->unstable,0,0.0
+AAPL,Apple,Major equities,compressed->expanding,0,0.0
+AAPL,Apple,Major equities,normal->expanding,33,1.544943820224719
+AAPL,Apple,Major equities,expanding->elevated,6,0.2808988764044944
+AAPL,Apple,Major equities,elevated->unstable,1,0.04681647940074907
+AAPL,Apple,Major equities,unstable->normal,0,0.0
+AAPL,Apple,Major equities,shock->normal,14,0.6554307116104869
+AAPL,Apple,Major equities,shock->elevated,3,0.1404494382022472
+AAPL,Apple,Major equities,shock->unstable,0,0.0
+AMZN,Amazon,Major equities,compressed->expanding,0,0.0
+AMZN,Amazon,Major equities,normal->expanding,27,1.2640449438202246
+AMZN,Amazon,Major equities,expanding->elevated,10,0.46816479400749067
+AMZN,Amazon,Major equities,elevated->unstable,1,0.04681647940074907
+AMZN,Amazon,Major equities,unstable->normal,0,0.0
+AMZN,Amazon,Major equities,shock->normal,13,0.6086142322097379
+AMZN,Amazon,Major equities,shock->elevated,4,0.18726591760299627
+AMZN,Amazon,Major equities,shock->unstable,0,0.0
+GOOGL,Alphabet,Major equities,compressed->expanding,0,0.0
+GOOGL,Alphabet,Major equities,normal->expanding,30,1.4044943820224718
+GOOGL,Alphabet,Major equities,expanding->elevated,4,0.18726591760299627
+GOOGL,Alphabet,Major equities,elevated->unstable,1,0.04681647940074907
+GOOGL,Alphabet,Major equities,unstable->normal,0,0.0
+GOOGL,Alphabet,Major equities,shock->normal,28,1.3108614232209739
+GOOGL,Alphabet,Major equities,shock->elevated,1,0.04681647940074907
+GOOGL,Alphabet,Major equities,shock->unstable,0,0.0
+TLT,US Treasury bond ETF,Bonds / rates proxies,compressed->expanding,0,0.0
+TLT,US Treasury bond ETF,Bonds / rates proxies,normal->expanding,31,1.451310861423221
+TLT,US Treasury bond ETF,Bonds / rates proxies,expanding->elevated,0,0.0
+TLT,US Treasury bond ETF,Bonds / rates proxies,elevated->unstable,0,0.0
+TLT,US Treasury bond ETF,Bonds / rates proxies,unstable->normal,0,0.0
+TLT,US Treasury bond ETF,Bonds / rates proxies,shock->normal,12,0.5617977528089888
+TLT,US Treasury bond ETF,Bonds / rates proxies,shock->elevated,3,0.1404494382022472
+TLT,US Treasury bond ETF,Bonds / rates proxies,shock->unstable,1,0.04681647940074907
+EURUSD=X,EUR/USD,FX,compressed->expanding,0,0.0
+EURUSD=X,EUR/USD,FX,normal->expanding,24,1.084010840108401
+EURUSD=X,EUR/USD,FX,expanding->elevated,7,0.31616982836495033
+EURUSD=X,EUR/USD,FX,elevated->unstable,0,0.0
+EURUSD=X,EUR/USD,FX,unstable->normal,0,0.0
+EURUSD=X,EUR/USD,FX,shock->normal,9,0.40650406504065045
+EURUSD=X,EUR/USD,FX,shock->elevated,0,0.0
+EURUSD=X,EUR/USD,FX,shock->unstable,1,0.045167118337850046
+GBPUSD=X,GBP/USD,FX,compressed->expanding,0,0.0
+GBPUSD=X,GBP/USD,FX,normal->expanding,35,1.5808491418247517
+GBPUSD=X,GBP/USD,FX,expanding->elevated,4,0.18066847335140018
+GBPUSD=X,GBP/USD,FX,elevated->unstable,0,0.0
+GBPUSD=X,GBP/USD,FX,unstable->normal,0,0.0
+GBPUSD=X,GBP/USD,FX,shock->normal,12,0.5420054200542005
+GBPUSD=X,GBP/USD,FX,shock->elevated,0,0.0
+GBPUSD=X,GBP/USD,FX,shock->unstable,1,0.045167118337850046
+JPY=X,USD/JPY,FX,compressed->expanding,0,0.0
+JPY=X,USD/JPY,FX,normal->expanding,21,0.9485094850948509
+JPY=X,USD/JPY,FX,expanding->elevated,7,0.31616982836495033
+JPY=X,USD/JPY,FX,elevated->unstable,0,0.0
+JPY=X,USD/JPY,FX,unstable->normal,0,0.0
+JPY=X,USD/JPY,FX,shock->normal,18,0.8130081300813009
+JPY=X,USD/JPY,FX,shock->elevated,3,0.13550135501355012
+JPY=X,USD/JPY,FX,shock->unstable,3,0.13550135501355012
+CL=F,WTI crude oil futures,Commodities,compressed->expanding,0,0.0
+CL=F,WTI crude oil futures,Commodities,normal->expanding,28,1.3090229079008884
+CL=F,WTI crude oil futures,Commodities,expanding->elevated,8,0.3740065451145395
+CL=F,WTI crude oil futures,Commodities,elevated->unstable,0,0.0
+CL=F,WTI crude oil futures,Commodities,unstable->normal,0,0.0
+CL=F,WTI crude oil futures,Commodities,shock->normal,7,0.3272557269752221
+CL=F,WTI crude oil futures,Commodities,shock->elevated,4,0.18700327255726976
+CL=F,WTI crude oil futures,Commodities,shock->unstable,3,0.1402524544179523
