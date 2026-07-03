@@ -72,6 +72,12 @@ Evidence: `docs/EDR/ERP-001-canonical-ate-verification-entry-point.md` proposed 
 
 Knowledge entry: RDR-002 verification currently relies on ad-hoc verifier artefacts under `/var/folders/0b/8y8rvw6d53q2y6gt96zb6kz00000gn/T/hermes-verify-<slug>/`. The verify script on RDR-002W behaviour is `ad-hoc hermes-verify, NOT suite green` and explicitly labelled as such. Promotion to `Supported`, or any future diagnostic-to-downstream change, requires a canonical repo-level verification command. No ATE Pine code was modified for ERP-001; the Engineering Review Proposal itself records the proposal only.
 
+### EDR-001 canonical ATE verification entry point implemented
+
+Evidence: `docs/EDR/EDR-001-canonical-ate-verification-entry-point.md` records the accepted decision to add `tools/scripts/verify_ate.py`, versioned fixtures under `tests/fixtures/ATE_v2_1/`, and `tests/README.md` as the canonical repo-level verification command.
+
+Knowledge entry: The canonical verifier command is `python tools/scripts/verify_ate.py`. It exits `0` on pass, `1` on fail, `2` on environment error. Initial result: 100/100 contract and behaviour checks pass against `pine/releases/ATE_v2.1.pine`. This verifier result does NOT change the RDR-002 / RDR-002W classification. VolatilityEngine remains `Weakly Supported`, diagnostic-only, with RiskEngine and ConfidenceEngine integration deferred. The verifier also surfaced a real project finding: the ATE v2.1 release exposes VolatilityEngine diagnostic variables under the `vol*` namespace (e.g. `volAtrPercent`, `volAtrRatio`, `volCombinedRatio`, `volShockFlag`), while the VolatilityEngine specification text describes a separate `volDiag*` prefix; both expose individual named diagnostic variables, but the prefix differs. Record this as a future specification amendment candidate; it is not a blocker for EDR-001 acceptance and is not a reclassification of the engine. Future ATE releases should use this command as part of the quality gate.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

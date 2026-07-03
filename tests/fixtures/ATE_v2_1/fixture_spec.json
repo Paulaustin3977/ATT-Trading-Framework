@@ -1,0 +1,42 @@
+{
+  "fixture_set_version": "1.0.0",
+  "fixtures": {
+    "quiet": {
+      "n": 240,
+      "vol_scale": 0.05,
+      "spike_every": null
+    },
+    "normal": {
+      "n": 240,
+      "vol_scale": 1.5,
+      "spike_every": null
+    },
+    "shock": {
+      "n": 240,
+      "vol_scale": 1.0,
+      "spike_every": 20,
+      "spike_pct": 0.05
+    }
+  },
+  "regimes": {
+    "quiet": "Quiet range-bound, small drift. Expected: normal and warm-up unknown only after seed warm-up.",
+    "normal": "Moderate drift and moderate ranges. Expected: normal plus limited expanding.",
+    "shock": "Periodic large-range bars on top of normal drift. Expected: at least one shock event flagged."
+  },
+  "params": {
+    "atrLength": 14,
+    "atrBaselineLength": 100,
+    "bbLength": 20,
+    "bbStdDev": 2.0,
+    "bbBaselineLength": 100,
+    "shockLookback": 20,
+    "shockMultiplier": 2.5,
+    "compressionThreshold": 0.75,
+    "normalUpperThreshold": 1.25,
+    "elevatedThreshold": 1.75,
+    "unstableThreshold": 2.5,
+    "volSlopeLookback": 5
+  },
+  "engine_reference_pine_sha256": "7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893",
+  "engine_reference_sha256_verifies_against": "pine/releases/ATE_v2.1.pine"
+}

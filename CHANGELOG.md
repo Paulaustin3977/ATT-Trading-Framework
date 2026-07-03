@@ -38,6 +38,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - RDR-002 verifier recorded as limited behaviour verification (43/43 ad-hoc checks, NOT suite green).
 - ERP-001 Engineering Review Proposal added proposing a canonical `tools/scripts/verify_ate.py` entry point for future ATE verification cycles.
   - No ATE Pine code modified.
+- EDR-001 implemented: canonical ATE verifier in place.
+  - `tools/scripts/verify_ate.py` created.
+  - Seeded ATE v2.1 fixtures added under `tests/fixtures/ATE_v2_1/`.
+  - Ad-hoc verification replaced by repo-level verification command.
+  - Verifier result: 100/100 contract and behaviour checks pass against `pine/releases/ATE_v2.1.pine`.
+  - No ATE Pine logic modified.
+  - VolatilityEngine classification remains Weakly Supported; no reclassification, no RiskEngine/ConfidenceEngine integration authorisation.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
