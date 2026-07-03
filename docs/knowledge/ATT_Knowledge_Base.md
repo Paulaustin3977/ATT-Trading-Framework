@@ -60,6 +60,18 @@ Evidence: `research/Reports/RDR/RDR-002-volatility-diagnostic-validation.md` val
 
 Knowledge entry: VolatilityEngine v1.0.0-draft is weakly supported as a diagnostic-only module. It should remain available for DashboardEngine and Research Mode, but RiskEngine and ConfidenceEngine integration remain deferred pending stronger evidence. The validation found useful regime diagnostics, low redundancy with Trend/Momentum, and no material hidden directional bias, but threshold/state-frequency concerns justify retesting before any downstream use.
 
+### RDR-002W VolatilityEngine weekly diagnostic validation
+
+Evidence: `research/Reports/RDR/RDR-002W-volatility-diagnostic-validation.md` validated ATE v2.1 VolatilityEngine diagnostic behaviour across weekly multi-asset data.
+
+Knowledge entry: VolatilityEngine v1.0.0-draft is also weakly supported on weekly aggregation. The weekly pattern agrees with the daily finding: useful diagnostic information, no hidden directional bias, smoother state sequences on weekly bars. RiskEngine and ConfidenceEngine integration remain deferred.
+
+### ERP-001 canonical ATE verification entry point
+
+Evidence: `docs/EDR/ERP-001-canonical-ate-verification-entry-point.md` proposed adding `tools/scripts/verify_ate.py` and a fixtures directory as the future canonical verification command for ATE validation cycles.
+
+Knowledge entry: RDR-002 verification currently relies on ad-hoc verifier artefacts under `/var/folders/0b/8y8rvw6d53q2y6gt96zb6kz00000gn/T/hermes-verify-<slug>/`. The verify script on RDR-002W behaviour is `ad-hoc hermes-verify, NOT suite green` and explicitly labelled as such. Promotion to `Supported`, or any future diagnostic-to-downstream change, requires a canonical repo-level verification command. No ATE Pine code was modified for ERP-001; the Engineering Review Proposal itself records the proposal only.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?
