@@ -149,7 +149,7 @@ If classification is unclear, classify by the highest plausible risk.
 | Release Manifest | Not applicable | Not applicable | Optional unless release candidate | Not applicable unless published package | Not applicable unless release candidate | Mandatory |
 | Knowledge Capture | Optional | Optional unless material lesson | Mandatory for material outcomes | Mandatory | Mandatory | Mandatory |
 | Review | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory |
-| Product Owner Approval | Optional | Optional | Optional unless scope/release affected | Optional unless release/scope affected | Mandatory | Mandatory |
+| Product Owner Approval | Optional | Optional | Mandatory only for scope/risk impact or Stable promotion | Optional unless release/scope affected | Mandatory for major architecture, risk, or scope changes before Release Candidate status | Mandatory for promotion to Stable, not for preparing Release Candidate |
 
 Mandatory means the gate must be completed or formally waived. Optional means use judgement; if the optional gate reveals material risk, it becomes mandatory for that change.
 
@@ -270,6 +270,8 @@ A result based on undocumented data must not be treated as reliable.
 
 Research claims and performance claims require a documented research validation process.
 
+A performance claim may be classified as `supported` only when it includes all applicable evidence-threshold controls listed below. Anything below that threshold must be classified as `weakly supported`, `inconclusive`, `falsified`, or `operationally rejected`.
+
 Validation must include:
 
 - Hypothesis
@@ -285,14 +287,20 @@ Validation must include:
 
 Performance claims require controls for:
 
-- Overfitting
-- Data snooping
-- Lookahead
-- Survivorship bias
-- Parameter stability
+- Clear hypothesis
+- Documented data source
+- In-sample and out-of-sample testing where applicable
+- Walk-forward or time-split validation where applicable
+- Parameter sensitivity check
+- Transaction costs where trading performance is claimed
 - Benchmark comparison
-- Regime dependence
-- Transaction costs where relevant
+- Stated limitations
+- Reproducibility notes
+- No obvious lookahead issue
+- No obvious survivorship-bias issue
+- No obvious data-snooping issue
+- Overfitting review
+- Regime-dependence review
 
 Additional validation should include, where feasible:
 
@@ -445,9 +453,12 @@ Approval authority:
 - Low waiver: accountable functional owner
 - Medium waiver: accountable functional owner plus Product Owner notification
 - High waiver: Product Owner and Risk Owner approval
-- Critical waiver: not permitted if it violates no-execution boundary or knowingly introduces lookahead/repainting into released logic
+- Low waiver: 90 days maximum
+- Medium waiver: 30 days default
+- High waiver: 14 days maximum and requires Product Owner and Risk Owner approval
+- Critical waiver: not allowed unless explicitly approved by Product Owner and Risk Owner; never allowed for hidden execution capability or knowingly released lookahead/repainting logic
 
-A waiver must be temporary unless explicitly accepted as permanent governance.
+Default waiver expiry is 30 days. No waiver is permanent.
 
 ---
 
@@ -455,10 +466,18 @@ A waiver must be temporary unless explicitly accepted as permanent governance.
 
 A release candidate requires a release manifest before promotion.
 
+Release manifests live in `docs/releases/` and link to the actual release artefacts in `pine/releases/`.
+
+Required structure:
+
+- Manifest: `docs/releases/ATE_vX.X_Release_Manifest.md`
+- Release artefact: `pine/releases/ATE_vX.X.pine`
+
 The release manifest must include:
 
 - Version
-- Release file path
+- Release file path, for example `pine/releases/ATE_vX.X.pine`
+- Manifest path, for example `docs/releases/ATE_vX.X_Release_Manifest.md`
 - Commit hash
 - Changed files
 - Validation artefacts
@@ -517,9 +536,11 @@ Review must confirm:
 - Required decision records exist
 - Required waivers are documented
 
-Hermes may recommend approval, modification, or rejection.
+Hermes may recommend approval, modification, rejection, or a block. Hermes may mark a release as `Research Blocked` or `Quality Blocked` when evidence, quality, scope, or research standards are not met.
 
-Final approval remains with the accountable human role.
+Hermes cannot approve or reject final governance alone. Final release approval or override remains with Paul Austin as Product Owner.
+
+If Paul Austin overrides a Hermes block, the override must be documented as a waiver with reason, risk accepted, expiry/review date, and mitigation.
 
 ---
 
@@ -561,7 +582,9 @@ Promotion to Release Candidate requires:
 
 ## Release Candidate
 
-Definition: passed initial checks and awaiting final review.
+Definition: passed initial checks and awaiting final review. A Release Candidate may be prepared by the normal engineering/research workflow without Product Owner approval unless it contains a major architecture, risk, or scope change.
+
+Major architecture, risk, or scope changes require Product Owner approval before Release Candidate status.
 
 Promotion to Stable requires:
 
@@ -569,7 +592,7 @@ Promotion to Stable requires:
 - Mandatory gates complete or formally waived
 - Known issues listed
 - Rollback path defined
-- Product Owner approval obtained
+- Explicit Product Owner approval obtained
 
 ## Stable
 
@@ -657,6 +680,7 @@ Hermes is responsible for:
 - Recommending improvement
 - Maintaining research integrity
 - Escalating no-execution boundary risks
+- Marking releases as `Research Blocked` or `Quality Blocked` when standards are not met
 
 Hermes must not:
 
@@ -721,7 +745,7 @@ Before release, answer:
 - Is the previous stable version preserved?
 - Is rollback possible?
 - Are waivers documented and approved?
-- Has the Product Owner approved release?
+- Has the Product Owner explicitly approved promotion to Stable?
 
 If any critical answer is "no", the release is not ready.
 
@@ -742,21 +766,23 @@ Quality improves when lessons become permanent.
 
 ---
 
-# 14. Open Questions for Paul Austin
+# 14. Resolved Product Owner / Chief Systems Architect Questions
 
-1. Should Product Owner approval be mandatory for every Release Candidate, or only for stable releases?
-2. What is the minimum acceptable evidence threshold for a performance claim to be called "supported" rather than "weakly supported"?
-3. Should release manifests live in a dedicated `releases/` documentation folder, or beside each release artefact?
-4. Should Hermes be allowed to mark a release as blocked, or only recommend blocking to Paul Austin?
-5. How long should waivers remain valid by default before expiry review?
+All prior open questions have been resolved in this draft.
+
+1. Product Owner approval is mandatory for promotion to Stable, not for preparing every Release Candidate. Major architecture, risk, or scope changes require Product Owner approval before Release Candidate status.
+2. A performance claim is `supported` only when it meets the evidence threshold in the Research Validation Gate. Anything below that threshold is `weakly supported`, `inconclusive`, `falsified`, or `operationally rejected`.
+3. Release manifests live in `docs/releases/` and link to release artefacts in `pine/releases/`, using `docs/releases/ATE_vX.X_Release_Manifest.md` and `pine/releases/ATE_vX.X.pine`.
+4. Hermes may mark a release as `Research Blocked` or `Quality Blocked`, but final release approval or override remains with Paul Austin as Product Owner. Overrides require a waiver.
+5. Waivers expire by severity: Low 90 days maximum, Medium 30 days default, High 14 days maximum, Critical only by explicit Product Owner and Risk Owner approval. No waiver is permanent.
 
 ---
 
 # 15. Recommendation
 
-Recommendation: approve with amendments after Paul Austin review.
+Recommendation: ready for Paul Austin approval.
 
-Rationale: this draft is now practical for a small AI-assisted engineering team because gates are proportional by significance level rather than applied universally. It adds the missing controls for data, security/scope, regression, decision records, waivers, release manifests, knowledge capture, research bias controls, and incident handling.
+Rationale: the Product Owner / Chief Systems Architect answers have been incorporated. The draft is practical for a small AI-assisted engineering team because gates are proportional by significance level rather than applied universally. It now includes resolved release approval rules, supported-performance evidence thresholds, release-manifest location, Hermes block/override authority, waiver expiry rules, and post-release incident handling.
 
 Do not promote to approved governance until Paul Austin reviews and explicitly approves the document.
 

@@ -1,65 +1,58 @@
-# Quality Manual v1.1 Draft Amendment Summary
+# Quality Manual v1.1 Draft Final Amendment Summary
 
 Date: 2026-07-03
-Status: Draft summary for Paul Austin review
+Status: Final draft summary for Paul Austin approval review
 Document: `docs/governance/Quality_Manual.md`
 
 ## Short Amendment Summary
 
-The Quality Manual has been revised into a practical v1.1 draft for a small AI-assisted engineering team.
+The Quality Manual v1.1 Draft has been updated with Product Owner / Chief Systems Architect answers to all open questions.
 
-Key amendments:
+Final amendments incorporated:
 
-- Defined six work significance levels:
-  - Minor documentation/cosmetic change
-  - Small bug fix
-  - Engine change
-  - Research claim
-  - Architecture change
-  - Release candidate
-- Added a mandatory/optional gate matrix so not all gates apply to all changes.
-- Added new gates:
-  - Data Quality Gate
-  - Security and Scope Gate
-  - Regression Evidence Gate
-  - Decision Record Gate
-  - Waiver / Exception Gate
-  - Release Manifest Gate
-  - Knowledge Capture Gate
-- Strengthened Research Validation for performance claims with controls for:
-  - overfitting
-  - data snooping
-  - lookahead
-  - survivorship bias
-  - parameter stability
+- Product Owner approval is mandatory for promotion to Stable, not for preparing every Release Candidate.
+- Major architecture, risk, or scope changes require Product Owner approval before Release Candidate status.
+- A `supported` performance claim now requires:
+  - clear hypothesis
+  - documented data source
+  - in-sample and out-of-sample testing where applicable
+  - walk-forward or time-split validation where applicable
+  - parameter sensitivity check
+  - transaction costs where trading performance is claimed
   - benchmark comparison
-  - regime dependence
-  - transaction costs where relevant
-- Added release manifest requirements:
-  - version
-  - release file path
-  - commit hash
-  - changed files
-  - validation artefacts
-  - known issues
-  - rollback path
-  - approval status
-- Defined mandatory triggers for EDRs and RDRs.
-- Added promotion criteria for Experimental, Laboratory, Validation Candidate, Release Candidate, Stable, Deprecated, and Rejected classifications.
-- Added waiver rules covering owner, reason, severity, expiry date, risk accepted, mitigation, and approval authority.
-- Added post-release incident handling covering severity, owner, response expectation, rollback rule, and prevention update.
-- Preserved lean operation by using proportional gate application rather than applying every gate to every change.
+  - stated limitations
+  - reproducibility notes
+  - no obvious lookahead, survivorship, or data-snooping issue
+- Claims below that threshold must be classified as weakly supported, inconclusive, falsified, or operationally rejected.
+- Release manifests now live in `docs/releases/` and link to artefacts in `pine/releases/`:
+  - `docs/releases/ATE_vX.X_Release_Manifest.md`
+  - `pine/releases/ATE_vX.X.pine`
+- Hermes may mark releases as `Research Blocked` or `Quality Blocked` when evidence, quality, scope, or research standards are not met.
+- Hermes cannot approve or reject final governance alone.
+- Final release approval or override remains with Paul Austin as Product Owner.
+- Product Owner overrides of Hermes blocks must be documented as waivers.
+- Waiver expiry rules added:
+  - Default waiver expiry: 30 days
+  - Critical waiver: only by explicit Product Owner and Risk Owner approval; no hidden execution or known lookahead/repainting release waiver
+  - High waiver: 14 days maximum
+  - Medium waiver: 30 days default
+  - Low waiver: 90 days maximum
+  - No waiver is permanent
 
-## Open Questions for Paul Austin
+## Confirmation: Open Questions Resolved
 
-1. Should Product Owner approval be mandatory for every Release Candidate, or only for stable releases?
-2. What is the minimum acceptable evidence threshold for a performance claim to be called "supported" rather than "weakly supported"?
-3. Should release manifests live in a dedicated `releases/` documentation folder, or beside each release artefact?
-4. Should Hermes be allowed to mark a release as blocked, or only recommend blocking to Paul Austin?
-5. How long should waivers remain valid by default before expiry review?
+All previous open questions have been resolved and incorporated into `docs/governance/Quality_Manual.md`.
+
+Resolved questions:
+
+1. Product Owner approval timing.
+2. Evidence threshold for supported performance claims.
+3. Release manifest location and naming structure.
+4. Hermes release-blocking authority and Product Owner override rule.
+5. Waiver expiry rules.
 
 ## Recommendation
 
-Recommendation: approve with amendments after Paul Austin review.
+Recommendation: ready for Paul Austin approval.
 
-The revised draft is materially stronger and practical enough to use as ATOS v1.1 quality governance, but it should not be promoted to approved status until Paul Austin reviews the open questions and explicitly approves the document.
+The document should remain `Draft for Paul Austin Review` until Paul explicitly approves and promotes it to approved governance.
