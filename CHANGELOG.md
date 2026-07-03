@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Architecture update note: corrected engine flow so RiskEngine follows ConfidenceEngine; added standard Engine Output Contract; clarified DashboardEngine is presentation-only and architecture change remains pending Paul Austin review.
 - ATOS-001 Operational Readiness Review draft.
 - ATOS v1.1 draft amendments for review.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
