@@ -63,6 +63,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Behavioural checks pass: 270 of 270 contract and behaviour checks against the ATE v2.1 VolatilityEngine compute path and the ATE v2.2 RiskEngine planned compute path.
   - No ATE Pine logic modified.
   - No ATE v2.2 release file created yet.
+- ATE v2.2 RiskEngine implementation plan added.
+  - Implementation plan saved at `docs/releases/ATE_v2.2_Implementation_Plan.md` against the approved RiskEngine v1.0 Draft specification.
+  - Implementation may begin only after Paul Austin answers the open questions and the canonical verifier `tools/scripts/verify_ate.py` is extended to load the new `pine/releases/ATE_v2.2.pine` release file.
+  - No Pine code written.
+  - `pine/releases/ATE_v2.2.pine` not yet created.
+  - `pine/releases/ATE_v2.1.pine` SHA remains unchanged at `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
