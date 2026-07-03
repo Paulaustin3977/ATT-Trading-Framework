@@ -383,20 +383,59 @@ If a manifest is required before the verifier pass or before RDR-003, do NOT cre
 
 ---
 
-## 19. Open Questions for Paul Austin
+## 19. Open Questions for Paul Austin — Answered
 
-Only include questions that must be answered before Pine implementation:
+The five open questions blocking Pine implementation have been answered by Paul Austin / Chief Systems Architect on 2026-07-03.
 
-1. Confirm verifier extension in §12 is the required gate (run after Pine implementation). [assumed yes based on prior approval — locking in writing here.]
-2. Confirm RDR-003 daily-first then weekly approach matches the ATE v2.2 validation policy.
-3. Confirm no future-conflict on the ATE v2.2 release filename (`pine/releases/ATE_v2.2.pine`).
-4. Confirm the dashboard label list in §9 is acceptable; no buy/sell wording at any row label.
-5. Confirm the seven input names in §6 are the final Pine input identifiers (renaming requires re-approval).
+1. **Verifier extension as gate.** Confirmed: the verifier extension in §12 is the required implementation gate after Pine implementation. The canonical command remains:
 
-The following are deferrable, do not block implementation:
+   ```
+   python tools/scripts/verify_ate.py
+   ```
+
+   Passing verifier checks proves contract and boundary compliance only. It does not replace RDR validation.
+
+2. **RDR sequence.** Confirmed: RDR-003 daily-first, then RDR-003W weekly, is the ATE v2.2 validation policy.
+
+3. **ATE v2.2 release filename.** Confirmed: the ATE v2.2 release filename is `pine/releases/ATE_v2.2.pine`. The ATE v2.1 release file must remain unchanged as rollback baseline.
+
+4. **Dashboard label list.** Confirmed: the dashboard label list in §9 is acceptable. Approved dashboard labels are:
+
+   - `Risk Score`
+   - `Risk State`
+   - `Risk Direction`
+   - `Risk Reason`
+   - `Risk Engine`
+   - `Vol Risk State`
+   - `Ext Risk State`
+   - `Struct Risk State`
+   - `Conflict Risk State`
+   - `Vol Risk Contrib`
+   - `Ext Risk Contrib`
+   - `Struct Risk Contrib`
+   - `Conflict Risk Contrib`
+   - `Smoothed Risk Score`
+
+   Reserved language remains forbidden:
+
+   `safe`, `unsafe`, `suitable`, `unsuitable`, `approved`, `blocked`, `tradeable`, `untradeable`.
+
+5. **Pine input names final.** Confirmed: the seven Pine input names in §6 are final:
+
+   - `riskVolElevatedScore`
+   - `riskExtensionAtrLow`
+   - `riskExtensionAtrHigh`
+   - `riskSwingAtr`
+   - `riskConfidenceRiskHigh`
+   - `riskConfidenceRiskLow`
+   - `riskSmoothingLength`
+
+### Deferrable questions (not blocking implementation)
 
 - Whether RiskEngine `riskScore` thresholds need an RDR-001 sensitivity sweep across the approved input ranges.
 - Whether the conflict component threshold-cut principle (either `> confidenceRiskHigh` or `< confidenceRiskLow`) should become a future amendment if RDR-003 flags instability.
+
+---
 
 ---
 
@@ -413,7 +452,16 @@ The plan:
 - preserves ATE v2.1 SHA as immutable evidence of no breakage,
 - aligns with Quality Manual v1.1 Gate 14 (release manifest) and EDR-001 verifier process.
 
-RiskEngine implementation may begin after this plan is committed. Pine code is NOT authorised to start until the plan is committed and Paul Austin has answered the five open questions above.
+**Implementation Status (after Paul Austin's open-question answers, 2026-07-03):** Approved and ready for Pine implementation.
+
+RiskEngine implementation may begin. Pine code is NOT started by this approval — implementation begins as a separate authorised task once the verifier has been extended to load `pine/releases/ATE_v2.2.pine`.
+
+This approval does NOT authorise:
+
+- Live trade execution, broker connectivity, or paper-trading API integration.
+- RiskEngine consumption by DecisionEngine, ConfidenceEngine, entry/exit logic, position sizing, stop logic, or trade-action alerts.
+- Reclassification of RiskEngine from "diagnostic only" status.
+- Modification of the ATE v2.1 release file at `pine/releases/ATE_v2.1.pine`.
 
 ---
 
