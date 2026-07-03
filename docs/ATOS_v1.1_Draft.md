@@ -257,7 +257,7 @@ The following documents form the ATOS v1.1 governance pack:
 - Research Methodology.
 - Release Process.
 - Hermes Integration.
-- Quality Manual.
+- Quality Manual — approved by Paul Austin as part of the ATOS v1.1 governance baseline.
 - Risk Management Standard.
 - Data Management Policy.
 - Security Policy.
@@ -274,8 +274,10 @@ The following documents form the ATOS v1.1 governance pack:
 
 [DRAFT v1.1]
 
-Paul Austin has approved ATOS v1.1 in principle, subject to review of the amended draft role-ownership model.
+Paul Austin has approved ATOS v1.1 in principle, subject to review of the full amended governance pack.
 
-This document is not yet promoted to approved governance. ATOS v1.1 becomes approved only after Paul reviews this amended draft and explicitly approves promotion.
+Paul Austin has approved the Quality Manual v1.1 as part of the ATOS v1.1 governance baseline.
+
+This document is not yet promoted as the full approved ATOS v1.1 governance baseline. Full ATOS v1.1 becomes approved only after Paul reviews the complete amended draft and explicitly approves promotion.
 
 Until that approval occurs, existing repository documents remain the active ATOS baseline.

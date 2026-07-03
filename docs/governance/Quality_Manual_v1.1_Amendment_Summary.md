@@ -1,12 +1,12 @@
 # Quality Manual v1.1 Draft Final Amendment Summary
 
 Date: 2026-07-03
-Status: Final draft summary for Paul Austin approval review
+Status: Approval summary
 Document: `docs/governance/Quality_Manual.md`
 
 ## Short Amendment Summary
 
-The Quality Manual v1.1 Draft has been updated with Product Owner / Chief Systems Architect answers to all open questions.
+The Quality Manual v1.1 has been approved by Paul Austin as part of the ATOS v1.1 governance baseline after incorporation of Product Owner / Chief Systems Architect answers to all open questions.
 
 Final amendments incorporated:
 
@@ -51,8 +51,8 @@ Resolved questions:
 4. Hermes release-blocking authority and Product Owner override rule.
 5. Waiver expiry rules.
 
-## Recommendation
+## Approval Confirmation
 
-Recommendation: ready for Paul Austin approval.
+Paul Austin approved the Quality Manual as part of the ATOS v1.1 governance baseline.
 
-The document should remain `Draft for Paul Austin Review` until Paul explicitly approves and promotes it to approved governance.
+Document status updated to `Approved ATOS v1.1 Governance Baseline`.

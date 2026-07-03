@@ -41,9 +41,15 @@ Evidence: Paul Austin approved ATOS v1.1 in principle and clarified that roles m
 
 Knowledge entry: ATOS roles do not require separate permanent agents at this stage. Current functional ownership is: Product Owner Paul Austin; Chief Systems Architect ChatGPT; Quantitative Research Department Hermes; Release Manager Paul Austin + ChatGPT; Documentation Owner ChatGPT with Hermes audit support; Data Steward Hermes initially; Risk Owner Paul Austin; Security Owner Paul Austin.
 
+
+### Quality Manual v1.1 approved
+
+Evidence: Paul Austin approved `docs/governance/Quality_Manual.md` as part of the ATOS v1.1 governance baseline.
+
+Knowledge entry: Quality Manual v1.1 is the active quality governance baseline for ATOS v1.1. It defines proportional gates, supported-performance evidence thresholds, release-manifest structure, Hermes block authority, waiver expiry rules and post-release incident handling.
+
 ## Open Governance Questions
 
-- What minimum statistical standard is required before a claim is classified as supported?
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?
 - What cadence should be used for ATOS reviews once the project reaches stable maintenance?
 
@@ -60,7 +66,7 @@ Knowledge entry: ATOS roles do not require separate permanent agents at this sta
 | Risk Owner | Paul Austin |
 | Security Owner | Paul Austin |
 
-ATOS v1.1 remains draft until Paul reviews the amended draft and explicitly approves promotion.
+Quality Manual v1.1 is approved as part of the ATOS v1.1 governance baseline. Full ATOS v1.1 remains draft until Paul reviews the complete amended governance pack and explicitly approves promotion.
 
 ## Negative Findings from ATOS-001
 

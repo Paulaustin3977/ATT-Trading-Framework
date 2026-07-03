@@ -1,7 +1,7 @@
 # Austin Trading Quality Manual
 
-Version: 1.1 Draft  
-Status: Draft for Paul Austin Review  
+Version: 1.1  
+Status: Approved ATOS v1.1 Governance Baseline  
 Owner: Austin Trading Team  
 Applies To: Austin Trading Engine, Austin Research Lab, Austin Strategy Framework, Austin Market Intelligence, and all future Austin Trading Platform projects.
 
@@ -31,9 +31,9 @@ Quality is defined by:
 
 # 2. Status and Approval
 
-This document is a Quality Manual v1.1 draft for ATOS v1.1 review.
+This document is the approved Quality Manual v1.1 for the ATOS v1.1 governance baseline.
 
-It must not be treated as approved governance until Paul Austin reviews it and explicitly promotes it to approved status.
+Paul Austin approved this Quality Manual as part of the ATOS v1.1 governance baseline on 2026-07-03.
 
 ---
 
@@ -784,7 +784,7 @@ Recommendation: ready for Paul Austin approval.
 
 Rationale: the Product Owner / Chief Systems Architect answers have been incorporated. The draft is practical for a small AI-assisted engineering team because gates are proportional by significance level rather than applied universally. It now includes resolved release approval rules, supported-performance evidence thresholds, release-manifest location, Hermes block/override authority, waiver expiry rules, and post-release incident handling.
 
-Do not promote to approved governance until Paul Austin reviews and explicitly approves the document.
+Paul Austin has reviewed and approved this document for the ATOS v1.1 governance baseline.
 
 ---
 
