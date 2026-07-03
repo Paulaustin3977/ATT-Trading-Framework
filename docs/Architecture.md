@@ -1,6 +1,6 @@
 # Architecture
 
-Status: Draft architecture amendment pending Paul Austin review
+Status: Active architecture baseline approved by Paul Austin
 
 ## Overview
 
@@ -95,6 +95,6 @@ Contract rules:
 - Each engine carries a semantic version in its specification.
 - Breaking changes to an engine's interface or output contract require a major bump and a documented migration note.
 
-## Review Status
+## Approval Status
 
-This architecture amendment reflects Chief Systems Architect review notes and remains pending Paul Austin review. It must not be treated as final approved architecture until Paul Austin explicitly approves it.
+This architecture baseline was approved by Paul Austin. It is the active `Architecture.md` baseline.
