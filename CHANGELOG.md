@@ -78,6 +78,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Pine implementation may begin only after the verifier extension lands.
   - Implementation status: Approved and ready for Pine implementation.
   - ATE v2.1 release file remains unchanged.
+- ATE v2.2 Pine implementation added.
+  - TradingView compile confirmed clean by Paul Austin.
+  - `pine/releases/ATE_v2.2.pine` and `pine/development/ATE_Current.pine` stored byte-identical (SHA-256 `743988ef7c8342c99a4f2f2fbdad27dce6d0594b702cee46fa652652a4f9c2b0`).
+  - Release manifest stored at `docs/releases/ATE_v2.2_Release_Manifest.md`.
+  - RiskEngine added as diagnostic-only dashboard and Research Mode module.
+  - VolatilityEngine v1.0.0-draft preserved from ATE v2.1.
+  - Existing ATE alerts preserved.
+  - No RiskEngine alerts added.
+  - No ConfidenceEngine impact, DecisionEngine impact, entry/exit impact, position sizing impact, or stop logic impact.
+  - ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
+  - RDR-003 and RDR-003W validation cycles remain scheduled future work.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
