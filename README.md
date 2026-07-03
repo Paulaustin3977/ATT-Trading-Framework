@@ -51,6 +51,13 @@ v2.0 (placeholder — see `pine/releases/`)
 
 See [`ROADMAP.md`](ROADMAP.md) for the long-term development plan and [`CHANGELOG.md`](CHANGELOG.md) for release history.
 
+## ATOS Governance Drafts
+
+- [`docs/ATOS_Operational_Readiness_Review.md`](docs/ATOS_Operational_Readiness_Review.md) — ATOS-001 independent readiness audit.
+- [`docs/ATOS_v1.1_Draft.md`](docs/ATOS_v1.1_Draft.md) — draft ATOS v1.1 amendments for review, not approved governance.
+- [`docs/governance/`](docs/governance/) — draft governance standards recommended by the readiness review.
+- [`docs/knowledge/ATT_Knowledge_Base.md`](docs/knowledge/ATT_Knowledge_Base.md) — draft permanent knowledge entries.
+
 ## Contributing
 
 See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution workflow, evidence requirements, and review process.
