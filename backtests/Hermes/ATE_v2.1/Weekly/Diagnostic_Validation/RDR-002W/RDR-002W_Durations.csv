@@ -1,0 +1,106 @@
+symbol,asset_name,asset_class,state,avg_duration,median_duration,longest_duration,shortest_duration,run_count
+GC=F,Gold futures,Metals,compressed,8.333333333333334,6.5,20,2,6
+GC=F,Gold futures,Metals,normal,17.0,10.0,50,1,17
+GC=F,Gold futures,Metals,expanding,5.0,5.0,9,1,10
+GC=F,Gold futures,Metals,elevated,5.0,5.0,5,5,2
+GC=F,Gold futures,Metals,unstable,0.0,0.0,0,0,0
+GC=F,Gold futures,Metals,shock,1.5714285714285714,1.0,3,1,7
+GC=F,Gold futures,Metals,unknown,112.0,112.0,112,112,1
+SI=F,Silver futures,Metals,compressed,5.3,2.5,18,1,10
+SI=F,Silver futures,Metals,normal,13.4,13.5,40,1,20
+SI=F,Silver futures,Metals,expanding,4.285714285714286,4.0,9,1,7
+SI=F,Silver futures,Metals,elevated,4.0,2.0,14,1,9
+SI=F,Silver futures,Metals,unstable,3.5,3.5,4,3,2
+SI=F,Silver futures,Metals,shock,1.2307692307692308,1.0,3,1,13
+SI=F,Silver futures,Metals,unknown,112.0,112.0,112,112,1
+HG=F,Copper futures,Metals,compressed,8.333333333333334,3.0,35,1,6
+HG=F,Copper futures,Metals,normal,17.0,14.0,52,1,18
+HG=F,Copper futures,Metals,expanding,3.0,2.0,7,1,13
+HG=F,Copper futures,Metals,elevated,4.5,4.5,5,4,2
+HG=F,Copper futures,Metals,unstable,0.0,0.0,0,0,0
+HG=F,Copper futures,Metals,shock,1.0,1.0,1,1,6
+HG=F,Copper futures,Metals,unknown,112.0,112.0,112,112,1
+NQ=F,Nasdaq futures,Index proxies,compressed,12.333333333333334,12.5,24,3,6
+NQ=F,Nasdaq futures,Index proxies,normal,17.666666666666668,11.0,43,4,15
+NQ=F,Nasdaq futures,Index proxies,expanding,5.0,5.0,12,1,11
+NQ=F,Nasdaq futures,Index proxies,elevated,3.3333333333333335,3.0,4,3,3
+NQ=F,Nasdaq futures,Index proxies,unstable,0.0,0.0,0,0,0
+NQ=F,Nasdaq futures,Index proxies,shock,2.0,2.0,3,1,3
+NQ=F,Nasdaq futures,Index proxies,unknown,112.0,112.0,112,112,1
+SPY,S&P 500 ETF,Index proxies,compressed,12.166666666666666,11.0,34,1,6
+SPY,S&P 500 ETF,Index proxies,normal,16.9375,14.5,49,1,16
+SPY,S&P 500 ETF,Index proxies,expanding,4.5,4.0,8,2,8
+SPY,S&P 500 ETF,Index proxies,elevated,8.0,8.0,9,7,2
+SPY,S&P 500 ETF,Index proxies,unstable,5.0,5.0,5,5,1
+SPY,S&P 500 ETF,Index proxies,shock,2.25,1.5,5,1,4
+SPY,S&P 500 ETF,Index proxies,unknown,112.0,112.0,112,112,1
+NVDA,NVIDIA,Major equities,compressed,11.0,6.5,31,1,6
+NVDA,NVIDIA,Major equities,normal,12.083333333333334,6.0,51,1,24
+NVDA,NVIDIA,Major equities,expanding,3.3333333333333335,2.0,7,1,9
+NVDA,NVIDIA,Major equities,elevated,7.0,7.0,13,1,2
+NVDA,NVIDIA,Major equities,unstable,0.0,0.0,0,0,0
+NVDA,NVIDIA,Major equities,shock,1.25,1.0,3,1,8
+NVDA,NVIDIA,Major equities,unknown,112.0,112.0,112,112,1
+MSFT,Microsoft,Major equities,compressed,8.166666666666666,8.0,13,4,6
+MSFT,Microsoft,Major equities,normal,16.055555555555557,10.5,96,1,18
+MSFT,Microsoft,Major equities,expanding,4.266666666666667,5.0,11,1,15
+MSFT,Microsoft,Major equities,elevated,1.0,1.0,1,1,2
+MSFT,Microsoft,Major equities,unstable,0.0,0.0,0,0,0
+MSFT,Microsoft,Major equities,shock,1.2,1.0,2,1,5
+MSFT,Microsoft,Major equities,unknown,112.0,112.0,112,112,1
+AAPL,Apple,Major equities,compressed,7.777777777777778,8.0,22,1,9
+AAPL,Apple,Major equities,normal,11.91304347826087,8.0,39,1,23
+AAPL,Apple,Major equities,expanding,4.166666666666667,4.0,9,1,12
+AAPL,Apple,Major equities,elevated,11.0,11.0,11,11,1
+AAPL,Apple,Major equities,unstable,0.0,0.0,0,0,0
+AAPL,Apple,Major equities,shock,1.0,1.0,1,1,5
+AAPL,Apple,Major equities,unknown,112.0,112.0,112,112,1
+AMZN,Amazon,Major equities,compressed,12.0,7.0,27,3,9
+AMZN,Amazon,Major equities,normal,11.1,7.5,35,1,20
+AMZN,Amazon,Major equities,expanding,4.5,2.0,12,1,10
+AMZN,Amazon,Major equities,elevated,7.25,6.5,14,2,4
+AMZN,Amazon,Major equities,unstable,0.0,0.0,0,0,0
+AMZN,Amazon,Major equities,shock,1.0,1.0,1,1,6
+AMZN,Amazon,Major equities,unknown,112.0,112.0,112,112,1
+GOOGL,Alphabet,Major equities,compressed,6.6,6.0,11,1,5
+GOOGL,Alphabet,Major equities,normal,15.6,13.5,39,1,20
+GOOGL,Alphabet,Major equities,expanding,4.3076923076923075,2.0,12,1,13
+GOOGL,Alphabet,Major equities,elevated,2.0,2.0,2,2,1
+GOOGL,Alphabet,Major equities,unstable,0.0,0.0,0,0,0
+GOOGL,Alphabet,Major equities,shock,1.4,1.0,3,1,5
+GOOGL,Alphabet,Major equities,unknown,112.0,112.0,112,112,1
+TLT,US Treasury bond ETF,Bonds / rates proxies,compressed,12.714285714285714,11.0,41,1,7
+TLT,US Treasury bond ETF,Bonds / rates proxies,normal,15.470588235294118,12.0,35,2,17
+TLT,US Treasury bond ETF,Bonds / rates proxies,expanding,4.166666666666667,4.0,8,1,6
+TLT,US Treasury bond ETF,Bonds / rates proxies,elevated,6.5,7.0,11,1,4
+TLT,US Treasury bond ETF,Bonds / rates proxies,unstable,0.0,0.0,0,0,0
+TLT,US Treasury bond ETF,Bonds / rates proxies,shock,1.75,1.5,3,1,4
+TLT,US Treasury bond ETF,Bonds / rates proxies,unknown,112.0,112.0,112,112,1
+EURUSD=X,EUR/USD,FX,compressed,12.625,7.5,30,1,8
+EURUSD=X,EUR/USD,FX,normal,13.333333333333334,8.5,55,1,18
+EURUSD=X,EUR/USD,FX,expanding,6.125,6.0,17,1,8
+EURUSD=X,EUR/USD,FX,elevated,7.0,7.0,9,5,2
+EURUSD=X,EUR/USD,FX,unstable,0.0,0.0,0,0,0
+EURUSD=X,EUR/USD,FX,shock,1.75,1.0,4,1,4
+EURUSD=X,EUR/USD,FX,unknown,112.0,112.0,112,112,1
+GBPUSD=X,GBP/USD,FX,compressed,16.4,9.0,34,1,5
+GBPUSD=X,GBP/USD,FX,normal,21.76923076923077,14.0,68,4,13
+GBPUSD=X,GBP/USD,FX,expanding,5.0,4.0,11,1,7
+GBPUSD=X,GBP/USD,FX,elevated,3.5,3.5,6,1,2
+GBPUSD=X,GBP/USD,FX,unstable,0.0,0.0,0,0,0
+GBPUSD=X,GBP/USD,FX,shock,2.0,2.0,3,1,2
+GBPUSD=X,GBP/USD,FX,unknown,112.0,112.0,112,112,1
+JPY=X,USD/JPY,FX,compressed,10.625,10.0,20,2,8
+JPY=X,USD/JPY,FX,normal,13.2,9.0,48,1,20
+JPY=X,USD/JPY,FX,expanding,3.875,3.5,7,1,8
+JPY=X,USD/JPY,FX,elevated,12.0,12.0,17,7,2
+JPY=X,USD/JPY,FX,unstable,0.0,0.0,0,0,0
+JPY=X,USD/JPY,FX,shock,1.1666666666666667,1.0,2,1,6
+JPY=X,USD/JPY,FX,unknown,112.0,112.0,112,112,1
+CL=F,WTI crude oil futures,Commodities,compressed,16.666666666666668,10.5,47,2,6
+CL=F,WTI crude oil futures,Commodities,normal,17.214285714285715,12.0,40,1,14
+CL=F,WTI crude oil futures,Commodities,expanding,3.0,3.0,7,1,5
+CL=F,WTI crude oil futures,Commodities,elevated,6.25,7.0,10,1,4
+CL=F,WTI crude oil futures,Commodities,unstable,4.5,4.0,8,2,4
+CL=F,WTI crude oil futures,Commodities,shock,1.375,1.0,2,1,8
+CL=F,WTI crude oil futures,Commodities,unknown,112.0,112.0,112,112,1

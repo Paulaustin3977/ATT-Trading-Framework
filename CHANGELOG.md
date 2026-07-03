@@ -30,6 +30,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Classification: Weakly Supported.
   - Recommendation: Keep Diagnostic; RiskEngine and ConfidenceEngine integration remain deferred.
   - Artefacts stored under `research/Reports/RDR/` and `backtests/Hermes/ATE_v2.1/Daily/Diagnostic_Validation/RDR-002/`.
+- RDR-002W VolatilityEngine weekly diagnostic validation completed.
+  - Same classification: Weakly Supported.
+  - Recommendation unchanged: Keep Diagnostic; RiskEngine and ConfidenceEngine integration remain deferred.
+  - Comparison with daily: state sequences smoother; abs momentum overlap roughly 2.6x daily but still well under the redundancy threshold; no hidden directional bias.
+  - Artefacts stored under `research/Reports/RDR/RDR-002W-volatility-diagnostic-validation.md` and `backtests/Hermes/ATE_v2.1/Weekly/Diagnostic_Validation/RDR-002W/`.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
