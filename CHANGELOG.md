@@ -22,6 +22,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Downstream consumption by ConfidenceEngine, RiskEngine, and DecisionEngine remains prohibited in ATE v2.1.
 - ATE v2.1 Implementation Plan added for diagnostic-only VolatilityEngine Pine planning.
   - The plan preserves the prohibition on ConfidenceEngine, RiskEngine, DecisionEngine, entry/exit logic, position sizing, stop placement, and trade-action alert impact.
+- ATE v2.1 Pine implementation added.
+  - TradingView compile confirmed clean by Paul Austin.
+  - ATE v2.1 stored as rollback baseline.
+  - VolatilityEngine added as diagnostic-only dashboard and Research Mode module.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
