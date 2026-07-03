@@ -1,7 +1,7 @@
 {
   "verifier": "ERP-001 canonical ATE verifier",
   "kind": "behaviour and contract verifier (NOT a suite green validation)",
-  "engine_target": "ATE v2.1 / VolatilityEngine v1.0.0-draft",
+  "engine_target": "ATE v2.1 / VolatilityEngine v1.0.0-draft + ATE v2.2 / RiskEngine v1.0.0-draft (planned, Python mirror)",
   "release_sha256_pine": "7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893",
   "fixtures": [
     "normal.csv",
@@ -26,8 +26,8 @@
       "shock": 6
     }
   },
-  "total_checks": 100,
-  "passed": 100,
+  "total_checks": 270,
+  "passed": 270,
   "failed": 0,
   "failures": [],
   "exit_meaning": {

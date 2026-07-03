@@ -56,6 +56,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Approval boundaries confirmed by Paul Austin / Chief Systems Architect on 2026-07-03.
   - Downstream consumption by ConfidenceEngine, RiskEngine, and DecisionEngine remains prohibited in ATE v2.2.
   - ATE v2.1 release file must remain unchanged.
+- EDR-001 canonical verifier extended for planned ATE v2.2 RiskEngine coverage.
+  - RiskEngine fixture directory added under `tests/fixtures/ATE_v2_2/` with seeded `calm_normal`, `elevated`, `extreme_conflict`, `unknown` regimes.
+  - `tests/fixtures/ATE_v2_2/fixture_spec.json` and `tools/scripts/_riskengine_compute.py` recorded as the planned compute-path mirror.
+  - Verifier now asserts the approved RiskEngine specification defines the four-component cap table, allowed states and directions, reserved-language absence, diagnostic-only boundaries, and version literal.
+  - Behavioural checks pass: 270 of 270 contract and behaviour checks against the ATE v2.1 VolatilityEngine compute path and the ATE v2.2 RiskEngine planned compute path.
+  - No ATE Pine logic modified.
+  - No ATE v2.2 release file created yet.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 

@@ -78,6 +78,12 @@ Evidence: `docs/EDR/EDR-001-canonical-ate-verification-entry-point.md` records t
 
 Knowledge entry: The canonical verifier command is `python tools/scripts/verify_ate.py`. It exits `0` on pass, `1` on fail, `2` on environment error. Initial result: 100/100 contract and behaviour checks pass against `pine/releases/ATE_v2.1.pine`. This verifier result does NOT change the RDR-002 / RDR-002W classification. VolatilityEngine remains `Weakly Supported`, diagnostic-only, with RiskEngine and ConfidenceEngine integration deferred. The verifier also surfaced a real project finding: the ATE v2.1 release exposes VolatilityEngine diagnostic variables under the `vol*` namespace (e.g. `volAtrPercent`, `volAtrRatio`, `volCombinedRatio`, `volShockFlag`), while the VolatilityEngine specification text describes a separate `volDiag*` prefix; both expose individual named diagnostic variables, but the prefix differs. Record this as a future specification amendment candidate; it is not a blocker for EDR-001 acceptance and is not a reclassification of the engine. Future ATE releases should use this command as part of the quality gate.
 
+### RiskEngine v2.2 implementation is blocked until verifier coverage exists
+
+Evidence: EDR-001 verifier was extended in 2026-07 under task ATE-2.2-RISK-VERIFY to cover the planned ATE v2.2 RiskEngine v1.0.0-draft compute path against seeded fixtures under `tests/fixtures/ATE_v2_2/` (`calm_normal`, `elevated`, `extreme_conflict`, `unknown`).
+
+Knowledge entry: The verifier coverage is infrastructure only and does NOT by itself prove empirical usefulness. RDR-001 validation (state frequency, hidden directional bias, overlap with VolatilityEngine, cross-asset behaviour) is still required after RiskEngine Pine implementation. Until that RDR-001 validation produces a non-falsified result and the verifier confirms Pine-vs-Python mirror parity (i.e. the actual Pine implementation matches the deterministic Python mirror the verifier tests), RiskEngine remains diagnostic-only and may not be consumed by DecisionEngine, ConfidenceEngine, entry/exit logic, position sizing, stop logic, or trade-action alerts.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

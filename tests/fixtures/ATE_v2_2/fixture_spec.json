@@ -1,0 +1,59 @@
+{
+  "fixture_set_version": "1.0.0",
+  "engine_target": "ATE v2.2 / RiskEngine v1.0.0-draft",
+  "fixtures": {
+    "calm_normal": {
+      "n": 240,
+      "seed": 21,
+      "vol_score": 60.0,
+      "vol_noise": 3.0,
+      "shock_prob": 0.0,
+      "bar_range_atr": 0.4,
+      "confidence": 50.0,
+      "conf_noise": 5.0
+    },
+    "elevated": {
+      "n": 240,
+      "seed": 22,
+      "vol_score": 22.0,
+      "vol_noise": 3.0,
+      "shock_prob": 0.25,
+      "bar_range_atr": 1.5,
+      "confidence": 70.0,
+      "conf_noise": 6.0,
+      "alternating_conf": true
+    },
+    "extreme_conflict": {
+      "n": 240,
+      "seed": 23,
+      "vol_score": 15.0,
+      "vol_noise": 1.0,
+      "shock_prob": 0.8,
+      "bar_range_atr": 3.8,
+      "confidence": 50.0,
+      "conf_noise": 4.0,
+      "alternating_conf": true
+    },
+    "unknown": {
+      "n": 80,
+      "seed": 24,
+      "vol_score": 60.0,
+      "vol_noise": 2.0,
+      "shock_prob": 0.0,
+      "bar_range_atr": 0.3,
+      "confidence": 50.0,
+      "conf_noise": 1.0,
+      "trend_nan": true
+    }
+  },
+  "params": {
+    "volRiskElevatedScore": 25,
+    "extensionAtrLow": 1.5,
+    "extensionAtrHigh": 3.0,
+    "swingRiskAtr": 2.0,
+    "confidenceRiskHigh": 80,
+    "confidenceRiskLow": 20,
+    "riskSmoothingLength": 3
+  },
+  "engine_reference": "specifications/ATE/RiskEngine.md (v1.0 Draft Approved)"
+}

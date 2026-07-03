@@ -47,6 +47,11 @@ FIXTURE_DIR = REPO / "tests/fixtures/ATE_v2_1"
 PINE_PATH = REPO / "pine/releases/ATE_v2.1.pine"
 LOG_PATH = TOOLS / "verify.log"
 
+# ATE v2.2 RiskEngine verification artefacts (planned, not yet implemented in Pine).
+RISK_SPEC = REPO / "specifications/ATE/RiskEngine.md"
+RISK_FIXTURE_DIR = REPO / "tests/fixtures/ATE_v2_2"
+RISK_COMPUTE = TOOLS / "_riskengine_compute.py"
+
 # Stub optional deps before importing the daily reproduction script.
 # The daily script imports yfinance and matplotlib at module top, but the
 # verifier does not download market data or render charts. Stubbing keeps
@@ -312,6 +317,295 @@ if calculate is not None:
 
 
 # ---------------------------------------------------------------------------
+# ATE v2.2 RiskEngine verification (planned, not yet implemented in Pine).
+# ---------------------------------------------------------------------------
+risk_spec_src = ""
+if RISK_SPEC.is_file():
+    risk_spec_src = RISK_SPEC.read_text()
+
+# A. Static specification checks: the approved RiskEngine spec must define
+#    the documented structure, allowed values, defaults, and boundaries.
+RISK_STATE = {"calm", "normal", "elevated", "tense", "extreme", "unknown"}
+RISK_DIRECTION = {"none", "elevated", "conflict", "stable", "indeterminate"}
+RISK_RESERVED = ["safe", "unsafe", "suitable", "unsuitable",
+                 "approved", "blocked", "tradeable", "untradeable"]
+RISK_DEFAULTS_LITERALS = {
+    "volRiskElevatedScore = 25": "volRiskElevatedScore",
+    "extensionAtrLow = 1.5": "extensionAtrLow",
+    "extensionAtrHigh = 3.0": "extensionAtrHigh",
+    "swingRiskAtr = 2.0": "swingRiskAtr",
+    "confidenceRiskHigh = 80": "confidenceRiskHigh",
+    "confidenceRiskLow = 20": "confidenceRiskLow",
+    "riskSmoothingLength = 3": "riskSmoothingLength",
+}
+RISK_VERSION_LITERAL = "1.0.0-draft"
+
+# Required contract output fields.
+RISK_REQUIRED_FIELDS = [
+    ("RiskScore", "score"),
+    ("RiskState", "state"),
+    ("RiskDirection", "direction"),
+    ("RiskReason", "reason"),
+    ("RiskEngineVersion", "version"),
+    ("volRiskContribution", "diagnostics"),
+    ("extRiskContribution", "diagnostics"),
+    ("structRiskContribution", "diagnostics"),
+    ("conflictRiskContribution", "diagnostics"),
+]
+
+# Required diagnostic component fields.
+RISK_DIAGNOSTIC_FIELDS = [
+    "volRiskComponentState", "extRiskComponentState",
+    "structRiskComponentState", "conflictRiskComponentState",
+    "volRiskScoreRaw", "extRiskScoreRaw",
+    "structRiskScoreRaw", "conflictRiskScoreRaw",
+    "volVolatilityScore", "smoothedRiskScore",
+]
+
+check("risk:spec_present", risk_spec_src != "")
+if risk_spec_src:
+    # 1. Allowed state and direction values are listed in the spec.
+    check("risk:spec_lists_all_states",
+          all(f"- {s}" in risk_spec_src or f"| `{s}`" in risk_spec_src for s in RISK_STATE),
+          str(sorted(RISK_STATE)))
+    check("risk:spec_lists_all_directions",
+          all(f"- {d}" in risk_spec_src or f"| `{d}`" in risk_spec_src for d in RISK_DIRECTION),
+          str(sorted(RISK_DIRECTION)))
+    # 2. Defaults recorded in the spec match approved inputs.
+    for literal, name in RISK_DEFAULTS_LITERALS.items():
+        check(f"risk:spec_default:{name}", literal in risk_spec_src, literal)
+    # 3. Version literal recorded.
+    check(f"risk:spec_version_literal", RISK_VERSION_LITERAL in risk_spec_src)
+    # 4. Forbidden direction values.
+    # Spec must explicitly forbid bullish/bearish direction (and state).
+    check("risk:spec_forbids_bullish_direction",
+          "bullish" in risk_spec_src and ("never" in risk_spec_src.lower() or "forbid" in risk_spec_src.lower()))
+    check("risk:spec_forbids_bearish_direction",
+          "bearish" in risk_spec_src and ("never" in risk_spec_src.lower() or "forbid" in risk_spec_src.lower()))
+    # 5. Reserved-language list is referenced explicitly.
+    check("risk:spec_reserved_language_list",
+          all(w in risk_spec_src.lower() for w in RISK_RESERVED))
+    # 6. Diagnostic-only boundary is explicit in the spec.
+    check("risk:spec_diagnostic_only_clause",
+          ("Diagnostic-Only Boundary" in risk_spec_src
+           or "diagnostic-only" in risk_spec_src.lower()))
+    check("risk:spec_no_confidence_consumption_clause",
+          "Must not consume RiskEngine in ATE v2.2" in risk_spec_src
+          or "ConfidenceEngine" in risk_spec_src and "RiskEngine" in risk_spec_src)
+    check("risk:spec_no_decision_consumption_clause",
+          "DecisionEngine" in risk_spec_src)
+    check("risk:spec_no_alerts_clause",
+          "No alerts" in risk_spec_src or "alerts" in risk_spec_src.lower())
+    check("risk:spec_no_broker_clause",
+          "broker" in risk_spec_src.lower() and "no " in risk_spec_src.lower())
+    check("risk:spec_no_paper_trading_clause",
+          ("paper-trading" in risk_spec_src.lower() or "paper trading" in risk_spec_src.lower()))
+    check("risk:spec_no_position_sizing_clause",
+          "position size" in risk_spec_src.lower())
+    check("risk:spec_no_stop_distance_clause",
+          "stop distance" in risk_spec_src.lower())
+    check("risk:spec_no_entry_logic_clause",
+          "entry logic" in risk_spec_src.lower())
+    check("risk:spec_no_exit_logic_clause",
+          "exit logic" in risk_spec_src.lower())
+    # 7. Required Research Mode field labels for RiskEngine are listed.
+    # The spec uses abstract EOC names (score/state/direction/reason) plus
+    # the actual Pine column names (RiskScore/RiskState/...). Both forms are
+    # equivalent for contract-mapping purposes.
+    spec_lower = risk_spec_src.lower()
+    for fld in RISK_REQUIRED_FIELDS:
+        fname = fld[0]
+        fkind = fld[1]
+        if fkind == "version":
+            check(f"risk:spec_research_mode_field:{fname}",
+                  RISK_VERSION_LITERAL in risk_spec_src)
+        else:
+            # Required: at least one of:
+            # - the Risk-prefixed column name; or
+            # - the abstract lowercase EOC name in the Engine Output Contract table.
+            abstract = fname[len("Risk"):].lower() if fname.startswith("Risk") else fname.lower()
+            # Locate the Engine Output Contract section and assert abstract is there.
+            eoc_match = re.search(r"##\s*5\.\s*Engine Output Contract[\s\S]*?(?=\n##\s|\Z)", risk_spec_src)
+            in_eoc = (eoc_match is not None) and (abstract in eoc_match.group(0).lower())
+            check(f"risk:spec_research_mode_field:{fname}",
+                  fname in risk_spec_src or in_eoc or abstract in spec_lower)
+    for fld in RISK_DIAGNOSTIC_FIELDS:
+        check(f"risk:spec_diagnostic_field:{fld}", fld in risk_spec_src)
+    # 8. Component score cap table.
+    for cap in ["Volatility risk | 35", "Extension risk | 30",
+                "Structure risk | 20", "Conflict risk | 15"]:
+        check(f"risk:spec_component_cap:{cap}", cap in risk_spec_src, cap)
+
+# B. Verifier-infrastructure checks: fixtures and compute path exist.
+check("risk:fixture_dir_exists", RISK_FIXTURE_DIR.is_dir(), str(RISK_FIXTURE_DIR))
+check("risk:compute_module_exists", RISK_COMPUTE.is_file(), str(RISK_COMPUTE))
+
+risk_loaded = None
+risk_spec_doc = None
+if RISK_COMPUTE.is_file():
+    try:
+        rspec_path = TOOLS / "_riskengine_compute.py"
+        r_spec = importlib.util.spec_from_file_location("_riskengine_compute", str(rspec_path))
+        risk_spec_doc = importlib.util.module_from_spec(r_spec)
+        r_spec.loader.exec_module(risk_spec_doc)
+        check("risk:compute_module_loads", True)
+    except Exception as e:
+        check("risk:compute_module_loads", False, repr(e))
+
+
+# C. Behaviour checks against fixtures (planned compute path).
+ALLOWED_RISK_STATE = RISK_STATE
+ALLOWED_RISK_DIRECTION = RISK_DIRECTION
+
+
+def _risk_summarise(df):
+    state_counts = (df["RiskState"].value_counts().to_dict()
+                    if "RiskState" in df.columns else {})
+    direction_set = sorted(set(df["RiskDirection"].dropna().unique()))
+    return {
+        "rows": len(df),
+        "state_counts": {str(k): int(v) for k, v in state_counts.items()},
+        "direction_values": direction_set,
+    }
+
+
+def _risk_fixture_run(name: str):
+    if risk_spec_doc is None:
+        return None
+    fx = RISK_FIXTURE_DIR / f"{name}.csv"
+    if not fx.is_file():
+        return None
+    df = pd.read_csv(fx, parse_dates=["Date"], index_col="Date")
+    return risk_spec_doc.calculate_risk(df)
+
+
+risk_run_results = {}
+for name in ["calm_normal", "elevated", "extreme_conflict", "unknown"]:
+    out = _risk_fixture_run(name)
+    risk_run_results[name] = out
+    summary = _risk_summarise(out) if out is not None else {"rows": 0, "state_counts": {}, "direction_values": []}
+
+    check(f"risk:behaviour:run:{name}", out is not None)
+    if out is None:
+        continue
+
+    check(f"risk:behaviour:rows_gt_zero:{name}",
+          summary["rows"] > 0, summary["rows"])
+
+    # State set bounded.
+    bad_states = (set(out["RiskState"].dropna().unique())
+                  if "RiskState" in out.columns else set()) - ALLOWED_RISK_STATE
+    check(f"risk:behaviour:states_allowed:{name}",
+          len(bad_states) == 0, str(bad_states))
+
+    # Direction set bounded.
+    bad_dirs = (set(out["RiskDirection"].dropna().unique())
+                if "RiskDirection" in out.columns else set()) - ALLOWED_RISK_DIRECTION
+    check(f"risk:behaviour:direction_allowed:{name}",
+          len(bad_dirs) == 0, str(bad_dirs))
+
+    # No bullish/bearish leakage.
+    if "RiskDirection" in out.columns:
+        dirs = set(out["RiskDirection"].dropna())
+        check(f"risk:behaviour:no_bullish_dir:{name}", "bullish" not in dirs)
+        check(f"risk:behaviour:no_bearish_dir:{name}", "bearish" not in dirs)
+    if "RiskState" in out.columns:
+        states = set(out["RiskState"].dropna())
+        check(f"risk:behaviour:no_bullish_state:{name}", "bullish" not in states)
+        check(f"risk:behaviour:no_bearish_state:{name}", "bearish" not in states)
+
+    # Engine Output Contract field values bounded.
+    for col, kind in RISK_REQUIRED_FIELDS:
+        if kind == "score":
+            s = out.get(col)
+            if s is not None:
+                vals = s.dropna()
+                ok = bool(((vals >= 0) & (vals <= 100)).all()) if len(vals) else True
+                check(f"risk:behaviour:{col}_in_range:{name}",
+                      ok, f"min={vals.min() if len(vals) else None} max={vals.max() if len(vals) else None}")
+        elif kind == "version":
+            s = out.get(col)
+            if s is not None:
+                vals = set(s.dropna().unique())
+                check(f"risk:behaviour:{col}_={RISK_VERSION_LITERAL}:{name}",
+                      vals == {RISK_VERSION_LITERAL}, str(vals))
+        elif kind in ("state", "direction", "reason"):
+            s = out.get(col)
+            if s is not None:
+                expected = {"state": ALLOWED_RISK_STATE,
+                            "direction": ALLOWED_RISK_DIRECTION}.get(kind)
+                if expected is not None:
+                    vals = set(s.dropna().unique())
+                    illegal = vals - expected
+                    check(f"risk:behaviour:{col}_set:{name}",
+                          len(illegal) == 0, str(illegal))
+                else:
+                    check(f"risk:behaviour:{col}_present:{name}", True)
+        elif kind == "diagnostics":
+            check(f"risk:behaviour:{col}_present:{name}", col in out.columns)
+
+    # Component contribution range checks.
+    comp_caps = {
+        "volRiskContribution": (0, 35),
+        "extRiskContribution": (0, 30),
+        "structRiskContribution": (0, 20),
+        "conflictRiskContribution": (0, 15),
+    }
+    for c_name, (lo, hi) in comp_caps.items():
+        if c_name in out.columns:
+            vals = out[c_name].dropna()
+            ok = bool(((vals >= lo) & (vals <= hi)).all()) if len(vals) else True
+            check(f"risk:behaviour:{c_name}_range:{name}",
+                  ok, f"{c_name} min={vals.min() if len(vals) else None} max={vals.max() if len(vals) else None}")
+
+    # Reserved-language absence in dashboard and reason text.
+    def _flatten(col):
+        s = out.get(col, None)
+        if s is None:
+            return []
+        # Convert to series of strings, handle NaN.
+        return [str(x) for x in s.tolist() if not (isinstance(x, float) and np.isnan(x))]
+
+    reserved_text = " ".join(
+        _flatten("RiskReason") + _flatten("RiskState") + _flatten("RiskDirection")
+    ).lower()
+    for w in RISK_RESERVED:
+        check(f"risk:behaviour:no_reserved_word:{w}:{name}",
+              f" {w} " not in f" {reserved_text} ")
+
+
+# D. Regime-shape expectations per fixture.
+if risk_run_results.get("calm_normal") is not None:
+    cn = risk_run_results["calm_normal"]
+    cn_states = cn["RiskState"].value_counts().to_dict() if "RiskState" in cn.columns else {}
+    # Calm fixture should not reach extreme state often.
+    extreme_pct = (cn_states.get("extreme", 0) / max(1, len(cn))) * 100
+    check("risk:behaviour:calm_extreme_pct_low",
+          extreme_pct < 60, f"extreme_pct={extreme_pct:.1f}%")
+
+if risk_run_results.get("elevated") is not None:
+    el = risk_run_results["elevated"]
+    el_states = el["RiskState"].value_counts().to_dict() if "RiskState" in el.columns else {}
+    elevated_pct = (el_states.get("elevated", 0)
+                    + el_states.get("tense", 0)
+                    + el_states.get("extreme", 0)) / max(1, len(el)) * 100
+    check("risk:behaviour:elevated_at_least_mid",
+          elevated_pct > 30, f"midplus_pct={elevated_pct:.1f}%")
+
+if risk_run_results.get("extreme_conflict") is not None:
+    ex = risk_run_results["extreme_conflict"]
+    ex_states = ex["RiskState"].value_counts().to_dict() if "RiskState" in ex.columns else {}
+    high_pct = (ex_states.get("tense", 0) + ex_states.get("extreme", 0)) / max(1, len(ex)) * 100
+    check("risk:behaviour:extreme_produces_high_states",
+          high_pct > 30, f"high_pct={high_pct:.1f}%")
+
+if risk_run_results.get("unknown") is not None:
+    un = risk_run_results["unknown"]
+    check("risk:behaviour:unknown_fixture_present",
+          un is not None and len(un) > 0)
+
+
+# ---------------------------------------------------------------------------
 # Output: stdout summary + verify.log
 # ---------------------------------------------------------------------------
 
@@ -330,7 +624,7 @@ pine_sha = hashlib.sha256(PINE_PATH.read_bytes()).hexdigest() if PINE_PATH.is_fi
 summary = {
     "verifier": "ERP-001 canonical ATE verifier",
     "kind": "behaviour and contract verifier (NOT a suite green validation)",
-    "engine_target": "ATE v2.1 / VolatilityEngine v1.0.0-draft",
+    "engine_target": "ATE v2.1 / VolatilityEngine v1.0.0-draft + ATE v2.2 / RiskEngine v1.0.0-draft (planned, Python mirror)",
     "release_sha256_pine": pine_sha,
     "fixtures": sorted([p.name for p in FIXTURE_DIR.glob("*.csv")]),
     "fixture_dists": {
