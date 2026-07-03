@@ -35,13 +35,32 @@ Evidence: `docs/Architecture.md` defines independent engines and one-way data fl
 
 Knowledge entry: Engine modularity must be protected through explicit interface contracts and Engineering Decision Records.
 
+### Early-stage role ownership may be functional
+
+Evidence: Paul Austin approved ATOS v1.1 in principle and clarified that roles may be assigned as functional responsibilities rather than separate agents during early-stage development.
+
+Knowledge entry: ATOS roles do not require separate permanent agents at this stage. Current functional ownership is: Product Owner Paul Austin; Chief Systems Architect ChatGPT; Quantitative Research Department Hermes; Release Manager Paul Austin + ChatGPT; Documentation Owner ChatGPT with Hermes audit support; Data Steward Hermes initially; Risk Owner Paul Austin; Security Owner Paul Austin.
+
 ## Open Governance Questions
 
-- Who is the named Risk Owner?
-- Who is the named Documentation Owner?
 - What minimum statistical standard is required before a claim is classified as supported?
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?
 - What cadence should be used for ATOS reviews once the project reaches stable maintenance?
+
+## Current Role Ownership
+
+| Functional role | Current owner |
+|---|---|
+| Product Owner | Paul Austin |
+| Chief Systems Architect | ChatGPT |
+| Quantitative Research Department | Hermes |
+| Release Manager | Paul Austin + ChatGPT |
+| Documentation Owner | ChatGPT, with Hermes audit support |
+| Data Steward | Hermes initially |
+| Risk Owner | Paul Austin |
+| Security Owner | Paul Austin |
+
+ATOS v1.1 remains draft until Paul reviews the amended draft and explicitly approves promotion.
 
 ## Negative Findings from ATOS-001
 

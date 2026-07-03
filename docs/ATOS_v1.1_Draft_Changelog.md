@@ -19,6 +19,13 @@ Date: 2026-07-03
 - Project review cadence.
 - Supporting governance-document drafts.
 
+## Amended After In-Principle Approval
+
+- Recorded Paul Austin's in-principle approval of ATOS v1.1, subject to review of amended draft wording.
+- Clarified that early-stage ATOS roles may be assigned as functional responsibilities rather than separate agents or separate people.
+- Added current draft role ownership: Product Owner Paul Austin; Chief Systems Architect ChatGPT; Quantitative Research Department Hermes; Release Manager Paul Austin + ChatGPT; Documentation Owner ChatGPT with Hermes audit support; Data Steward Hermes initially; Risk Owner Paul Austin; Security Owner Paul Austin.
+- Confirmed ATOS v1.1 remains draft and must not be promoted to approved governance until Paul reviews the amended draft and explicitly approves promotion.
+
 ## Changed
 
 - Reframed Hermes from validation harness only to research, validation, audit and critique function, while preserving the no-approval/no-trading boundary.

@@ -6,7 +6,9 @@ Source: ATOS-001 Operational Readiness Review
 
 ## Amendment Notice
 
-This document is a rewritten ATOS v1.1 draft. It incorporates recommended changes from the operational readiness review but is not authoritative until approved by the Austin Trading Team.
+This document is a rewritten ATOS v1.1 draft. It incorporates recommended changes from the operational readiness review but is not authoritative until reviewed and approved by Paul Austin.
+
+Paul Austin has approved ATOS v1.1 in principle, subject to the role-ownership amendments in this draft. This is not final approval and does not promote ATOS v1.1 to approved governance.
 
 Draft amendments are marked with `[DRAFT v1.1]`.
 
@@ -56,18 +58,29 @@ The Austin Trading Operating System governs the Austin Trading Engine: a modular
 
 [DRAFT v1.1]
 
-| Role | Accountability | Approval authority |
-|---|---|---|
-| Product Owner | Mission, scope, priorities and business constraints | Roadmap, scope changes and ATOS approval. |
-| Chief Systems Architect | Architecture, engine boundaries, interfaces and technical coherence | Architecture and interface decisions. |
-| Quantitative Research Director | Research methodology, evidence quality and scientific integrity | Research standards and evidence sufficiency. |
-| Engineering Lead | Coding standards, implementation quality and regression discipline | Code readiness and technical review completion. |
-| Release Manager | Release checklist, versioning, changelog and tag discipline | Release execution. |
-| Data Steward | Data lineage, data quality and retention | Data-source approval. |
-| Risk Owner | Project risk register, mitigations and waivers | Risk acceptance and waiver approval. |
-| Security Owner | Access, credentials, tooling and repository security | Security policy and exceptions. |
-| Documentation Owner | ATOS coherence, cross-references and review cadence | Documentation updates. |
-| Hermes | Research, validation, audit, critique and evidence production | Recommendations only; no sole approval authority. |
+During early-stage development, ATOS roles may be assigned as functional responsibilities rather than separate agents or separate people. A single person or agent may hold more than one functional responsibility, provided conflicts of interest are made visible and material decisions remain reviewable.
+
+Current draft role ownership:
+
+| Role | Current owner | Accountability | Approval authority |
+|---|---|---|---|
+| Product Owner | Paul Austin | Mission, scope, priorities and business constraints | Roadmap, scope changes and ATOS approval. |
+| Chief Systems Architect | ChatGPT | Architecture, engine boundaries, interfaces and technical coherence | Architecture and interface recommendations for Paul review. |
+| Quantitative Research Department | Hermes | Research methodology, evidence quality, scientific integrity, validation, audit and critique | Research recommendations and evidence sufficiency assessments; no sole final approval. |
+| Engineering Lead | ChatGPT, with Hermes audit support where required | Coding standards, implementation quality and regression discipline | Code readiness recommendations and technical review completion. |
+| Release Manager | Paul Austin + ChatGPT | Release checklist, versioning, changelog and tag discipline | Release execution subject to Paul approval. |
+| Data Steward | Hermes initially | Data lineage, data quality and retention | Data-source assessment and recommendations; escalates material risk to Paul. |
+| Risk Owner | Paul Austin | Project risk register, mitigations and waivers | Risk acceptance and waiver approval. |
+| Security Owner | Paul Austin | Access, credentials, tooling and repository security | Security policy and exceptions. |
+| Documentation Owner | ChatGPT, with Hermes audit support | ATOS coherence, cross-references and review cadence | Documentation updates subject to Paul review where governance meaning changes. |
+
+Ownership notes:
+
+- These assignments are early-stage functional responsibilities, not a requirement to create separate permanent agents.
+- Hermes remains the Quantitative Research Department and audit support function.
+- ChatGPT may hold architecture, engineering and documentation responsibilities, but Hermes should audit material governance/research claims where practical.
+- Paul Austin remains the final human authority for scope, risk, security and approval of ATOS v1.1.
+- ATOS v1.1 remains draft until Paul reviews the amended draft and explicitly approves promotion.
 
 ## 5. Decision Rights and Change Control
 
@@ -261,6 +274,8 @@ The following documents form the ATOS v1.1 governance pack:
 
 [DRAFT v1.1]
 
-This draft should be reviewed by the Product Owner, Chief Systems Architect and Quantitative Research Director before adoption.
+Paul Austin has approved ATOS v1.1 in principle, subject to review of the amended draft role-ownership model.
 
-Until approved, existing repository documents remain the active ATOS baseline.
+This document is not yet promoted to approved governance. ATOS v1.1 becomes approved only after Paul reviews this amended draft and explicitly approves promotion.
+
+Until that approval occurs, existing repository documents remain the active ATOS baseline.
