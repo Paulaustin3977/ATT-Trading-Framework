@@ -1,6 +1,6 @@
 # Austin Trading Quality Manual
 
-Version: 1.1-draft  
+Version: 1.1 Draft  
 Status: Draft for Paul Austin Review  
 Owner: Austin Trading Team  
 Applies To: Austin Trading Engine, Austin Research Lab, Austin Strategy Framework, Austin Market Intelligence, and all future Austin Trading Platform projects.
@@ -31,7 +31,7 @@ Quality is defined by:
 
 # 2. Status and Approval
 
-This document is a revised draft for ATOS v1.1 review.
+This document is a Quality Manual v1.1 draft for ATOS v1.1 review.
 
 It must not be treated as approved governance until Paul Austin reviews it and explicitly promotes it to approved status.
 
@@ -56,29 +56,106 @@ Quality should be proportional. The team should avoid unnecessary bureaucracy fo
 
 ---
 
-# 4. Applicability and Change Types
+# 4. Work Significance Levels
 
-Quality gates are risk-based and proportional. Not every change requires every gate.
+ATOS quality control is risk-based. Do not apply every gate to every change.
 
-| Change type | Minimum required gates |
-|---|---|
-| Editorial documentation change | Documentation Gate, Review Gate |
-| Minor documentation correction | Documentation Gate, Review Gate |
-| Minor bug fix | Mission Clarity, Engineering Quality, Regression and Compatibility, Documentation, Review |
-| Engine behaviour change | Mission Clarity, Specification, Engineering Quality, Engine Contract Compliance, Regression and Compatibility, Documentation, Review |
-| Research claim | Mission Clarity, Data Quality, Research Validation, Reproducibility, Knowledge Capture, Review |
-| Performance claim | Mission Clarity, Data Quality, Research Validation, Reproducibility, Security and No-Execution Boundary, Knowledge Capture, Review |
-| Architecture change | Mission Clarity, Specification, Decision Record, Documentation, Review |
-| Governance change | Mission Clarity, Decision Record, Documentation, Review, Product Owner approval |
-| Release candidate | All applicable gates, Release Manifest, Product Owner approval |
+## 4.1 Minor documentation/cosmetic change
 
-If a change type is unclear, classify it by highest plausible risk.
+Examples:
+
+- Typo fixes
+- Formatting
+- Link correction
+- Clarifying wording that does not change governance, architecture, research, release, or engine meaning
+
+Risk profile: low.
+
+## 4.2 Small bug fix
+
+Examples:
+
+- Localised code correction
+- Small documentation correction with behavioural implications
+- Minor defect fix that does not change engine contract, architecture, or research conclusion
+
+Risk profile: low to medium.
+
+## 4.3 Engine change
+
+Examples:
+
+- Engine logic change
+- Engine input/default/range change
+- Engine output change
+- Engine Output Contract change
+- Dashboard display logic that consumes engine outputs
+
+Risk profile: medium to high.
+
+## 4.4 Research claim
+
+Examples:
+
+- Claim about market behaviour
+- Claim about validated performance
+- Claim that one method is better than another
+- Claim that evidence supports promotion, rejection, or deprecation
+
+Risk profile: medium to critical depending on claim.
+
+## 4.5 Architecture change
+
+Examples:
+
+- Engine flow change
+- Contract/interface change
+- New engine, removed engine, or changed responsibility boundary
+- Change to one-way data flow, bar-close logic, or DashboardEngine presentation-only rule
+
+Risk profile: high.
+
+## 4.6 Release candidate
+
+Examples:
+
+- Candidate stable release
+- Versioned Pine release
+- Published research package
+- Governance pack proposed for active baseline
+
+Risk profile: high to critical.
+
+If classification is unclear, classify by the highest plausible risk.
 
 ---
 
-# 5. Quality Gates
+# 5. Mandatory and Optional Gates by Significance Level
 
-Every significant piece of work must pass the gates applicable to its change type.
+| Gate | Minor documentation/cosmetic | Small bug fix | Engine change | Research claim | Architecture change | Release candidate |
+|---|---|---|---|---|---|---|
+| Mission Clarity | Optional | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory |
+| Specification | Optional | Optional | Mandatory | Optional | Mandatory | Mandatory |
+| Engineering Quality | Optional | Mandatory | Mandatory | Optional | Optional | Mandatory where code changes |
+| Engine Contract Compliance | Optional | Optional unless engine output affected | Mandatory | Optional | Mandatory if interface affected | Mandatory for engine releases |
+| Data Quality | Optional | Optional | Optional unless validation uses data | Mandatory | Optional | Mandatory where evidence uses data |
+| Research Validation | Optional | Optional | Mandatory where claim/behaviour needs evidence | Mandatory | Optional unless evidence claim made | Mandatory where release contains research or behaviour claims |
+| Reproducibility | Optional | Optional | Mandatory for validation artefacts | Mandatory | Mandatory for decision evidence | Mandatory |
+| Regression Evidence | Optional | Mandatory | Mandatory | Optional unless behaviour affected | Mandatory where behaviour/contract affected | Mandatory |
+| Documentation | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory |
+| Decision Record | Optional | Optional | Mandatory if contract/architecture/risk changes | Mandatory for accepted/rejected research conclusions | Mandatory | Mandatory for material release decisions |
+| Security and Scope | Optional | Optional | Mandatory if tooling/integration/scope affected | Mandatory for performance/trading-related claims | Mandatory | Mandatory |
+| Waiver / Exception | Optional | Mandatory if any required gate is skipped | Mandatory if any required gate is skipped | Mandatory if any required gate is skipped | Mandatory if any required gate is skipped | Mandatory if any required gate is skipped |
+| Release Manifest | Not applicable | Not applicable | Optional unless release candidate | Not applicable unless published package | Not applicable unless release candidate | Mandatory |
+| Knowledge Capture | Optional | Optional unless material lesson | Mandatory for material outcomes | Mandatory | Mandatory | Mandatory |
+| Review | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory | Mandatory |
+| Product Owner Approval | Optional | Optional | Optional unless scope/release affected | Optional unless release/scope affected | Mandatory | Mandatory |
+
+Mandatory means the gate must be completed or formally waived. Optional means use judgement; if the optional gate reveals material risk, it becomes mandatory for that change.
+
+---
+
+# 6. Quality Gates
 
 ## Gate 1 — Mission Clarity
 
@@ -91,16 +168,17 @@ Before work begins, the task must clearly define:
 - Assumptions
 - Known risks
 - Applicable documents
-- Change type
-- Required gates
+- Work significance level
+- Mandatory gates
+- Optional gates intentionally skipped
 
-If the mission is unclear, the work must not proceed beyond discovery.
+If the mission is unclear, work may continue only as discovery, not implementation or release.
 
 ---
 
 ## Gate 2 — Specification
 
-Before implementation, a significant feature or change must have a written specification.
+Before implementation, significant work must have a written specification or equivalent change note.
 
 The specification must define:
 
@@ -159,6 +237,7 @@ Downstream engines may consume upstream values but must not mutate them.
 Breaking changes to the contract require:
 
 - Specification update
+- Engineering Decision Record where material
 - Major version bump where appropriate
 - Migration note
 - Architecture impact review
@@ -166,7 +245,7 @@ Breaking changes to the contract require:
 
 ---
 
-## Gate 5 — Data Quality
+## Gate 5 — Data Quality Gate
 
 Research, validation, and performance claims must document data quality.
 
@@ -187,27 +266,41 @@ A result based on undocumented data must not be treated as reliable.
 
 ---
 
-## Gate 6 — Research Validation
+## Gate 6 — Research Validation Gate
 
-Where applicable, Hermes must validate the feature or claim using an appropriate research process.
+Research claims and performance claims require a documented research validation process.
 
-Validation should include:
+Validation must include:
 
 - Hypothesis
 - Pre-registered scope
 - Data source
 - Date range
 - Instruments tested
-- In-sample results where applicable
-- Out-of-sample results where applicable
-- Walk-forward testing for strategy/performance claims where feasible
-- Sensitivity analysis for tunable logic where feasible
-- Benchmark or null comparison where relevant
-- Transaction costs for strategy/performance claims where relevant
-- Bias checks: lookahead, repainting, data snooping, survivorship, regime dependence, proxy mismatch
+- Methodology
+- Results
 - Limitations
 - Recommendation
 - Result classification: supported, weakly supported, inconclusive, falsified, or rejected
+
+Performance claims require controls for:
+
+- Overfitting
+- Data snooping
+- Lookahead
+- Survivorship bias
+- Parameter stability
+- Benchmark comparison
+- Regime dependence
+- Transaction costs where relevant
+
+Additional validation should include, where feasible:
+
+- In-sample and out-of-sample separation
+- Walk-forward testing
+- Parameter sensitivity analysis
+- Null or benchmark comparison
+- Negative result capture
 
 A backtest alone is not sufficient unless the research question is explicitly narrow and the limitation is stated.
 
@@ -233,7 +326,7 @@ If reproducibility is limited, the limitation must be stated clearly in the repo
 
 ---
 
-## Gate 8 — Regression and Compatibility
+## Gate 8 — Regression Evidence Gate
 
 Behaviour-changing work must include regression and compatibility evidence.
 
@@ -271,22 +364,42 @@ A feature is not complete if required documentation is missing.
 
 ---
 
-## Gate 10 — Decision Records
+## Gate 10 — Decision Record Gate
 
-A decision record is required when a change materially affects architecture, research methodology, release policy, data assumptions, risk posture, or governance.
+Decision records prevent repeat debate and undocumented architecture/research drift.
 
-Use:
+### EDR mandatory triggers
 
-- Engineering Decision Record for architecture, engine contracts, tooling, release, or implementation decisions.
-- Research Decision Record for hypotheses, methodology, evidence interpretation, or research acceptance/rejection decisions.
+An Engineering Decision Record is mandatory when a change materially affects:
+
+- Engine architecture
+- Engine flow
+- Engine Output Contract
+- Data flow or one-way dependency rule
+- DashboardEngine presentation-only rule
+- Release process
+- Tooling or automation that changes validation/release behaviour
+- Breaking interface or migration decision
+
+### RDR mandatory triggers
+
+A Research Decision Record is mandatory when a change materially affects:
+
+- Accepted research conclusion
+- Rejected research conclusion with reusable knowledge
+- Performance claim
+- Research methodology
+- Data assumption
+- Evidence threshold
+- Validation result used for promotion, rejection, or deprecation
 
 A decision record must state context, decision, alternatives, consequences, risks, and evidence.
 
 ---
 
-## Gate 11 — Security and No-Execution Boundary
+## Gate 11 — Security and Scope Gate
 
-Every release, tool integration, and governance change must confirm the no-execution boundary.
+Every release, tool integration, performance claim, architecture change, and governance change must confirm the no-execution boundary.
 
 The Austin Trading Platform is currently a research, analysis, indicator, strategy, dashboard, and decision-support framework.
 
@@ -299,57 +412,68 @@ The following remain out of scope:
 - Handling broker credentials
 - Managing real positions
 
-Security checks must confirm:
+Security and scope checks must confirm:
 
 - No secrets or credentials are committed
 - No broker or execution credentials are introduced
 - No paper-trading API integration is introduced
 - External services are documented where material
 - Access or credential risks are escalated to the Security Owner
+- The change does not create hidden execution capability
 
 Any proposal touching execution, broker connectivity, order placement, or paper-trading APIs requires formal ATOS amendment before work begins.
 
 ---
 
-## Gate 12 — Review
+## Gate 12 — Waiver / Exception Gate
 
-Every significant release, research claim, architectural change, or governance change must be reviewed.
+A waiver is required when a mandatory quality requirement is knowingly not met.
 
-Review must confirm:
+A waiver must record:
 
-- The specification was followed
-- Code compiles where applicable
-- Logic is explainable
-- Research evidence is adequate for the claim
-- Risks are identified
-- Required documentation is updated
-- No governance boundary is violated
-- Required decision records exist
-- Required waivers are documented
+- Owner
+- Requirement waived
+- Reason
+- Severity
+- Expiry date or review date
+- Risk accepted
+- Mitigation
+- Approval authority
 
-Hermes may recommend approval, modification, or rejection.
+Approval authority:
 
-Final approval remains with the accountable human role.
+- Low waiver: accountable functional owner
+- Medium waiver: accountable functional owner plus Product Owner notification
+- High waiver: Product Owner and Risk Owner approval
+- Critical waiver: not permitted if it violates no-execution boundary or knowingly introduces lookahead/repainting into released logic
+
+A waiver must be temporary unless explicitly accepted as permanent governance.
 
 ---
 
-## Gate 13 — Release Manifest and Release Readiness
+## Gate 13 — Release Manifest Gate
 
-A release may only be promoted when all applicable gates are complete.
+A release candidate requires a release manifest before promotion.
 
-A release manifest must record:
+The release manifest must include:
 
-- Release version
+- Version
+- Release file path
 - Commit hash
-- Files released
-- Affected specifications
-- Research artefacts
-- Regression evidence
-- Known issues and severity
-- Waivers, if any
+- Changed files
+- Validation artefacts
+- Known issues
 - Rollback path
-- Approver
+- Approval status
+
+Recommended additional fields:
+
 - Release date
+- Approver
+- Waivers, if any
+- Affected specifications
+- Regression evidence
+- Changelog reference
 
 No unstable, experimental, or partially validated feature should enter a stable release.
 
@@ -357,25 +481,7 @@ Previous stable versions must remain preserved.
 
 ---
 
-## Gate 14 — Waivers and Exceptions
-
-A waiver is required when a quality requirement is knowingly not met.
-
-A waiver must include:
-
-- Requirement waived
-- Reason
-- Risk severity
-- Mitigation
-- Owner
-- Expiry or review date
-- Approval by the Product Owner and/or Risk Owner where material
-
-Critical risks must not be waived if they violate the no-execution boundary or knowingly introduce lookahead/repainting into released logic.
-
----
-
-## Gate 15 — Knowledge Capture
+## Gate 14 — Knowledge Capture Gate
 
 Material outcomes must be captured as knowledge.
 
@@ -393,59 +499,117 @@ Knowledge entries must separate evidence, interpretation, and recommendation.
 
 ---
 
-# 6. Quality Classification
+## Gate 15 — Review
 
-Work may be classified as:
+Every significant release, research claim, architectural change, or governance change must be reviewed.
+
+Review must confirm:
+
+- Applicable gates were correctly selected
+- Mandatory gates are complete or waived
+- The specification was followed
+- Code compiles where applicable
+- Logic is explainable
+- Research evidence is adequate for the claim
+- Risks are identified
+- Required documentation is updated
+- No governance boundary is violated
+- Required decision records exist
+- Required waivers are documented
+
+Hermes may recommend approval, modification, or rejection.
+
+Final approval remains with the accountable human role.
+
+---
+
+# 7. Quality Classification and Promotion Criteria
+
+Work may be classified as follows.
 
 ## Experimental
 
-Idea or prototype only. Not for release.
+Definition: idea or prototype only. Not for release.
 
-Exit criteria: hypothesis or reason to abandon is documented.
+Promotion to Laboratory requires:
+
+- Hypothesis or purpose documented
+- Known risks noted
+- Reason for testing identified
 
 ## Laboratory
 
-Being tested in Austin Research Lab. May be unstable.
+Definition: being tested in Austin Research Lab. May be unstable.
 
-Exit criteria: preliminary evidence and limitations are recorded.
+Promotion to Validation Candidate requires:
+
+- Preliminary evidence recorded
+- Known limitations recorded
+- Data source noted where relevant
+- No no-execution boundary breach
 
 ## Validation Candidate
 
-Ready for Hermes testing. Not yet stable.
+Definition: ready for Hermes testing. Not yet stable.
 
-Exit criteria: validation report or explicit rejection is produced.
+Promotion to Release Candidate requires:
+
+- Applicable research validation complete
+- Regression evidence complete where behaviour changed
+- Documentation updated
+- Result classified as supported or weakly supported, or explicitly accepted for non-performance reasons
 
 ## Release Candidate
 
-Passed initial checks and awaiting final review.
+Definition: passed initial checks and awaiting final review.
 
-Exit criteria: release manifest complete and Product Owner approval obtained.
+Promotion to Stable requires:
+
+- Release manifest complete
+- Mandatory gates complete or formally waived
+- Known issues listed
+- Rollback path defined
+- Product Owner approval obtained
 
 ## Stable
 
-Approved, documented, versioned, and released.
+Definition: approved, documented, versioned, and released.
 
-Exit criteria: remains stable until superseded, deprecated, or defected.
+Stable work remains stable until:
+
+- Superseded by a later version
+- Deprecated
+- Rejected due to defect or invalidated evidence
 
 ## Deprecated
 
-Still available but scheduled for replacement or removal.
+Definition: still available but scheduled for replacement or removal.
 
-Exit criteria: migration path and removal target are documented.
+Deprecation requires:
+
+- Reason documented
+- Replacement or migration path documented
+- Removal target or review date recorded
+- User/research impact noted
 
 ## Rejected
 
-Tested and not accepted.
+Definition: tested and not accepted.
 
-Exit criteria: rejection reason and reusable knowledge are documented.
+Rejected work must record:
+
+- Rejection reason
+- Evidence or observation supporting rejection
+- Whether knowledge should be retained
+- Whether future retest conditions exist
 
 Rejected work must remain documented if it produced useful knowledge.
 
 ---
 
-# 7. Acceptance Criteria
+# 8. Acceptance Criteria
 
-A feature may be accepted only if it satisfies at least one of the following and passes all applicable quality gates:
+A feature may be accepted only if it satisfies at least one of the following and passes all mandatory quality gates for its significance level:
 
 - Improves market understanding
 - Improves explainability
@@ -462,7 +626,7 @@ Features that only add visual complexity, parameter clutter, or unvalidated opti
 
 ---
 
-# 8. Rejection Criteria
+# 9. Rejection Criteria
 
 A feature should be rejected if it:
 
@@ -480,7 +644,7 @@ A feature should be rejected if it:
 
 ---
 
-# 9. Hermes Quality Responsibilities
+# 10. Hermes Quality Responsibilities
 
 Hermes is responsible for:
 
@@ -505,12 +669,43 @@ Hermes must not:
 
 ---
 
-# 10. Quality Review Checklist
+# 11. Post-Release Incident Handling
+
+If a defect is discovered after release, create an incident note.
+
+The incident note must include:
+
+- Severity
+- Owner
+- Response expectation
+- Rollback rule
+- Prevention update
+- Affected version or file
+- Cause, if known
+- Changelog and knowledge-base update requirement
+
+## Severity response expectations
+
+| Severity | Meaning | Response expectation | Rollback rule | Prevention update |
+|---|---|---|---|---|
+| Critical | Invalidates research, creates lookahead/repainting, violates scope, introduces execution/broker/paper-trading risk, or compromises credentials/security | Stop promotion or release immediately; escalate to Product Owner and Risk Owner | Roll back unless Product Owner and Risk Owner explicitly decide otherwise | Mandatory |
+| High | Major logic error, incorrect dashboard output, broken alerts, unreliable release, or materially incomplete validation | Block release until resolved or formally waived | Roll back if released output is materially misleading | Mandatory |
+| Medium | Incorrect documentation, minor scoring inconsistency, missing diagnostics, incomplete report, or unclear limitation | Fix before next release unless accepted as known issue | Roll back only if user-facing reliability is affected | Required where process gap exists |
+| Low | Formatting, naming, cosmetic issue, or minor documentation improvement | Fix when practical | No rollback normally required | Optional |
+
+Failures are not hidden.
+
+Failures are converted into process improvements.
+
+---
+
+# 12. Quality Review Checklist
 
 Before release, answer:
 
-- Is the change type clear?
-- Are the applicable gates identified?
+- Is the significance level clear?
+- Are mandatory and optional gates identified?
+- Are all mandatory gates complete or formally waived?
 - Does it compile where applicable?
 - Is the purpose clear?
 - Is the logic explainable?
@@ -532,54 +727,6 @@ If any critical answer is "no", the release is not ready.
 
 ---
 
-# 11. Quality Failure Handling
-
-If a defect is discovered after release:
-
-1. Record the defect.
-2. Classify severity.
-3. Preserve the faulty version for audit.
-4. Roll back if necessary.
-5. Create a fix branch or replacement version.
-6. Document the cause.
-7. Add a prevention rule if possible.
-8. Update the changelog and knowledge base.
-9. Review whether a quality gate failed or was missing.
-
-Failures are not hidden.
-
-Failures are converted into process improvements.
-
----
-
-# 12. Severity Levels
-
-## Critical
-
-Invalidates research, creates lookahead/repainting, violates scope, introduces execution/broker/paper-trading risk, or compromises credentials/security.
-
-Expected response: stop promotion or release immediately; escalate to Product Owner and Risk Owner.
-
-## High
-
-Major logic error, incorrect dashboard output, broken alerts, unreliable release, or materially incomplete validation.
-
-Expected response: block release until resolved or formally waived.
-
-## Medium
-
-Incorrect documentation, minor scoring inconsistency, missing diagnostics, incomplete report, or unclear limitation.
-
-Expected response: fix before release unless explicitly accepted as known issue.
-
-## Low
-
-Formatting, naming, cosmetic issue, or minor documentation improvement.
-
-Expected response: fix when practical; does not normally block release.
-
----
-
 # 13. Continuous Improvement
 
 Every completed significant task should answer:
@@ -595,7 +742,27 @@ Quality improves when lessons become permanent.
 
 ---
 
-# 14. Final Principle
+# 14. Open Questions for Paul Austin
+
+1. Should Product Owner approval be mandatory for every Release Candidate, or only for stable releases?
+2. What is the minimum acceptable evidence threshold for a performance claim to be called "supported" rather than "weakly supported"?
+3. Should release manifests live in a dedicated `releases/` documentation folder, or beside each release artefact?
+4. Should Hermes be allowed to mark a release as blocked, or only recommend blocking to Paul Austin?
+5. How long should waivers remain valid by default before expiry review?
+
+---
+
+# 15. Recommendation
+
+Recommendation: approve with amendments after Paul Austin review.
+
+Rationale: this draft is now practical for a small AI-assisted engineering team because gates are proportional by significance level rather than applied universally. It adds the missing controls for data, security/scope, regression, decision records, waivers, release manifests, knowledge capture, research bias controls, and incident handling.
+
+Do not promote to approved governance until Paul Austin reviews and explicitly approves the document.
+
+---
+
+# 16. Final Principle
 
 Quality is not a final inspection step.
 
