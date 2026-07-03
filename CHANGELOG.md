@@ -45,6 +45,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Verifier result: 100/100 contract and behaviour checks pass against `pine/releases/ATE_v2.1.pine`.
   - No ATE Pine logic modified.
   - VolatilityEngine classification remains Weakly Supported; no reclassification, no RiskEngine/ConfidenceEngine integration authorisation.
+- RiskEngine v1.0 Draft drafted and reviewed.
+  - Recommendation: Approve with amendments.
+  - Implementation readiness: ready for diagnostic-only implementation planning after blocking questions are answered.
+  - ATE v2.2 RiskEngine remains diagnostic-only; no ConfidenceEngine, DecisionEngine, entry/exit, sizing, stop, or trade-action alert impact.
+  - Revised specification saved at `specifications/ATE/RiskEngine.md`.
+  - Review report saved at `research/Reports/RDR/RiskEngine_Specification_Review.md`.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
