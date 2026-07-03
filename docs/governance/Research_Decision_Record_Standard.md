@@ -1,10 +1,12 @@
 # Research Decision Record Standard
 
 Task ID: RDR-001
-Version: 1.0 Draft
-Status: Draft for Paul Austin Review
+Version: 1.0
+Status: Approved ATOS v1.1 Governance Baseline
 Owner: Hermes, Quantitative Research Department
 Applies To: Austin Trading Engine, Austin Research Lab, Austin Strategy Framework, Austin Market Intelligence, and future Austin Trading Platform research.
+
+Approval: Paul Austin approved this RDR-001 standard as part of the ATOS v1.1 governance baseline after final amendment application.
 
 ---
 
@@ -220,3 +222,12 @@ Before marking an RDR ready for review:
 - Limitations are explicit.
 - No live trading, broker, or paper-trading API dependency is introduced.
 - Hermes recommendation does not claim final Paul Austin approval unless approval occurred.
+---
+
+# 13. Versioned Research Standard Changes
+
+RDR-001 standards are approved for ATOS v1.1 governance. Any future folder, schema, or reporting change must be versioned and documented.
+
+Breaking changes to research summary schemas require a new schema version and preserved historical template.
+
+Non-breaking additions may be added only at the end of the CSV and must be documented in the run manifest.

@@ -1,10 +1,12 @@
 # Backtest Result Format Standard
 
 Task ID: RDR-001
-Version: 1.0 Draft
-Status: Draft for Paul Austin Review
+Version: 1.0
+Status: Approved ATOS v1.1 Governance Baseline
 Owner: Hermes, Quantitative Research Department
 Applies To: Hermes backtests, validation runs, asset qualification tests, version comparisons, and ATE release-validation research.
+
+Approval: Paul Austin approved this RDR-001 standard as part of the ATOS v1.1 governance baseline after final amendment application.
 
 ---
 
@@ -145,7 +147,7 @@ Recommendation:
 
 Use:
 
-`docs/templates/Research_Summary_Table_Template.csv`
+`docs/templates/Research_Summary_Table_Template_CURRENT.csv`
 
 Required design rules:
 
@@ -156,6 +158,10 @@ Required design rules:
 - If unavailable, leave blank; do not use zero unless zero is the measured value.
 - Use repository-relative paths for report and manifest links.
 - Keep `run_id` stable and unique.
+- Record `schema_version` in every manifest.
+- Add new columns only at the end of the CSV.
+- Document any added columns in the run manifest.
+- Breaking schema changes require a new schema version.
 
 ---
 
@@ -208,7 +214,20 @@ Minimum evidence:
 
 - Positive out-of-sample evidence.
 - Acceptable drawdown relative to target use.
-- Adequate trade count for timeframe.
+- Minimum trade-count threshold for timeframe satisfied.
+
+Initial Tier A trade-count thresholds:
+
+| Timeframe | Minimum threshold |
+|---|---|
+| Daily | Minimum 30 trades per asset, or 100+ trades across the tested universe. |
+| Weekly | Minimum 8 trades per asset, or 30+ trades across the tested universe. |
+| Monthly / long-horizon | No fixed minimum, but must be marked `Low Statistical Confidence` unless supported by long history and cross-asset confirmation. |
+
+An asset may be classified as promising with fewer trades, but should not be Tier A Production Candidate unless the evidence threshold is satisfied.
+
+Additional Tier A requirements:
+
 - Parameter stability across nearby values.
 - Robustness across at least two market regimes where data permits.
 - Transaction-cost sensitivity acceptable.

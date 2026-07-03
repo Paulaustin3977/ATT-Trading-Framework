@@ -1,10 +1,12 @@
 # Research Storage Standard
 
 Task ID: RDR-001
-Version: 1.0 Draft
-Status: Draft for Paul Austin Review
+Version: 1.0
+Status: Approved ATOS v1.1 Governance Baseline
 Owner: Hermes, Quantitative Research Department
 Applies To: Austin Trading research, backtests, validation runs, asset qualification, version comparisons, and negative findings.
+
+Approval: Paul Austin approved this RDR-001 standard as part of the ATOS v1.1 governance baseline after final amendment application.
 
 ---
 
@@ -74,7 +76,7 @@ data/
 └── README.md
 ```
 
-This is the baseline. Add subfolders only when they improve retrieval or automation.
+This is the approved baseline. Any future folder, schema, or reporting change must be versioned and documented.
 
 ---
 
@@ -178,6 +180,8 @@ Store in:
 
 Raw data should be immutable. If corrected data is downloaded, save it as a new dated copy or document replacement in the manifest.
 
+`data/raw/` should remain mostly untracked in Git. Commit manifests, not large raw datasets. Commit small sample datasets only when needed for reproducibility tests. Large raw data should be stored externally or locally and referenced by manifest.
+
 ## Processed data
 
 Store in:
@@ -200,6 +204,20 @@ Store in:
 `data/manifests/`
 
 Every material run must link to a manifest or embed manifest details.
+
+Manifests must record:
+
+- Data source.
+- Download date.
+- Symbol.
+- Timeframe.
+- Date range.
+- Adjustments.
+- Transformations.
+- Storage location.
+- Checksum if available.
+- Known limitations.
+- Research summary CSV schema version used.
 
 ---
 
@@ -259,9 +277,17 @@ This lets Paul Austin, ChatGPT, Hermes, and future agents assess the result quic
 
 # 11. Machine-Readable Standard
 
-Every material run must produce a CSV summary using:
+Every material run must produce a CSV summary using the current locked schema:
 
-`docs/templates/Research_Summary_Table_Template.csv`
+`docs/templates/Research_Summary_Table_Template_CURRENT.csv`
+
+The core schema is locked. Hermes may add new columns only at the end of the CSV. New columns must be documented in the run manifest. Breaking schema changes require a new schema version.
+
+Preserved schema templates:
+
+- `docs/templates/Research_Summary_Table_Template_v1.csv`
+- `docs/templates/Research_Summary_Table_Template_v2.csv`
+- `docs/templates/Research_Summary_Table_Template_CURRENT.csv`
 
 Rules:
 
@@ -317,8 +343,11 @@ Therefore:
 - Do not rename historical run IDs.
 - Do not move reports without updating references.
 - Keep CSV headers stable once approved.
-- Add new columns to the end where possible.
-- Preserve old schema versions in manifests.
+- Add new columns only to the end of the CSV.
+- Document new columns in the run manifest.
+- Preserve old schema templates as separate versioned files.
+- Record the schema version used in every manifest.
+- Use `Research_Summary_Table_Template_CURRENT.csv` as the active pointer.
 
 ---
 

@@ -1,0 +1,3 @@
+# Austin Trading data policy
+data/raw/*
+!data/raw/.gitkeep

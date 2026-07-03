@@ -8,6 +8,7 @@ ATE Version: <ATE vX.X>
 Strategy / Indicator Version: <version>
 Engine Version(s): <version(s)>
 Git Commit Hash: <commit>
+Research Summary Schema Version: <v1 | v2 | CURRENT>
 
 ---
 
@@ -27,7 +28,10 @@ Universe: <symbols / asset classes>
 | Field | Value |
 |---|---|
 | Data source |  |
-| Raw data path |  |
+| Download date |  |
+| Symbol |  |
+| Timeframe |  |
+| Raw data path / storage location |  |
 | Processed data path |  |
 | Start date |  |
 | End date |  |
@@ -35,8 +39,10 @@ Universe: <symbols / asset classes>
 | Out-of-sample start/end |  |
 | Timezone/session assumptions |  |
 | Adjusted/unadjusted |  |
+| Adjustments |  |
 | Missing-data handling |  |
 | Transformations |  |
+| Checksum if available |  |
 | Known limitations |  |
 
 ## 4. Parameters
@@ -81,6 +87,13 @@ parameters:
 
 - <Limitation>
 
-## 10. Integrity Statement
+## 10. Schema Notes
+
+- Schema file used:
+- Schema version:
+- New columns added after the locked core schema:
+- Reason for additional columns:
+
+## 11. Integrity Statement
 
 No live trading, broker connectivity, paper-trading API, autonomous order placement, or broker credential handling was used in this research run.
