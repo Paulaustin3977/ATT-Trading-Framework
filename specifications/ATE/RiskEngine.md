@@ -1,7 +1,7 @@
 # RiskEngine Specification
 
 Version: 1.0 Draft
-Status: Draft for Review
+Status: Approved for Diagnostic-Only Implementation Planning
 Related ATE Release: ATE v2.2 candidate
 Owner: Austin Trading Team
 Applies To: Austin Trading Engine
@@ -572,12 +572,38 @@ RiskEngine v1.0 Draft drafted for ATE v2.2 review, applying RDR-002 lessons lear
 
 ## 17. Approval Status
 
-This specification is a Draft for Review. It is not yet approved for ATE v2.2 implementation planning.
+This specification is Approved for Diagnostic-Only Implementation Planning.
 
-Approval requires:
+Approval was granted by Paul Austin / Chief Systems Architect on 2026-07-03 against the eight blocking questions in the RiskEngine Specification Review report.
 
-- Paul Austin / Product Owner review and approval of diagnostic-only status.
-- Chief Systems Architect review of engine-separation boundaries.
-- Completion of any blocking questions.
+Approval boundaries:
 
-Recommendation: Approve with amendments as listed in the Specification Review Report. When amendments are applied, the revised specification may proceed to ATE v2.2 diagnostic-only implementation planning.
+- RiskEngine v1.0 Draft is diagnostic-only in ATE v2.2. All binding boundary rules are approved.
+- Four-component split is approved for v1.0:
+  - volatility risk: 35
+  - extension risk: 30
+  - structure risk: 20
+  - conflict risk: 15
+- Seven inputs and defaults are approved:
+  - `volRiskElevatedScore = 25`
+  - `extensionAtrLow = 1.5`
+  - `extensionAtrHigh = 3.0`
+  - `swingRiskAtr = 2.0`
+  - `confidenceRiskHigh = 80`
+  - `confidenceRiskLow = 20`
+  - `riskSmoothingLength = 3`
+- EDR-001 canonical verifier must be extended to cover the RiskEngine compute path before ATE v2.2 ships.
+- No alerts, diagnostic or otherwise, in ATE v2.2 RiskEngine.
+- Reserved-language list is forbidden in ATE v2.2 RiskEngine dashboard and Research Mode fields:
+  `safe`, `unsafe`, `suitable`, `unsuitable`, `approved`, `blocked`, `tradeable`, `untradeable`.
+- ATE v2.2 must live in a new release file at `pine/releases/ATE_v2.2.pine`. The ATE v2.1 release file at `pine/releases/ATE_v2.1.pine` must remain unchanged.
+- RiskEngine must not consume VolatilityEngine, ConfidenceEngine, or DecisionEngine for any decision-layer behaviour. It may only read VolatilityEngine `volScore` and `volShockFlag` plus ConfidenceEngine `confidenceScore` as diagnostic inputs.
+
+Implementation may proceed under this approval but Pine code has not yet been written. Pine implementation must satisfy the implementation-level acceptance criteria in section 13 and must extend the EDR-001 verifier before ATE v2.2 release candidate preparation.
+
+This approval does NOT authorise:
+
+- Live trade execution, broker connectivity, or paper-trading API integration.
+- RiskEngine consumption by DecisionEngine, ConfidenceEngine, entry/exit logic, position sizing, stop placement, or alerts.
+- Reclassification of RiskEngine from "no consumption" status.
+- Modifications to the ATE v2.1 release file.

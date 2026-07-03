@@ -51,6 +51,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - ATE v2.2 RiskEngine remains diagnostic-only; no ConfidenceEngine, DecisionEngine, entry/exit, sizing, stop, or trade-action alert impact.
   - Revised specification saved at `specifications/ATE/RiskEngine.md`.
   - Review report saved at `research/Reports/RDR/RiskEngine_Specification_Review.md`.
+- RiskEngine Specification v1.0 Draft approved for diagnostic-only ATE v2.2 implementation planning.
+  - Status changed from Draft for Review to Approved for Diagnostic-Only Implementation Planning.
+  - Approval boundaries confirmed by Paul Austin / Chief Systems Architect on 2026-07-03.
+  - Downstream consumption by ConfidenceEngine, RiskEngine, and DecisionEngine remains prohibited in ATE v2.2.
+  - ATE v2.1 release file must remain unchanged.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
