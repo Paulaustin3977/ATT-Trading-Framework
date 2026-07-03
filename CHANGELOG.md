@@ -17,6 +17,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - ATOS v1.1 draft amendments for review.
 - Quality Manual v1.1 approved by Paul Austin as part of the ATOS v1.1 governance baseline.
 - RDR-001 research storage, Research Decision Record, backtest result format standards, schema-version templates, raw-data policy, and Tier A trade-count thresholds approved by Paul Austin as part of the ATOS v1.1 governance baseline.
+- VolatilityEngine v1.0 draft specification added for ATE v2.1 review.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 

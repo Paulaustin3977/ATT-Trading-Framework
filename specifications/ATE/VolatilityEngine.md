@@ -1,35 +1,45 @@
-# VolatilityEngine
+# VolatilityEngine Specification
 
-## Purpose
+Version: 1.0 Draft
+Status: Draft for Review
+Related ATE Release: ATE v2.1
+Owner: Austin Trading Team
+Applies To: Austin Trading Engine
 
-Classify the current volatility regime and detect contraction/expansion cycles.
+---
 
-## Status
+# 1. Purpose
 
-Specification draft. Implementation pending.
+The VolatilityEngine measures the current volatility condition of a market.
 
-## Inputs
+Its purpose is not to generate buy or sell signals.
 
-- OHLC daily bars
-- ATR lookback length
-- Regime comparison window
+Its purpose is to answer:
 
-## Outputs
+> Is market movement expanding, contracting, normal, unstable, or unsuitable for action?
 
-- `atrValue`: current ATR in price units
-- `volatilityState`: one of `CONTRACTION`, `EXPANSION`, `NEUTRAL`
-- `regimeConfidence`: numeric in `[0, 1]`
+The VolatilityEngine provides evidence to the wider Austin Trading Engine so that future RiskEngine and DecisionEngine modules can decide whether market conditions are favourable, dangerous, or uncertain.
 
-## Method (placeholder)
+---
 
-ATR normalised by an average over the regime comparison window. Contraction is flagged when current ATR is below the lower threshold; expansion when above the upper threshold.
+# 2. Design Principle
 
-## Constraints
+Volatility shall not automatically increase confidence.
 
-- No repainting.
-- Bar-close only.
-- Pure function of inputs and bar index.
+The VolatilityEngine measures market condition.
 
-## Version
+The ConfidenceEngine measures strength of evidence.
 
-`0.1.0-spec`
+The RiskEngine interprets whether volatility makes a potential action safer or riskier.
+
+Therefore, the VolatilityEngine should initially be treated as a diagnostic and risk-support module rather than a direct confidence booster.
+
+---
+
+# 3. Engine Question
+
+The VolatilityEngine answers:
+
+```text
+What volatility regime is the market currently in?
+```
