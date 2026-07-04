@@ -1,0 +1,97 @@
+symbol,asset_name,asset_class,state,avg_duration,median_duration,longest_duration,shortest_duration,run_count
+GC=F,Gold futures,Metals,calm,12.696969696969697,7.0,77,1,99
+GC=F,Gold futures,Metals,normal,4.674074074074074,3.0,33,1,135
+GC=F,Gold futures,Metals,elevated,5.222222222222222,3.0,30,1,45
+GC=F,Gold futures,Metals,tense,1.8571428571428572,1.0,5,1,7
+GC=F,Gold futures,Metals,extreme,2.0,2.0,2,2,1
+GC=F,Gold futures,Metals,unknown,0.0,0.0,0,0,0
+SI=F,Silver futures,Metals,calm,10.965217391304348,8.0,46,1,115
+SI=F,Silver futures,Metals,normal,4.0062111801242235,3.0,23,1,161
+SI=F,Silver futures,Metals,elevated,3.736842105263158,2.0,29,1,57
+SI=F,Silver futures,Metals,tense,1.8,2.0,3,1,10
+SI=F,Silver futures,Metals,extreme,1.0,1.0,1,1,1
+SI=F,Silver futures,Metals,unknown,0.0,0.0,0,0,0
+HG=F,Copper futures,Metals,calm,15.10752688172043,9.0,89,1,93
+HG=F,Copper futures,Metals,normal,4.882352941176471,3.0,22,1,119
+HG=F,Copper futures,Metals,elevated,3.7837837837837838,3.0,16,1,37
+HG=F,Copper futures,Metals,tense,1.8571428571428572,2.0,3,1,7
+HG=F,Copper futures,Metals,extreme,0.0,0.0,0,0,0
+HG=F,Copper futures,Metals,unknown,0.0,0.0,0,0,0
+NQ=F,Nasdaq futures,Index proxies,calm,18.16867469879518,13.0,89,1,83
+NQ=F,Nasdaq futures,Index proxies,normal,4.752475247524752,3.0,24,1,101
+NQ=F,Nasdaq futures,Index proxies,elevated,6.590909090909091,3.5,23,1,22
+NQ=F,Nasdaq futures,Index proxies,tense,1.5,1.0,3,1,4
+NQ=F,Nasdaq futures,Index proxies,extreme,1.0,1.0,1,1,1
+NQ=F,Nasdaq futures,Index proxies,unknown,0.0,0.0,0,0,0
+SPY,S&P 500 ETF,Index proxies,calm,17.225,11.0,82,1,80
+SPY,S&P 500 ETF,Index proxies,normal,5.466666666666667,3.0,27,1,105
+SPY,S&P 500 ETF,Index proxies,elevated,5.117647058823529,3.0,23,1,34
+SPY,S&P 500 ETF,Index proxies,tense,1.4,1.0,2,1,5
+SPY,S&P 500 ETF,Index proxies,extreme,1.5,1.5,2,1,2
+SPY,S&P 500 ETF,Index proxies,unknown,0.0,0.0,0,0,0
+NVDA,NVIDIA,Major equities,calm,20.243243243243242,11.5,134,1,74
+NVDA,NVIDIA,Major equities,normal,5.064516129032258,3.0,32,1,93
+NVDA,NVIDIA,Major equities,elevated,6.791666666666667,6.5,22,1,24
+NVDA,NVIDIA,Major equities,tense,1.3333333333333333,1.0,2,1,3
+NVDA,NVIDIA,Major equities,extreme,0.0,0.0,0,0,0
+NVDA,NVIDIA,Major equities,unknown,0.0,0.0,0,0,0
+MSFT,Microsoft,Major equities,calm,18.4625,12.5,113,1,80
+MSFT,Microsoft,Major equities,normal,4.650943396226415,3.0,16,1,106
+MSFT,Microsoft,Major equities,elevated,5.366666666666666,3.0,21,1,30
+MSFT,Microsoft,Major equities,tense,2.5,2.5,3,2,2
+MSFT,Microsoft,Major equities,extreme,0.0,0.0,0,0,0
+MSFT,Microsoft,Major equities,unknown,0.0,0.0,0,0,0
+AAPL,Apple,Major equities,calm,16.011627906976745,11.5,75,1,86
+AAPL,Apple,Major equities,normal,4.723214285714286,3.0,27,1,112
+AAPL,Apple,Major equities,elevated,7.096774193548387,4.0,22,1,31
+AAPL,Apple,Major equities,tense,2.0,2.0,3,1,5
+AAPL,Apple,Major equities,extreme,0.0,0.0,0,0,0
+AAPL,Apple,Major equities,unknown,0.0,0.0,0,0,0
+AMZN,Amazon,Major equities,calm,16.96629213483146,12.0,109,1,89
+AMZN,Amazon,Major equities,normal,5.288461538461538,4.0,26,1,104
+AMZN,Amazon,Major equities,elevated,4.4375,3.5,19,1,16
+AMZN,Amazon,Major equities,tense,2.0,2.0,2,2,2
+AMZN,Amazon,Major equities,extreme,1.0,1.0,1,1,1
+AMZN,Amazon,Major equities,unknown,0.0,0.0,0,0,0
+GOOGL,Alphabet,Major equities,calm,17.89156626506024,12.0,141,1,83
+GOOGL,Alphabet,Major equities,normal,5.009433962264151,3.0,25,1,106
+GOOGL,Alphabet,Major equities,elevated,4.68,2.0,22,1,25
+GOOGL,Alphabet,Major equities,tense,3.0,3.0,3,3,1
+GOOGL,Alphabet,Major equities,extreme,0.0,0.0,0,0,0
+GOOGL,Alphabet,Major equities,unknown,0.0,0.0,0,0,0
+TLT,US Treasury bond ETF,Bonds / rates proxies,calm,23.779411764705884,16.5,96,1,68
+TLT,US Treasury bond ETF,Bonds / rates proxies,normal,5.174418604651163,3.0,21,1,86
+TLT,US Treasury bond ETF,Bonds / rates proxies,elevated,3.0952380952380953,2.0,13,1,21
+TLT,US Treasury bond ETF,Bonds / rates proxies,tense,1.75,1.5,3,1,4
+TLT,US Treasury bond ETF,Bonds / rates proxies,extreme,2.0,2.0,2,2,1
+TLT,US Treasury bond ETF,Bonds / rates proxies,unknown,0.0,0.0,0,0,0
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,calm,22.88157894736842,12.5,209,1,76
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,normal,4.080459770114943,3.0,16,1,87
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,elevated,2.55,3.0,5,1,20
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,tense,1.0,1.0,1,1,1
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,extreme,1.0,1.0,1,1,1
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,unknown,0.0,0.0,0,0,0
+EURUSD=X,EUR/USD,FX,calm,27.734375,23.5,86,1,64
+EURUSD=X,EUR/USD,FX,normal,5.492957746478873,4.0,26,1,71
+EURUSD=X,EUR/USD,FX,elevated,4.9,1.0,23,1,10
+EURUSD=X,EUR/USD,FX,tense,0.0,0.0,0,0,0
+EURUSD=X,EUR/USD,FX,extreme,0.0,0.0,0,0,0
+EURUSD=X,EUR/USD,FX,unknown,0.0,0.0,0,0,0
+GBPUSD=X,GBP/USD,FX,calm,26.558823529411764,16.0,169,1,68
+GBPUSD=X,GBP/USD,FX,normal,4.0843373493975905,3.0,23,1,83
+GBPUSD=X,GBP/USD,FX,elevated,4.0588235294117645,2.0,23,1,17
+GBPUSD=X,GBP/USD,FX,tense,1.0,1.0,1,1,1
+GBPUSD=X,GBP/USD,FX,extreme,0.0,0.0,0,0,0
+GBPUSD=X,GBP/USD,FX,unknown,0.0,0.0,0,0,0
+JPY=X,USD/JPY,FX,calm,20.73170731707317,13.5,108,1,82
+JPY=X,USD/JPY,FX,normal,4.144230769230769,3.0,22,1,104
+JPY=X,USD/JPY,FX,elevated,3.12,3.0,9,1,25
+JPY=X,USD/JPY,FX,tense,2.5,2.5,3,2,2
+JPY=X,USD/JPY,FX,extreme,0.0,0.0,0,0,0
+JPY=X,USD/JPY,FX,unknown,0.0,0.0,0,0,0
+CL=F,WTI crude oil futures,Commodities,calm,25.650793650793652,17.0,83,2,63
+CL=F,WTI crude oil futures,Commodities,normal,5.222222222222222,3.0,19,1,72
+CL=F,WTI crude oil futures,Commodities,elevated,7.052631578947368,4.0,25,1,19
+CL=F,WTI crude oil futures,Commodities,tense,1.8333333333333333,2.0,3,1,6
+CL=F,WTI crude oil futures,Commodities,extreme,2.0,2.0,2,2,1
+CL=F,WTI crude oil futures,Commodities,unknown,0.0,0.0,0,0,0

@@ -1,0 +1,569 @@
+//@version=6
+indicator("Austin Trading Engine v2.1", shorttitle="ATE v2.1", overlay=true, max_labels_count=500)
+
+// ═════════════════════════════════════════════════════════════════════════════
+// AUSTIN TRADING ENGINE v2.1
+// Diagnostic-only VolatilityEngine release
+//
+// VolatilityEngine v1.0.0-draft:
+// - Dashboard display: YES
+// - Research Mode output: YES
+// - ConfidenceEngine consumption: NO
+// - RiskEngine consumption: NO
+// - DecisionEngine consumption: NO
+// - Buy/sell signal impact: NO
+// - Position sizing impact: NO
+// - Stop logic impact: NO
+// ═════════════════════════════════════════════════════════════════════════════
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// INPUTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+grpProfile = "Market Profile"
+profile = input.string("Gold", "Profile", options=["Gold", "Silver", "Gilts", "Forex", "Stocks", "Custom"], group=grpProfile)
+
+grpMA = "MA Engine"
+maType = input.string("EMA", "MA Type", options=["SMA", "EMA", "WMA", "Hull"], group=grpMA)
+src = input.source(close, "Source", group=grpMA)
+
+grpFast = "Fast Cluster"
+fLen1 = input.int(4, "Fast 1", minval=1, group=grpFast)
+fLen2 = input.int(8, "Fast 2", minval=1, group=grpFast)
+fLen3 = input.int(13, "Fast 3", minval=1, group=grpFast)
+
+grpMed = "Medium Cluster"
+mLen1 = input.int(21, "Medium 1", minval=1, group=grpMed)
+mLen2 = input.int(34, "Medium 2", minval=1, group=grpMed)
+mLen3 = input.int(55, "Medium 3", minval=1, group=grpMed)
+
+grpSlow = "Slow Cluster"
+sLen1 = input.int(50, "Slow 1", minval=1, group=grpSlow)
+sLen2 = input.int(100, "Slow 2", minval=1, group=grpSlow)
+sLen3 = input.int(200, "Slow 3", minval=1, group=grpSlow)
+
+grpStruct = "Structure Engine"
+showStructure = input.bool(true, "Enable Structure Engine", group=grpStruct)
+pivotLen = input.int(5, "Swing Pivot Length", minval=2, maxval=20, group=grpStruct)
+
+grpMom = "Momentum Engine"
+showMomentum = input.bool(true, "Enable Momentum Engine", group=grpMom)
+rsiLen = input.int(14, "RSI Length", minval=2, group=grpMom)
+macdFast = input.int(12, "MACD Fast", minval=1, group=grpMom)
+macdSlow = input.int(26, "MACD Slow", minval=1, group=grpMom)
+macdSignal = input.int(9, "MACD Signal", minval=1, group=grpMom)
+adxLen = input.int(14, "ADX Length", minval=2, group=grpMom)
+adxSmooth = input.int(14, "ADX Smoothing", minval=2, group=grpMom)
+
+grpVol = "Volatility Engine v1.0.0-draft"
+showVolatility = input.bool(true, "Enable Volatility Diagnostics", group=grpVol)
+atrLength = input.int(14, "ATR Length", minval=5, maxval=100, group=grpVol)
+atrBaselineLength = input.int(100, "ATR Baseline Length", minval=20, maxval=500, group=grpVol)
+bbLength = input.int(20, "BB Length", minval=10, maxval=100, group=grpVol)
+bbStdDev = input.float(2.0, "BB StdDev", minval=1.0, maxval=3.0, step=0.1, group=grpVol)
+bbBaselineLength = input.int(100, "BB Baseline Length", minval=20, maxval=500, group=grpVol)
+shockLookback = input.int(20, "Shock Lookback", minval=5, maxval=100, group=grpVol)
+shockMultiplier = input.float(2.5, "Shock Multiplier", minval=1.5, maxval=5.0, step=0.1, group=grpVol)
+compressionThreshold = input.float(0.75, "Compression Threshold", minval=0.25, maxval=1.0, step=0.05, group=grpVol)
+normalUpperThreshold = input.float(1.25, "Normal Upper Threshold", minval=1.0, maxval=1.75, step=0.05, group=grpVol)
+elevatedThreshold = input.float(1.75, "Elevated Threshold", minval=1.25, maxval=3.0, step=0.05, group=grpVol)
+unstableThreshold = input.float(2.50, "Unstable Threshold", minval=1.75, maxval=5.0, step=0.05, group=grpVol)
+volSlopeLookback = input.int(5, "Volatility Slope Lookback", minval=2, maxval=20, group=grpVol)
+
+grpConf = "Confidence Engine"
+showConfidence = input.bool(true, "Enable Confidence Engine", group=grpConf)
+trendWeight = input.float(40.0, "Trend Weight", minval=0, maxval=100, group=grpConf)
+structureWeight = input.float(30.0, "Structure Weight", minval=0, maxval=100, group=grpConf)
+momentumWeight = input.float(30.0, "Momentum Weight", minval=0, maxval=100, group=grpConf)
+
+grpVisual = "Visuals"
+showFast = input.bool(true, "Show Fast MAs", group=grpVisual)
+showMed = input.bool(true, "Show Medium MAs", group=grpVisual)
+showSlow = input.bool(true, "Show Slow MAs", group=grpVisual)
+showDash = input.bool(true, "Show Dashboard", group=grpVisual)
+showSignals = input.bool(true, "Show Signals", group=grpVisual)
+showBg = input.bool(true, "Trend Background", group=grpVisual)
+slopeLookback = input.int(3, "MA Slope Lookback", minval=1, maxval=20, group=grpVisual)
+
+grpResearch = "ATE Research Mode"
+showResearch = input.bool(false, "Show Research Output", group=grpResearch)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// FUNCTIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+f_ma(_src, _len, _type) =>
+    halfLen = math.max(1, math.floor(_len / 2))
+    sqrtLen = math.max(1, math.round(math.sqrt(_len)))
+    switch _type
+        "SMA" => ta.sma(_src, _len)
+        "EMA" => ta.ema(_src, _len)
+        "WMA" => ta.wma(_src, _len)
+        "Hull" => ta.wma(2 * ta.wma(_src, halfLen) - ta.wma(_src, _len), sqrtLen)
+
+f_up(v) =>
+    not na(v[slopeLookback]) and v > v[slopeLookback]
+
+f_dn(v) =>
+    not na(v[slopeLookback]) and v < v[slopeLookback]
+
+f_boolScore(cond, pts) =>
+    cond ? pts : 0.0
+
+f_state(score) =>
+    score >= 80 ? "STRONG BULL" :
+     score >= 60 ? "BULL" :
+     score > 40 ? "NEUTRAL" :
+     score > 20 ? "BEAR" : "STRONG BEAR"
+
+f_scoreColor(score) =>
+    score >= 80 ? color.lime :
+     score >= 60 ? color.green :
+     score > 40 ? color.yellow :
+     score > 20 ? color.orange : color.red
+
+f_volColor(score) =>
+    na(score) ? color.gray :
+     score >= 80 ? color.lime :
+     score >= 60 ? color.green :
+     score >= 40 ? color.yellow :
+     score >= 20 ? color.orange : color.red
+
+f_fmt(v) =>
+    na(v) ? "na" : str.tostring(v, "#.##")
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MA CALCULATIONS
+// ─────────────────────────────────────────────────────────────────────────────
+
+f1 = f_ma(src, fLen1, maType)
+f2 = f_ma(src, fLen2, maType)
+f3 = f_ma(src, fLen3, maType)
+
+m1 = f_ma(src, mLen1, maType)
+m2 = f_ma(src, mLen2, maType)
+m3 = f_ma(src, mLen3, maType)
+
+s1 = f_ma(src, sLen1, maType)
+s2 = f_ma(src, sLen2, maType)
+s3 = f_ma(src, sLen3, maType)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// COLOURS
+// ─────────────────────────────────────────────────────────────────────────────
+
+fastUpCol = color.new(#00E5FF, 0)
+fastDnCol = color.new(#FF1744, 0)
+medUpCol = color.new(#00E676, 0)
+medDnCol = color.new(#FF9100, 0)
+slowUpCol = color.new(#2979FF, 0)
+slowDnCol = color.new(#AA00FF, 0)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// TREND SCORE ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+priceScore = f_boolScore(close > s1, 5) + f_boolScore(close > s2, 5) + f_boolScore(close > s3, 10)
+
+slowAlignScore =
+     s1 > s2 and s2 > s3 ? 30 :
+     s1 > s2 or s2 > s3 ? 15 : 0
+
+slopeScore = f_boolScore(f_up(s1), 7) + f_boolScore(f_up(s2), 7) + f_boolScore(f_up(s3), 6)
+
+fastScore =
+     f1 > f2 and f2 > f3 ? 15 :
+     f1 > f2 or f2 > f3 ? 8 : 0
+
+mediumScore =
+     m1 > m2 and m2 > m3 ? 15 :
+     m1 > m2 or m2 > m3 ? 8 : 0
+
+trendScore = priceScore + slowAlignScore + slopeScore + fastScore + mediumScore
+marketState = f_state(trendScore)
+stateCol = f_scoreColor(trendScore)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// STRUCTURE ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+swingHigh = ta.pivothigh(high, pivotLen, pivotLen)
+swingLow = ta.pivotlow(low, pivotLen, pivotLen)
+
+var float lastHigh = na
+var float prevHigh = na
+var float lastLow = na
+var float prevLow = na
+
+if not na(swingHigh)
+    prevHigh := lastHigh
+    lastHigh := swingHigh
+
+if not na(swingLow)
+    prevLow := lastLow
+    lastLow := swingLow
+
+higherHigh = not na(lastHigh) and not na(prevHigh) and lastHigh > prevHigh
+lowerHigh = not na(lastHigh) and not na(prevHigh) and lastHigh < prevHigh
+higherLow = not na(lastLow) and not na(prevLow) and lastLow > prevLow
+lowerLow = not na(lastLow) and not na(prevLow) and lastLow < prevLow
+
+bullStructure = higherHigh and higherLow
+bearStructure = lowerHigh and lowerLow
+
+bosBull = not na(lastHigh) and close > lastHigh
+bosBear = not na(lastLow) and close < lastLow
+
+structureScore =
+     not showStructure ? 50 :
+     bullStructure and bosBull ? 100 :
+     bullStructure ? 80 :
+     higherLow or higherHigh ? 65 :
+     bearStructure and bosBear ? 0 :
+     bearStructure ? 20 :
+     lowerLow or lowerHigh ? 35 : 50
+
+structureState =
+     structureScore >= 80 ? "BULLISH STRUCTURE" :
+     structureScore >= 60 ? "LEANING BULLISH" :
+     structureScore > 40 ? "NEUTRAL" :
+     structureScore > 20 ? "LEANING BEARISH" : "BEARISH STRUCTURE"
+
+structureCol = f_scoreColor(structureScore)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// MOMENTUM ENGINE
+// ─────────────────────────────────────────────────────────────────────────────
+
+rsiVal = ta.rsi(close, rsiLen)
+rsiUp = rsiVal > rsiVal[1]
+
+[macdLine, macdSig, macdHist] = ta.macd(close, macdFast, macdSlow, macdSignal)
+macdBull = macdLine > macdSig
+macdBear = macdLine < macdSig
+macdRising = macdHist > macdHist[1]
+
+[plusDI, minusDI, adxVal] = ta.dmi(adxLen, adxSmooth)
+adxRising = adxVal > adxVal[1]
+
+rsiScore =
+     rsiVal >= 55 and rsiVal <= 70 and rsiUp ? 35 :
+     rsiVal > 50 and rsiVal < 80 ? 28 :
+     rsiVal >= 45 and rsiVal <= 55 ? 18 :
+     rsiVal < 45 ? 8 : 15
+
+macdScore =
+     macdBull and macdHist > 0 and macdRising ? 35 :
+     macdBull and macdHist > 0 ? 28 :
+     macdBull ? 22 :
+     macdBear and macdHist < 0 and not macdRising ? 5 : 15
+
+adxScore =
+     adxVal >= 25 and adxVal <= 45 and adxRising ? 30 :
+     adxVal >= 25 ? 24 :
+     adxVal >= 18 ? 16 : 8
+
+momentumScore = showMomentum ? rsiScore + macdScore + adxScore : 50
+
+momentumState =
+     momentumScore >= 80 ? "STRONG MOMENTUM" :
+     momentumScore >= 60 ? "BULLISH MOMENTUM" :
+     momentumScore > 40 ? "NEUTRAL MOMENTUM" :
+     momentumScore > 20 ? "BEARISH MOMENTUM" : "WEAK MOMENTUM"
+
+momentumCol = f_scoreColor(momentumScore)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// VOLATILITY ENGINE v1.0.0-draft
+// DIAGNOSTIC ONLY — DOES NOT AFFECT CONFIDENCE, RISK, DECISION OR SIGNALS
+// ─────────────────────────────────────────────────────────────────────────────
+
+volEngineVersion = "1.0.0-draft"
+
+volAtr = ta.atr(atrLength)
+volAtrPercent = close == 0 ? na : (volAtr / close) * 100.0
+volAtrBaseline = ta.sma(volAtrPercent, atrBaselineLength)
+volAtrRatio = na(volAtrBaseline) or volAtrBaseline == 0 ? na : volAtrPercent / volAtrBaseline
+
+volBbBasis = ta.sma(close, bbLength)
+volBbDev = bbStdDev * ta.stdev(close, bbLength)
+volBbUpper = volBbBasis + volBbDev
+volBbLower = volBbBasis - volBbDev
+volBbWidthRaw = volBbBasis == 0 ? na : (volBbUpper - volBbLower) / volBbBasis
+volBbWidthBaseline = ta.sma(volBbWidthRaw, bbBaselineLength)
+volBbWidthRatio = na(volBbWidthBaseline) or volBbWidthBaseline == 0 ? na : volBbWidthRaw / volBbWidthBaseline
+
+volValidAtr = not na(volAtrRatio)
+volValidBb = not na(volBbWidthRatio)
+
+volCombinedRatio =
+     volValidAtr and volValidBb ? (volAtrRatio + volBbWidthRatio) / 2.0 :
+     volValidAtr ? volAtrRatio :
+     volValidBb ? volBbWidthRatio : na
+
+volSlope = not na(volCombinedRatio) and not na(volCombinedRatio[volSlopeLookback]) ? volCombinedRatio - volCombinedRatio[volSlopeLookback] : na
+
+volTrueRange = ta.tr(true)
+volTrueRangeBaseline = ta.sma(volTrueRange, shockLookback)
+volShockFlag = not na(volTrueRangeBaseline) and volTrueRangeBaseline > 0 and volTrueRange >= volTrueRangeBaseline * shockMultiplier
+
+volUnknown = not showVolatility or na(volCombinedRatio)
+
+volState =
+     volUnknown ? "unknown" :
+     volShockFlag ? "shock" :
+     volCombinedRatio >= unstableThreshold ? "unstable" :
+     volCombinedRatio >= elevatedThreshold ? "elevated" :
+     volCombinedRatio < compressionThreshold ? "compressed" :
+     volCombinedRatio <= normalUpperThreshold ? "normal" :
+     volCombinedRatio > normalUpperThreshold and volSlope > 0 ? "expanding" :
+     "normal"
+
+volDirection =
+     volUnknown ? "none" :
+     volShockFlag ? "unstable" :
+     volCombinedRatio >= unstableThreshold ? "unstable" :
+     na(volSlope) ? "none" :
+     volSlope > 0 ? "expanding" :
+     volSlope < 0 ? "contracting" : "stable"
+
+volScore =
+     volState == "normal" ? 85.0 :
+     volState == "expanding" ? 70.0 :
+     volState == "compressed" ? 55.0 :
+     volState == "elevated" ? 45.0 :
+     volState == "unstable" ? 20.0 :
+     volState == "shock" ? 10.0 : na
+
+volReason =
+     volState == "unknown" ? "Insufficient volatility data" :
+     volState == "shock" ? "True range shock detected" :
+     volState == "unstable" ? "Volatility extremely above baseline" :
+     volState == "elevated" ? "Volatility materially above baseline" :
+     volState == "expanding" ? "Volatility expanding above normal" :
+     volState == "compressed" ? "Volatility compressed below baseline" :
+     "Volatility near asset baseline"
+
+volCol = f_volColor(volScore)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// CONFIDENCE ENGINE
+// IMPORTANT: VolatilityEngine is NOT used in confidenceScore in ATE v2.1
+// ─────────────────────────────────────────────────────────────────────────────
+
+totalWeight = trendWeight + structureWeight + momentumWeight
+normTrendWeight = totalWeight == 0 ? 0.0 : trendWeight / totalWeight
+normStructureWeight = totalWeight == 0 ? 0.0 : structureWeight / totalWeight
+normMomentumWeight = totalWeight == 0 ? 0.0 : momentumWeight / totalWeight
+
+confidenceScore =
+     showConfidence and totalWeight > 0 ?
+     (trendScore * normTrendWeight) +
+     (structureScore * normStructureWeight) +
+     (momentumScore * normMomentumWeight) : 50
+
+confidenceState =
+     confidenceScore >= 80 ? "HIGH CONFIDENCE" :
+     confidenceScore >= 60 ? "GOOD CONFIDENCE" :
+     confidenceScore > 40 ? "LOW / MIXED" :
+     confidenceScore > 20 ? "BEARISH CONFIDENCE" : "STRONG BEARISH"
+
+confidenceCol = f_scoreColor(confidenceScore)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// PLOTS
+// ─────────────────────────────────────────────────────────────────────────────
+
+plot(showFast ? f1 : na, "Fast 1", color=f_up(f1) ? fastUpCol : f_dn(f1) ? fastDnCol : color.gray, linewidth=1)
+plot(showFast ? f2 : na, "Fast 2", color=f_up(f2) ? fastUpCol : f_dn(f2) ? fastDnCol : color.gray, linewidth=1)
+plot(showFast ? f3 : na, "Fast 3", color=f_up(f3) ? fastUpCol : f_dn(f3) ? fastDnCol : color.gray, linewidth=1)
+
+plot(showMed ? m1 : na, "Medium 1", color=f_up(m1) ? medUpCol : f_dn(m1) ? medDnCol : color.gray, linewidth=2)
+plot(showMed ? m2 : na, "Medium 2", color=f_up(m2) ? medUpCol : f_dn(m2) ? medDnCol : color.gray, linewidth=2)
+plot(showMed ? m3 : na, "Medium 3", color=f_up(m3) ? medUpCol : f_dn(m3) ? medDnCol : color.gray, linewidth=2)
+
+plot(showSlow ? s1 : na, "Slow 1", color=f_up(s1) ? slowUpCol : f_dn(s1) ? slowDnCol : color.gray, linewidth=2)
+plot(showSlow ? s2 : na, "Slow 2", color=f_up(s2) ? slowUpCol : f_dn(s2) ? slowDnCol : color.gray, linewidth=3)
+plot(showSlow ? s3 : na, "Slow 3", color=f_up(s3) ? slowUpCol : f_dn(s3) ? slowDnCol : color.gray, linewidth=4)
+
+bgcolor(showBg ? color.new(confidenceCol, 90) : na)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// SIGNALS
+// VolatilityEngine creates no trade-action signals in ATE v2.1
+// ─────────────────────────────────────────────────────────────────────────────
+
+goldenCross = ta.crossover(s1, s3)
+deathCross = ta.crossunder(s1, s3)
+
+strongBullStart = trendScore >= 80 and trendScore[1] < 80
+strongBearStart = trendScore <= 20 and trendScore[1] > 20
+
+momentumBull = momentumScore >= 70 and momentumScore[1] < 70
+momentumBear = momentumScore <= 30 and momentumScore[1] > 30
+
+confidenceBull = confidenceScore >= 75 and confidenceScore[1] < 75
+confidenceBear = confidenceScore <= 30 and confidenceScore[1] > 30
+
+plotshape(showSignals and goldenCross, title="Golden Cross", style=shape.diamond, location=location.belowbar, color=medUpCol, size=size.normal, text="GOLDEN", textcolor=color.white)
+plotshape(showSignals and deathCross, title="Death Cross", style=shape.diamond, location=location.abovebar, color=medDnCol, size=size.normal, text="DEATH", textcolor=color.white)
+
+plotshape(showSignals and strongBullStart, title="Strong Bull Start", style=shape.triangleup, location=location.belowbar, color=color.lime, size=size.small, text="ATE BULL", textcolor=color.white)
+plotshape(showSignals and strongBearStart, title="Strong Bear Start", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="ATE BEAR", textcolor=color.white)
+
+plotshape(showStructure and not na(swingHigh), title="Swing High", style=shape.circle, location=location.abovebar, color=color.red, size=size.tiny, offset=-pivotLen)
+plotshape(showStructure and not na(swingLow), title="Swing Low", style=shape.circle, location=location.belowbar, color=color.lime, size=size.tiny, offset=-pivotLen)
+
+plotshape(showStructure and bosBull, title="Bullish BOS", style=shape.labelup, location=location.belowbar, color=color.lime, text="BOS", textcolor=color.white, size=size.tiny)
+plotshape(showStructure and bosBear, title="Bearish BOS", style=shape.labeldown, location=location.abovebar, color=color.red, text="BOS", textcolor=color.white, size=size.tiny)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// DASHBOARD
+// ─────────────────────────────────────────────────────────────────────────────
+
+var table dash = table.new(position.top_right, 2, 24, border_width=1)
+
+if barstate.islast
+    table.clear(dash, 0, 0, 1, 23)
+
+    if showDash
+        table.cell(dash, 0, 0, "AUSTIN TRADING ENGINE", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
+        table.cell(dash, 1, 0, "v2.1", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
+
+        table.cell(dash, 0, 1, "Profile", text_color=color.white, bgcolor=color.new(color.gray, 70))
+        table.cell(dash, 1, 1, profile, text_color=color.white, bgcolor=color.new(color.gray, 70))
+
+        table.cell(dash, 0, 2, "Timeframe", text_color=color.white, bgcolor=color.new(color.gray, 70))
+        table.cell(dash, 1, 2, timeframe.period, text_color=color.white, bgcolor=color.new(color.gray, 70))
+
+        table.cell(dash, 0, 3, "Trend Score", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 3, str.tostring(trendScore, "#") + " / 100", text_color=stateCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 4, "Market State", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 4, marketState, text_color=stateCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 5, "Structure Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 5, str.tostring(structureScore, "#") + " / 100", text_color=structureCol, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 6, "Structure State", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 6, structureState, text_color=structureCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 7, "Momentum Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 7, str.tostring(momentumScore, "#") + " / 100", text_color=momentumCol, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 8, "Momentum State", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 8, momentumState, text_color=momentumCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 9, "Confidence Score", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 9, str.tostring(confidenceScore, "#") + " / 100", text_color=confidenceCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 10, "Confidence State", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 10, confidenceState, text_color=confidenceCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 11, "Volatility Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 11, na(volScore) ? "na" : str.tostring(volScore, "#") + " / 100", text_color=volCol, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 12, "Volatility State", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 12, volState, text_color=volCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 13, "Vol Direction", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 13, volDirection, text_color=volCol, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 14, "ATR % / Ratio", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 14, f_fmt(volAtrPercent) + " / " + f_fmt(volAtrRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 15, "BB Ratio", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 15, f_fmt(volBbWidthRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 16, "Combined Vol", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 16, f_fmt(volCombinedRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 17, "Shock Flag", text_color=color.white, bgcolor=color.new(color.gray, 80))
+        table.cell(dash, 1, 17, volShockFlag ? "TRUE" : "false", text_color=volShockFlag ? color.red : color.white, bgcolor=color.new(color.gray, 80))
+
+        table.cell(dash, 0, 18, "Vol Reason", text_color=color.white, bgcolor=color.new(color.black, 20))
+        table.cell(dash, 1, 18, volReason, text_color=volCol, bgcolor=color.new(color.black, 20))
+
+        table.cell(dash, 0, 19, "Price Score", text_color=color.white, bgcolor=color.new(color.gray, 85))
+        table.cell(dash, 1, 19, str.tostring(priceScore, "#") + " / 20", text_color=color.white, bgcolor=color.new(color.gray, 85))
+
+        table.cell(dash, 0, 20, "Slow Align", text_color=color.white, bgcolor=color.new(color.gray, 85))
+        table.cell(dash, 1, 20, str.tostring(slowAlignScore, "#") + " / 30", text_color=color.white, bgcolor=color.new(color.gray, 85))
+
+        table.cell(dash, 0, 21, "Slope Score", text_color=color.white, bgcolor=color.new(color.gray, 85))
+        table.cell(dash, 1, 21, str.tostring(slopeScore, "#") + " / 20", text_color=color.white, bgcolor=color.new(color.gray, 85))
+
+        table.cell(dash, 0, 22, "RSI/MACD/ADX", text_color=color.white, bgcolor=color.new(color.gray, 85))
+        table.cell(dash, 1, 22, str.tostring(rsiScore, "#") + "/" + str.tostring(macdScore, "#") + "/" + str.tostring(adxScore, "#"), text_color=color.white, bgcolor=color.new(color.gray, 85))
+
+        table.cell(dash, 0, 23, "Vol Engine", text_color=color.white, bgcolor=color.new(color.gray, 85))
+        table.cell(dash, 1, 23, volEngineVersion + " diagnostic", text_color=color.white, bgcolor=color.new(color.gray, 85))
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// RESEARCH MODE
+// ─────────────────────────────────────────────────────────────────────────────
+
+var table research = table.new(position.bottom_right, 1, 1, border_width=1)
+
+if barstate.islast
+    table.clear(research, 0, 0, 0, 0)
+
+    if showResearch
+        researchText =
+             "ATE_RESEARCH_LOG\n" +
+             "ATEVersion: v2.1\n" +
+             "Symbol: " + syminfo.ticker + "\n" +
+             "Timeframe: " + timeframe.period + "\n" +
+             "Profile: " + profile + "\n" +
+             "TrendScore: " + str.tostring(trendScore, "#") + "\n" +
+             "StructureScore: " + str.tostring(structureScore, "#") + "\n" +
+             "MomentumScore: " + str.tostring(momentumScore, "#") + "\n" +
+             "ConfidenceScore: " + str.tostring(confidenceScore, "#") + "\n" +
+             "MarketState: " + marketState + "\n" +
+             "StructureState: " + structureState + "\n" +
+             "MomentumState: " + momentumState + "\n" +
+             "VolatilityEngineVersion: " + volEngineVersion + "\n" +
+             "VolatilityScore: " + f_fmt(volScore) + "\n" +
+             "VolatilityState: " + volState + "\n" +
+             "VolatilityDirection: " + volDirection + "\n" +
+             "VolatilityReason: " + volReason + "\n" +
+             "ATRPercent: " + f_fmt(volAtrPercent) + "\n" +
+             "ATRRatio: " + f_fmt(volAtrRatio) + "\n" +
+             "BBWidthRatio: " + f_fmt(volBbWidthRatio) + "\n" +
+             "CombinedVolRatio: " + f_fmt(volCombinedRatio) + "\n" +
+             "VolSlope: " + f_fmt(volSlope) + "\n" +
+             "ShockFlag: " + str.tostring(volShockFlag) + "\n" +
+             "Close: " + str.tostring(close, "#.##")
+
+        table.cell(research, 0, 0, researchText, text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.small)
+
+
+// ─────────────────────────────────────────────────────────────────────────────
+// ALERTS
+// No VolatilityEngine alerts in ATE v2.1.
+// Existing ATE v1.3 alert behaviour preserved.
+// ─────────────────────────────────────────────────────────────────────────────
+
+alertcondition(goldenCross, "ATE Golden Cross", "Austin Trading Engine: Golden Cross detected")
+alertcondition(deathCross, "ATE Death Cross", "Austin Trading Engine: Death Cross detected")
+alertcondition(strongBullStart, "ATE Strong Bull", "Austin Trading Engine: Strong Bull market state started")
+alertcondition(strongBearStart, "ATE Strong Bear", "Austin Trading Engine: Strong Bear market state started")
+alertcondition(bosBull, "ATE Bullish BOS", "Austin Trading Engine: Bullish Break of Structure")
+alertcondition(bosBear, "ATE Bearish BOS", "Austin Trading Engine: Bearish Break of Structure")
+alertcondition(momentumBull, "ATE Momentum Bullish", "Austin Trading Engine: Momentum became bullish")
+alertcondition(momentumBear, "ATE Momentum Bearish", "Austin Trading Engine: Momentum became bearish")
+alertcondition(confidenceBull, "ATE High Confidence Bull", "Austin Trading Engine: Confidence crossed bullish threshold")
+alertcondition(confidenceBear, "ATE Low Confidence Bear", "Austin Trading Engine: Confidence crossed bearish threshold")
