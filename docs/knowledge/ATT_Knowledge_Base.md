@@ -84,6 +84,12 @@ Evidence: EDR-001 verifier was extended in 2026-07 under task ATE-2.2-RISK-VERIF
 
 Knowledge entry: The verifier coverage is infrastructure only and does NOT by itself prove empirical usefulness. RDR-001 validation (state frequency, hidden directional bias, overlap with VolatilityEngine, cross-asset behaviour) is still required after RiskEngine Pine implementation. Until that RDR-001 validation produces a non-falsified result and the verifier confirms Pine-vs-Python mirror parity (i.e. the actual Pine implementation matches the deterministic Python mirror the verifier tests), RiskEngine remains diagnostic-only and may not be consumed by DecisionEngine, ConfidenceEngine, entry/exit logic, position sizing, stop logic, or trade-action alerts.
 
+### ATE v2.2 TradingView compile confirmed clean after alert restoration
+
+Evidence: Paul Austin recompiled the updated ATE v2.2 Pine release in TradingView after the restored `confidenceBear` alertcondition was added back to `pine/releases/ATE_v2.2.pine` (and mirrored into `pine/development/ATE_Current.pine`). Local screenshot evidence retained by Paul Austin at `/home/paul/Pictures/Screenshots/Screenshot From 2026-07-03 23-52-49.png` (Linux-style path; the macOS-local reference is under `/Users/paul/Pictures/` and is not committed to the repo).
+
+Knowledge entry: ATE v2.2 TradingView compile produces zero errors at release SHA-256 `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`. ATE v2.2 now preserves all 10 ATE alertcondition calls (matching ATE v2.1 exactly), no RiskEngine alerts were added, and RiskEngine remains diagnostic-only. The compile confirmation step did not modify any Pine logic. RDR-003 and RDR-003W validation cycles for RiskEngine remain scheduled future work and are not authorised or claimed by this confirmation.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

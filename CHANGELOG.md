@@ -97,6 +97,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - No RiskEngine logic modified. No RiskEngine alerts added. No other Pine logic altered.
   - ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
   - TradingView re-compile confirmation by Paul Austin pending after restoration.
+- ATE v2.2 TradingView compile confirmed clean after alert restoration.
+  - Paul Austin recompiled the updated ATE v2.2 Pine release in TradingView after the restored `confidenceBear` alert; TradingView compile produced zero errors.
+  - Release file SHA-256 unchanged from the restored baseline: `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`.
+  - Screenshots/local-evidence: `/home/paul/Pictures/Screenshots/Screenshot From 2026-07-03 23-52-49.png` (Linux-style path; actual local copy on macOS is under `/Users/paul/Pictures/` — reference only, not committed to repo).
+  - ATE v2.2 preserves all 10 existing ATE alertcondition calls; no RiskEngine alerts added; RiskEngine remains diagnostic-only.
+  - ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
+  - No Pine logic modified during this confirmation step.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 

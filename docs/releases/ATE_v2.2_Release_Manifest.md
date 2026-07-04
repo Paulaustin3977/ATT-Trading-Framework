@@ -77,3 +77,12 @@ The release and development Pine files were stored from the same user-provided T
 - This manifest records storage of the rollback baseline; it does not by itself authorise live trading, broker connectivity, paper-trading APIs, autonomous execution, position management, or trade execution.
 - This is the release-manifest step following the ATE v2.2 Implementation Plan approval at commit `581d895` ("Approve ATE v2.2 RiskEngine implementation plan (open questions answered)"). The plan approved implementation readiness; this manifest records the resulting rollback storage after compile confirmation.
 - RDR-003 daily-first and RDR-003W weekly validation cycles remain scheduled future work; they are not authorised or claimed by this manifest.
+
+### Post-alert-restore compile confirmation
+
+- Paul Austin recompiled the updated ATE v2.2 release in TradingView after the `confidenceBear` alertcondition was restored to both `pine/releases/ATE_v2.2.pine` and `pine/development/ATE_Current.pine`.
+- TradingView compile confirmed clean with zero errors. Release file SHA-256 unchanged from the restored baseline: `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`.
+- ATE v2.2 preserves all 10 existing ATE alertcondition calls (matching ATE v2.1 exactly). No RiskEngine alerts added. RiskEngine remains diagnostic-only.
+- ATE v2.1 release file remains unchanged (SHA-256 `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`).
+- Local-evidence screenshot retained by Paul Austin at `/home/paul/Pictures/Screenshots/Screenshot From 2026-07-03 23-52-49.png` (Linux-style path; macOS-local reference under `/Users/paul/Pictures/` is non-repo, evidence-only).
+- No Pine logic modified during this compile-confirmation step.
