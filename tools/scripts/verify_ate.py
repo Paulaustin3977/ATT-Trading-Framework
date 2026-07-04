@@ -52,6 +52,12 @@ RISK_SPEC = REPO / "specifications/ATE/RiskEngine.md"
 RISK_FIXTURE_DIR = REPO / "tests/fixtures/ATE_v2_2"
 RISK_COMPUTE = TOOLS / "_riskengine_compute.py"
 
+# ATE v2.2 release-file direct verification (EDR-001 extension under ATOS v1.1).
+V22_PINE = REPO / "pine/releases/ATE_v2.2.pine"
+V22_DEV  = REPO / "pine/development/ATE_Current.pine"
+V22_EXPECTED_SHA = "d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239"
+V21_EXPECTED_SHA = "7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893"
+
 # Stub optional deps before importing the daily reproduction script.
 # The daily script imports yfinance and matplotlib at module top, but the
 # verifier does not download market data or render charts. Stubbing keeps
@@ -606,6 +612,370 @@ if risk_run_results.get("unknown") is not None:
 
 
 # ---------------------------------------------------------------------------
+# E. ATE v2.2 release file direct verification (EDR-001 extension).
+# ---------------------------------------------------------------------------
+# Loads ``pine/releases/ATE_v2.2.pine`` and ``pine/development/ATE_Current.pine``
+# directly and asserts the contract recorded in the ATE v2.2 Release Manifest,
+# the approved RiskEngine v1.0 specification, and the Design Chapter 5 of the
+# Architecture baseline (Engine Output Contract).
+#
+# Scope: this is a release-file static verifier. It does NOT execute Pine, does
+# NOT compare against the Python mirror, and does NOT prove empirical
+# usefulness. Empirical claim of the RiskEngine for downstream consumption
+# remains subject to RDR-003 / RDR-003W.
+
+def _sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _read_text(path: Path) -> str:
+    return path.read_text() if path.is_file() else ""
+
+
+v22_src = _read_text(V22_PINE)
+v22_dev_src = _read_text(V22_DEV)
+
+# 1. File integrity.
+check("v22:release_file_exists", V22_PINE.is_file(), str(V22_PINE))
+check("v22:dev_file_exists", V22_DEV.is_file(), str(V22_DEV))
+v22_sha_actual = _sha256(V22_PINE) if V22_PINE.is_file() else None
+v22_dev_sha_actual = _sha256(V22_DEV) if V22_DEV.is_file() else None
+v21_sha_actual = _sha256(PINE_PATH) if PINE_PATH.is_file() else None
+
+if v22_sha_actual is not None:
+    check("v22:release_sha_matches_manifest",
+          v22_sha_actual == V22_EXPECTED_SHA,
+          f"expected={V22_EXPECTED_SHA} actual={v22_sha_actual}")
+if v22_sha_actual is not None and v22_dev_sha_actual is not None:
+    check("v22:release_dev_byte_identical",
+          v22_sha_actual == v22_dev_sha_actual,
+          f"release={v22_sha_actual} dev={v22_dev_sha_actual}")
+if v21_sha_actual is not None:
+    check("v21:release_sha_unchanged",
+          v21_sha_actual == V21_EXPECTED_SHA,
+          f"expected={V21_EXPECTED_SHA} actual={v21_sha_actual}")
+
+# 2. Header / version.
+check("v22:indicator_title_v2_2",
+      "Austin Trading Engine v2.2" in v22_src)
+check("v22:research_mode_ate_version_v2_2",
+      "ATEVersion: v2.2" in v22_src)
+check("v22:risk_engine_version_literal",
+      'riskEngineVersion = "1.0.0-draft"' in v22_src)
+check("v22:vol_engine_version_literal",
+      'volEngineVersion = "1.0.0-draft"' in v22_src)
+
+# 3. RiskEngine approved inputs (exact identifiers).
+V22_REQUIRED_INPUTS = [
+    "riskVolElevatedScore",
+    "riskExtensionAtrLow",
+    "riskExtensionAtrHigh",
+    "riskSwingAtr",
+    "riskConfidenceRiskHigh",
+    "riskConfidenceRiskLow",
+    "riskSmoothingLength",
+]
+for inp in V22_REQUIRED_INPUTS:
+    check(f"v22:risk_input:{inp}", f"{inp} = input" in v22_src)
+
+# 4. Engine Output Contract mapping in Pine.
+V22_EOC = {
+    "score": ["riskScore"],
+    "state": ["riskState"],
+    "direction": ["riskDirection"],
+    "reason": ["riskReason"],
+    "version": ["riskEngineVersion"],
+    "diagnostics": [
+        "riskVolRaw", "riskExtRaw", "riskStructRaw", "riskConflictRaw",
+        "riskVolState", "riskExtState", "riskStructState", "riskConflictState",
+        "riskSmoothedRaw",
+        "riskDiagVolScore", "riskDiagVolShockFlag", "riskDiagConfidenceScore",
+        "riskDiagExtBarRangeAtr", "riskDiagStructLastSwingAtr",
+        "riskDiagConflictCross", "riskDiagInsufficientData",
+    ],
+}
+for kind, vars_ in V22_EOC.items():
+    for vn in vars_:
+        check(f"v22:eoc:{kind}:{vn}", vn in v22_src)
+
+# 5. Allowed states and directions (parsed literal blocks).
+V22_ALLOWED_STATES = {"calm", "normal", "elevated", "tense", "extreme", "unknown"}
+V22_ALLOWED_DIRS = {"none", "elevated", "conflict", "stable", "indeterminate"}
+
+
+def _extract_assignment_block(src: str, name: str) -> str:
+    """Return the text of ``<name> = ...`` until the next blank line, or ''."""
+    pattern = re.compile(
+        r"^\s*" + re.escape(name) + r"\s*=\s*(?:\n|(?:[^\n]*\n))(?:[^\n]*\n)*?[^\n]*(?=\n\n|\n\s*//\s*─|\Z)",
+        re.MULTILINE,
+    )
+    m = pattern.search(src)
+    return m.group(0) if m else ""
+
+
+state_block = _extract_assignment_block(v22_src, "riskState")
+dir_block = _extract_assignment_block(v22_src, "riskDirection")
+reason_block = _extract_assignment_block(v22_src, "riskReason")
+
+for v in V22_ALLOWED_STATES:
+    check(f"v22:risk_state_present:{v}", f'"{v}"' in state_block, v)
+for v in V22_ALLOWED_DIRS:
+    check(f"v22:risk_dir_present:{v}", f'"{v}"' in dir_block, v)
+check("v22:risk_state_no_bullish", '"bullish"' not in state_block)
+check("v22:risk_state_no_bearish", '"bearish"' not in state_block)
+check("v22:risk_dir_no_bullish", '"bullish"' not in dir_block)
+check("v22:risk_dir_no_bearish", '"bearish"' not in dir_block)
+
+# 6. Component scoring.
+for var in ("riskVolRaw", "riskExtRaw", "riskStructRaw", "riskConflictRaw"):
+    check(f"v22:component:{var}", var in v22_src)
+# Cap references — both in the RiskEngine block (clamps) and in the
+# dashboard render cells (" / 35" / " / 30" / " / 20" / " / 15").
+if v22_src:
+    risk_lines = v22_src.split("\n")
+    # Find markers using a coarse heuristic: start at first occurrence of
+    # 'riskVolRaw =', end at the DASHBOARD section marker line (exact match).
+    risk_start = next((i for i, ln in enumerate(risk_lines)
+                       if "riskVolRaw =" in ln), 0)
+    risk_end = next((i for i, ln in enumerate(risk_lines)
+                     if ln.strip() == "// DASHBOARD"), len(risk_lines))
+    risk_block_text = "\n".join(risk_lines[risk_start:risk_end])
+    # Dashboard render caps (lines after the DASHBOARD header).
+    dash_start = risk_end
+    research_marker = next((i for i, ln in enumerate(risk_lines)
+                            if ln.strip() == "// RESEARCH MODE"),
+                           len(risk_lines))
+    dash_block_text = "\n".join(risk_lines[dash_start:research_marker])
+
+    # Each component has a numeric cap. Confirm: (a) the clamp upper bound
+    # equals the documented cap in the RiskEngine block; (b) the dashboard
+    # render string contains " / <cap>".
+    COMPONENT_CAPS = [
+        ("riskVolRaw", 35),
+        ("riskExtRaw", 30),
+        ("riskStructRaw", 20),
+        ("riskConflictRaw", 15),
+    ]
+    for var, cap in COMPONENT_CAPS:
+        # Adjacent line: ``<var> = f_clamp(... , 0.0, <cap>.0)``.
+        # Pine v6 nests ternary expressions with parentheses in f_clamp's
+        # first argument; we therefore look for ``f_clamp(... , 0.0, <cap>.0)``
+        # where the leading ``f_clamp(`` is on the same line as the assignment,
+        # using a non-greedy match that permits nested ``(`` / ``)``.
+        # Implementation: count open vs close parens after ``f_clamp(`` until
+        # the closing ``, 0.0, <cap>.0)`` terminator.
+        clamp_ok = False
+        line_ok = False
+        for ln_i, ln in enumerate(risk_block_text.split("\n")):
+            if not ln.lstrip().startswith(var + " "):
+                continue
+            # Find f_clamp( on this line.
+            idx = ln.find("f_clamp(")
+            if idx < 0:
+                continue
+            # Walk forward to find the matching close paren, then check the
+            # terminator ``, 0.0, <cap>.0)`` immediately after.
+            depth = 0
+            for j in range(idx, len(ln)):
+                ch = ln[j]
+                if ch == "(":
+                    depth += 1
+                elif ch == ")":
+                    depth -= 1
+                    if depth == 0:
+                        tail = ln[idx:j + 1]
+                        if (f", 0.0, {cap}.0)" in tail
+                                or f",0.0,{cap}.0)" in tail):
+                            clamp_ok = True
+                            if var + " " in ln[:idx] or ln.lstrip().startswith(var):
+                                line_ok = True
+                        break
+            break  # only the first matching assignment line
+
+        # Dashboard render with the same cap.
+        dash_cap_str = f"\" / {cap}\""
+        dash_ok = dash_cap_str in dash_block_text
+        check(f"v22:component_cap:{var}:clamp({cap}.0)",
+              clamp_ok and line_ok,
+              f"clamp({cap}.0) for {var}")
+        check(f"v22:component_cap:{var}:dashboard('/ {cap}')",
+              dash_ok, f"dashboard '/ {cap}' for {var}")
+    # Total score 0..100. The actual clauses are f_clamp(..., 0.0, 100.0) in
+    # the source.
+    check("v22:score_clamp_upper_bound_100",
+          "100.0" in risk_block_text, "100.0 upper bound present")
+    check("v22:score_clamp_lower_bound_0",
+          "0.0" in risk_block_text, "0.0 lower bound present")
+
+# 7. Dashboard labels — exact strings.
+V22_DASHBOARD_LABELS = [
+    "Risk Score", "Risk State", "Risk Direction", "Risk Reason", "Risk Engine",
+    "Vol Risk State", "Ext Risk State", "Struct Risk State",
+    "Conflict Risk State",
+    "Vol Risk Contrib", "Ext Risk Contrib", "Struct Risk Contrib",
+    "Conflict Risk Contrib",
+    "Smoothed Risk Score",
+]
+# Extract the DASHBOARD section only (between DASHBOARD header and RESEARCH
+# MODE header) so labels from other sections cannot false-pass.
+if v22_src:
+    sections = v22_src.split("\n")
+    dash_start = next((i for i, ln in enumerate(sections)
+                       if ln.strip() == "// DASHBOARD"), 0)
+    research_marker = next((i for i, ln in enumerate(sections)
+                            if ln.strip() == "// RESEARCH MODE"), len(sections))
+    dash_section = "\n".join(sections[dash_start:research_marker])
+    for lbl in V22_DASHBOARD_LABELS:
+        check(f"v22:dashboard_label:{lbl}", f'"{lbl}"' in dash_section, lbl)
+
+# 8. Research Mode labels — exact strings.
+V22_RESEARCH_LABELS = [
+    "RiskEngineVersion", "RiskScore", "RiskState", "RiskDirection",
+    "RiskReason",
+    "VolRiskContribution", "ExtRiskContribution", "StructRiskContribution",
+    "ConflictRiskContribution",
+    "VolRiskState", "ExtRiskState", "StructRiskState", "ConflictRiskState",
+    "BarRangeATR", "LastSwingATR", "RiskInsufficientData",
+]
+if v22_src:
+    sections = v22_src.split("\n")
+    rm_start = next((i for i, ln in enumerate(sections)
+                     if ln.strip() == "// RESEARCH MODE"), 0)
+    alerts_marker = next((i for i, ln in enumerate(sections)
+                          if ln.strip() == "// ALERTS"), len(sections))
+    research_section = "\n".join(sections[rm_start:alerts_marker])
+    for lbl in V22_RESEARCH_LABELS:
+        check(f"v22:research_mode_label:{lbl}", f'"{lbl}: "' in research_section, lbl)
+
+# 9. Alert preservation. Exactly the 10 ATE v1.3 alerts; no RiskEngine alert.
+ALERT_TITLES = [
+    "ATE Golden Cross",
+    "ATE Death Cross",
+    "ATE Strong Bull",
+    "ATE Strong Bear",
+    "ATE Bullish BOS",
+    "ATE Bearish BOS",
+    "ATE Momentum Bullish",
+    "ATE Momentum Bearish",
+    "ATE High Confidence Bull",
+    "ATE Low Confidence Bear",
+]
+ALERT_PRESENCE = re.findall(r'alertcondition\([^,]+,\s*"([^"]+)"', v22_src)
+for at in ALERT_TITLES:
+    check(f"v22:alert_present:{at}", at in ALERT_PRESENCE, at)
+check("v22:alert_count_equals_10", len(ALERT_PRESENCE) == 10,
+      f"actual={len(ALERT_PRESENCE)} titles={ALERT_PRESENCE}")
+# No RiskEngine alert.
+for forbidden in ("RiskEngine Buy", "RiskEngine Sell", "RiskEngine Entry",
+                  "RiskEngine Exit", "ATE Risk Buy", "ATE Risk Sell"):
+    check(f"v22:no_riskengine_alert:{forbidden}",
+          forbidden not in v22_src, forbidden)
+
+# 10. Boundary checks: RiskEngine must not assign to other engines' outputs.
+BOUNDARY_VARS = ("confidenceScore", "marketState", "trendScore",
+                 "structureScore", "momentumScore",
+                 "volScore", "volState", "volDirection", "volShockFlag")
+if v22_src:
+    sections = v22_src.split("\n")
+    risk_start = next((i for i, ln in enumerate(sections)
+                       if "riskEngineVersion =" in ln), 0)
+    risk_end = next((i for i, ln in enumerate(sections)
+                     if ln.strip() == "// DASHBOARD"), len(sections))
+    risk_block_text = "\n".join(sections[risk_start:risk_end])
+    for var in BOUNDARY_VARS:
+        # Conservative: the RiskEngine block must not contain a direct assignment
+        # to ``var`` on its own line. We look for lines like "var =" or "var +="
+        # which would indicate scoring mutation.
+        pat = re.compile(rf"^\s*{re.escape(var)}\s*=", re.MULTILINE)
+        check(f"v22:boundary_no_assign:{var}", not pat.search(risk_block_text), var)
+# No strategy()/broker/order/execution logic.
+FORBIDDEN_LOGIC = ("strategy(", "broker", "paper-trading", "paper trading",
+                   "order", "position size", "stop distance",
+                   "stop placement", "entry logic", "exit logic")
+# Limit forbidden-logic check to RiskEngine block only (signals/alerts blocks
+# historically carry benign "bullish"/"bearish" wording in alert *messages*,
+# not strategy() calls — but we still scope to be safe).
+if v22_src:
+    sections = v22_src.split("\n")
+    risk_start = next((i for i, ln in enumerate(sections)
+                       if "riskEngineVersion =" in ln), 0)
+    risk_end = next((i for i, ln in enumerate(sections)
+                     if ln.strip() == "// DASHBOARD"), len(sections))
+    risk_block_text = "\n".join(sections[risk_start:risk_end]).lower()
+    for w in FORBIDDEN_LOGIC:
+        check(f"v22:no_forbidden_logic:{w}", w not in risk_block_text, w)
+
+# 11. Reserved language — scoped to RiskEngine output/display fields only.
+# Three spans:
+#   a. riskState literal assignment block
+#   b. riskDirection literal assignment block
+#   c. riskReason literal assignment block
+#   d. RiskEngine dashboard cells (rows 19..32) — extracted by line range
+#      from the DASHBOARD section.
+#   e. Research Mode body (after 'if showResearch' until end of section).
+RESERVED_LANG = ["safe", "unsafe", "suitable", "unsuitable",
+                 "approved", "blocked", "tradeable", "untradeable"]
+
+
+def _span_reserved(text: str, span_name: str) -> None:
+    t = text.lower()
+    for w in RESERVED_LANG:
+        # Boundary check: require the word to appear as a discrete token
+        # surrounded by non-word characters (whitespace, punctuation,
+        # quotes). Pine uses double quotes around string literals, so we
+        # also explicitly handle '"..."' patterns.
+        for boundary_token in (f'"{w}"', f' {w} ', f' {w},', f',{w} ',
+                               f' {w}.', f'.{w} ', f' {w}?', f'?{w} ',
+                               f' {w}!', f'!{w} '):
+            if boundary_token in t:
+                check(f"v22:reserved:{span_name}:{w}", False,
+                      f'matched token "{w}"')
+                return
+        check(f"v22:reserved:{span_name}:{w}", True)
+
+
+_span_reserved(state_block, "risk_state_block")
+_span_reserved(dir_block, "risk_direction_block")
+_span_reserved(reason_block, "risk_reason_block")
+
+# Dashboard RiskEngine rows: in v2.2 these are rows 19..32 inclusive.
+# Locate the dashboard section, then slice lines containing table.cell calls
+# for rows 19..32.
+if v22_src:
+    sections = v22_src.split("\n")
+    dash_start = next((i for i, ln in enumerate(sections)
+                       if ln.strip() == "// DASHBOARD"), 0)
+    research_marker = next((i for i, ln in enumerate(sections)
+                            if ln.strip() == "// RESEARCH MODE"), len(sections))
+    dash_lines = sections[dash_start:research_marker]
+    risk_dash_texts = []
+    for ln in dash_lines:
+        # Match table.cell(... , row N, ...) for N between 19 and 32.
+        m = re.search(r"^\s*table\.cell\(\s*\w+\s*,\s*\d+\s*,\s*(\d+)\s*,", ln)
+        if m and 19 <= int(m.group(1)) <= 32:
+            risk_dash_texts.append(ln)
+    dash_block = "\n".join(risk_dash_texts)
+    _span_reserved(dash_block, "risk_dashboard")
+
+# Research Mode body: lines between 'if showResearch' and the closing
+# table.cell(research, ...) call.
+if v22_src:
+    sections = v22_src.split("\n")
+    rm_start = next((i for i, ln in enumerate(sections)
+                     if ln.strip() == "// RESEARCH MODE"), 0)
+    alerts_marker = next((i for i, ln in enumerate(sections)
+                          if ln.strip() == "// ALERTS"), len(sections))
+    rm_section = sections[rm_start:alerts_marker]
+    # Find first 'if showResearch' and slice to end-of-section text body.
+    try:
+        body_start = next(i for i, ln in enumerate(rm_section)
+                          if "if showResearch" in ln)
+    except StopIteration:
+        body_start = 0
+    body_text = "\n".join(rm_section[body_start:])
+    _span_reserved(body_text, "research_mode")
+
+# ---------------------------------------------------------------------------
 # Output: stdout summary + verify.log
 # ---------------------------------------------------------------------------
 
@@ -619,13 +989,26 @@ total = len(results)
 passed = sum(1 for r in results if r["ok"])
 failed = total - passed
 
-pine_sha = hashlib.sha256(PINE_PATH.read_bytes()).hexdigest() if PINE_PATH.is_file() else None
+pine_sha = v21_sha_actual or (hashlib.sha256(PINE_PATH.read_bytes()).hexdigest() if PINE_PATH.is_file() else None)
 
 summary = {
     "verifier": "ERP-001 canonical ATE verifier",
     "kind": "behaviour and contract verifier (NOT a suite green validation)",
-    "engine_target": "ATE v2.1 / VolatilityEngine v1.0.0-draft + ATE v2.2 / RiskEngine v1.0.0-draft (planned, Python mirror)",
+    "engine_target": (
+        "ATE v2.1 / VolatilityEngine v1.0.0-draft "
+        "+ ATE v2.2 / RiskEngine v1.0.0-draft (planned Python mirror + v2.2 release file)"
+    ),
     "release_sha256_pine": pine_sha,
+    "v21_release_sha256_expected": V21_EXPECTED_SHA,
+    "v21_release_sha256_unchanged": (v21_sha_actual == V21_EXPECTED_SHA) if v21_sha_actual is not None else False,
+    "v22_release_sha256_actual": v22_sha_actual,
+    "v22_release_sha256_expected": V22_EXPECTED_SHA,
+    "v22_release_sha256_matches_manifest": (
+        v22_sha_actual == V22_EXPECTED_SHA) if v22_sha_actual is not None else False,
+    "v22_dev_sha256_actual": v22_dev_sha_actual,
+    "v22_release_dev_byte_identical": (
+        v22_sha_actual is not None and v22_dev_sha_actual is not None
+        and v22_sha_actual == v22_dev_sha_actual),
     "fixtures": sorted([p.name for p in FIXTURE_DIR.glob("*.csv")]),
     "fixture_dists": {
         "quiet": _dist(quiet_out),
