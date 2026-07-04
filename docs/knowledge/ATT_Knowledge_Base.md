@@ -108,6 +108,12 @@ Evidence: `tools/scripts/verify_ate.py` was extended in 2026-07 to directly load
 
 Knowledge entry: The canonical verifier command remains `python tools/scripts/verify_ate.py`. Current result: 442/442 checks pass (exit 0); v2.2 release SHA matches the manifest, the dev mirror is byte-identical, and v2.1 SHA is unchanged. The release-file checks are static and scope-reserved (no Pine execution); they cover the seven approved RiskEngine inputs, the Engine Output Contract variables, the allowed state and direction literals (`calm`/`normal`/`elevated`/`tense`/`extreme`/`unknown` and `none`/`elevated`/`conflict`/`stable`/`indeterminate`), the four-component cap clamps (`f_clamp(..., 0.0, 35.0/30.0/20.0/15.0)`), the total `riskScore` clamp `[0.0, 100.0]`, the 14 approved dashboard labels, the 15 Research Mode labels, exactly 10 alertcondition titles matching ATE v2.1, no RiskEngine alert, boundary discipline (no assignment to other engines' outputs and no `strategy(...)`/broker/order/sizing/stop/entry-logic/exit-logic logic), and reserved-language absence (`safe`/`unsafe`/`suitable`/`unsuitable`/`approved`/`blocked`/`tradeable`/`untradeable`) scoped to the RiskEngine literal assignment blocks, RiskEngine dashboard cells, and Research Mode body only. Like the existing compute-path checks, this extension does NOT prove empirical usefulness and does NOT change the RiskEngine classification. RDR-003 / RDR-003W remain required for any future diagnostic-to-downstream change.
 
+### ATE v2.2 user handbook published
+
+Evidence: `docs/user/ATE_User_Handbook.md` was added as the plain-English user guide for reading the ATE v2.2 TradingView indicator.
+
+Knowledge entry: ATE v2.2 is a user-facing TradingView market analysis indicator with a dashboard. VolatilityEngine and RiskEngine are user-visible on the dashboard but remain diagnostic-only. ATE does not place trades, does not connect to a broker, does not manage positions, does not guarantee profit, and does not issue financial advice. The 10 ATE alerts are Golden Cross, Death Cross, Strong Bull, Strong Bear, Bullish BOS, Bearish BOS, Momentum Bullish, Momentum Bearish, High Confidence Bull, and Low Confidence Bear. These are the only alerts produced by ATE v2.2. ConfidenceEngine does not consume VolatilityEngine or RiskEngine. The handbook is plain-English and contains no research methodology or technical implementation detail.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

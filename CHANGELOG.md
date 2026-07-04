@@ -160,6 +160,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Negative findings: state distribution still calm/normal-skewed (median pct_calm 68.0%); `tense`/`extreme` evidence remains thin on weekly bars; hidden-bias median moves modestly upward 4.5pp → 7.5pp due to small `extreme`/`tense` weekly samples; Conflict component remains small in most bars; what is measured here is the deterministic Python mirror; Pine-vs-Python parity check remains a separate prerequisite before any downstream consumption claim.
   - Follow-up: Pine-vs-Python parity check; any future daily threshold retest must be re-validated on weekly bars before re-classifying RiskEngine from "Supported" → "Confirmed-Supported".
   - No ATE Pine logic modified. No broker, no paper-trading API. Diagnostic only.
+- ATE v2.2 User Handbook added at `docs/user/ATE_User_Handbook.md`.
+  - Plain-English reader guide for the TradingView chart.
+  - Verifies against `pine/releases/ATE_v2.2.pine`, `docs/releases/ATE_v2.2_Release_Manifest.md`, `specifications/ATE/RiskEngine.md`, and `specifications/ATE/VolatilityEngine.md`.
+  - Preserves the diagnostic-only status of VolatilityEngine and RiskEngine.
+  - Preserves the no-execution boundary.
+  - 10 alert list matches preserved ATE alertcondition calls exactly.
+  - No Pine logic modified.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
