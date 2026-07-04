@@ -1,19 +1,17 @@
 //@version=6
-indicator("Austin Trading Engine v2.2 [RDR-004 Export Helper - temporary]", shorttitle="ATE v2.2 EXPORT", overlay=true, max_labels_count=500)
+indicator("Austin Trading Engine v2.2 [RDR-004 Export Helper - temporary]", shorttitle="ATE EXP", overlay=true, max_labels_count=500, max_bars_back=5000)
 
 // ═════════════════════════════════════════════════════════════════════════════
-// AUSTIN TRADING ENGINE v2.2
-// Diagnostic-only RiskEngine release
+// ATE v2.2 RDR-004 EXPORT HELPER — TEMPORARY
 //
-// RiskEngine v1.0.0-draft:
-// - Dashboard display: YES
-// - Research Mode output: YES
-// - ConfidenceEngine impact: NO
-// - DecisionEngine impact: NO
-// - Entry/exit impact: NO
-// - Position sizing impact: NO
-// - Stop logic impact: NO
-// - Risk alerts: NO
+// NOT part of the ATE v2.2 release.
+// DO NOT use for live trading.
+// DO NOT use as an indicator release.
+// DO NOT promote these plot() outputs back into pine/releases/ATE_v2.2.pine.
+//
+// Purpose:
+// Export RiskEngine per-bar values from TradingView for RDR-004 Pine-vs-Python
+// parity testing.
 // ═════════════════════════════════════════════════════════════════════════════
 
 
@@ -88,16 +86,15 @@ riskConfidenceRiskLow = input.float(20.0, "Risk Confidence Low", minval=0, maxva
 riskSmoothingLength = input.int(3, "Risk Smoothing Length", minval=1, maxval=20, group=grpRisk)
 
 grpVisual = "Visuals"
-showFast = input.bool(true, "Show Fast MAs", group=grpVisual)
-showMed = input.bool(true, "Show Medium MAs", group=grpVisual)
-showSlow = input.bool(true, "Show Slow MAs", group=grpVisual)
-showDash = input.bool(true, "Show Dashboard", group=grpVisual)
-showSignals = input.bool(true, "Show Signals", group=grpVisual)
-showBg = input.bool(true, "Trend Background", group=grpVisual)
+showFast = input.bool(false, "Show Fast MAs", group=grpVisual)
+showMed = input.bool(false, "Show Medium MAs", group=grpVisual)
+showSlow = input.bool(false, "Show Slow MAs", group=grpVisual)
+showBg = input.bool(false, "Trend Background", group=grpVisual)
 slopeLookback = input.int(3, "MA Slope Lookback", minval=1, maxval=20, group=grpVisual)
 
-grpResearch = "ATE Research Mode"
-showResearch = input.bool(false, "Show Research Output", group=grpResearch)
+grpResearch = "RDR-004 Export"
+showResearch = input.bool(true, "Show Research Output", group=grpResearch)
+rdr004_session_id = input.string("rdr004-001", "RDR-004 session id", group=grpResearch)
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -134,13 +131,6 @@ f_scoreColor(score) =>
      score > 40 ? color.yellow :
      score > 20 ? color.orange : color.red
 
-f_volColor(score) =>
-    na(score) ? color.gray :
-     score >= 80 ? color.lime :
-     score >= 60 ? color.green :
-     score >= 40 ? color.yellow :
-     score >= 20 ? color.orange : color.red
-
 f_riskColor(score) =>
     na(score) ? color.gray :
      score <= 15 ? color.lime :
@@ -148,14 +138,17 @@ f_riskColor(score) =>
      score <= 55 ? color.yellow :
      score <= 75 ? color.orange : color.red
 
-f_fmt(v) =>
-    na(v) ? "na" : str.tostring(v, "#.##")
-
 f_clamp(v, lo, hi) =>
     na(v) ? na : math.max(lo, math.min(hi, v))
 
 f_linear(v, lo, hi, outLo, outHi) =>
     na(v) or hi == lo ? na : outLo + ((v - lo) / (hi - lo)) * (outHi - outLo)
+
+f_fmt(v) =>
+    na(v) ? "na" : str.tostring(v, "#.######")
+
+f_bool(v) =>
+    v ? "true" : "false"
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -173,18 +166,6 @@ m3 = f_ma(src, mLen3, maType)
 s1 = f_ma(src, sLen1, maType)
 s2 = f_ma(src, sLen2, maType)
 s3 = f_ma(src, sLen3, maType)
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// COLOURS
-// ─────────────────────────────────────────────────────────────────────────────
-
-fastUpCol = color.new(#00E5FF, 0)
-fastDnCol = color.new(#FF1744, 0)
-medUpCol = color.new(#00E676, 0)
-medDnCol = color.new(#FF9100, 0)
-slowUpCol = color.new(#2979FF, 0)
-slowDnCol = color.new(#AA00FF, 0)
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -209,7 +190,6 @@ mediumScore =
 
 trendScore = priceScore + slowAlignScore + slopeScore + fastScore + mediumScore
 marketState = f_state(trendScore)
-stateCol = f_scoreColor(trendScore)
 
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -258,8 +238,6 @@ structureState =
      structureScore > 40 ? "NEUTRAL" :
      structureScore > 20 ? "LEANING BEARISH" : "BEARISH STRUCTURE"
 
-structureCol = f_scoreColor(structureScore)
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // MOMENTUM ENGINE
@@ -301,12 +279,9 @@ momentumState =
      momentumScore > 40 ? "NEUTRAL MOMENTUM" :
      momentumScore > 20 ? "BEARISH MOMENTUM" : "WEAK MOMENTUM"
 
-momentumCol = f_scoreColor(momentumScore)
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // VOLATILITY ENGINE v1.0.0-draft
-// DIAGNOSTIC ONLY — DOES NOT AFFECT CONFIDENCE, RISK DECISIONS OR SIGNALS
 // ─────────────────────────────────────────────────────────────────────────────
 
 volEngineVersion = "1.0.0-draft"
@@ -375,12 +350,9 @@ volReason =
      volState == "compressed" ? "Volatility compressed below baseline" :
      "Volatility near asset baseline"
 
-volCol = f_volColor(volScore)
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // CONFIDENCE ENGINE
-// IMPORTANT: VolatilityEngine and RiskEngine are NOT used in confidenceScore
 // ─────────────────────────────────────────────────────────────────────────────
 
 totalWeight = trendWeight + structureWeight + momentumWeight
@@ -400,25 +372,19 @@ confidenceState =
      confidenceScore > 40 ? "LOW / MIXED" :
      confidenceScore > 20 ? "BEARISH CONFIDENCE" : "STRONG BEARISH"
 
-confidenceCol = f_scoreColor(confidenceScore)
-
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RISK ENGINE v1.0.0-draft
-// DIAGNOSTIC ONLY — DOES NOT AFFECT CONFIDENCE, DECISION OR SIGNALS
 // ─────────────────────────────────────────────────────────────────────────────
 
 riskEngineVersion = "1.0.0-draft"
 
-// Diagnostic input snapshots
 riskDiagVolScore = volScore
 riskDiagVolShockFlag = volShockFlag
 riskDiagConfidenceScore = confidenceScore
 
-// Extension diagnostic
 riskDiagExtBarRangeAtr = na(volAtr) or volAtr == 0 ? na : (high - low) / volAtr
 
-// Structure diagnostic using nearest confirmed swing level
 riskHasHigh = not na(lastHigh)
 riskHasLow = not na(lastLow)
 
@@ -429,14 +395,12 @@ riskNearestSwingDistance =
 
 riskDiagStructLastSwingAtr = na(volAtr) or volAtr == 0 or na(riskNearestSwingDistance) ? na : riskNearestSwingDistance / volAtr
 
-// Conflict diagnostic
 riskTrendMomentumDiff = trendScore - momentumScore
 riskTrendMomentumCrossBars = ta.barssince(ta.cross(riskTrendMomentumDiff, 0))
 riskDiagConflictCross = not na(riskTrendMomentumCrossBars) and riskTrendMomentumCrossBars <= riskSmoothingLength
 
 riskDiagInsufficientData = not showRisk or na(volAtr) or na(riskDiagExtBarRangeAtr) or na(riskDiagStructLastSwingAtr) or na(confidenceScore)
 
-// Volatility risk contribution: 0 to 35
 riskVolBase =
      na(riskDiagVolScore) ? 10.0 :
      riskDiagVolScore < riskVolElevatedScore ? 10.0 :
@@ -450,12 +414,10 @@ riskVolState =
      riskVolRaw <= 15 ? "volElev" :
      riskVolRaw <= 25 ? "volTense" : "volExtreme"
 
-// Extension risk contribution: 0 to 30
 riskExtRawUnclamped =
      na(riskDiagExtBarRangeAtr) ? 10.0 :
      riskDiagExtBarRangeAtr <= riskExtensionAtrLow ? 0.0 :
-     riskDiagExtBarRangeAtr <= riskExtensionAtrHigh ?
-         f_linear(riskDiagExtBarRangeAtr, riskExtensionAtrLow, riskExtensionAtrHigh, 0.0, 20.0) : 30.0
+     riskDiagExtBarRangeAtr <= riskExtensionAtrHigh ? f_linear(riskDiagExtBarRangeAtr, riskExtensionAtrLow, riskExtensionAtrHigh, 0.0, 20.0) : 30.0
 
 riskExtRaw = f_clamp(riskExtRawUnclamped, 0.0, 30.0)
 
@@ -464,52 +426,46 @@ riskExtState =
      riskExtRaw <= 15 ? "extNorm" :
      riskExtRaw <= 25 ? "extStretch" : "extExtreme"
 
-// Structure risk contribution: 0 to 20
 riskStructMid = riskSwingAtr * 1.5
 riskStructHigh = riskSwingAtr * 2.0
 
-riskStructRawUnclamped =
-     not showStructure ? 0.0 :
-na(riskDiagStructLastSwingAtr) ? 10.0 :
-riskDiagStructLastSwingAtr <= riskSwingAtr ? 0.0 :
-riskDiagStructLastSwingAtr <= riskStructMid ?
-f_linear(riskDiagStructLastSwingAtr, riskSwingAtr, riskStructMid, 0.0, 12.0) :
-riskDiagStructLastSwingAtr <= riskStructHigh ?
-f_linear(riskDiagStructLastSwingAtr, riskStructMid, riskStructHigh, 12.0, 18.0) : 20.0
+riskStructRawUnclamped = not showStructure ? 10.0 : na(riskDiagStructLastSwingAtr) ? 10.0 : riskDiagStructLastSwingAtr <= riskSwingAtr ? 0.0 : riskDiagStructLastSwingAtr <= riskStructMid ? f_linear(riskDiagStructLastSwingAtr, riskSwingAtr, riskStructMid, 0.0, 12.0) : riskDiagStructLastSwingAtr <= riskStructHigh ? f_linear(riskDiagStructLastSwingAtr, riskStructMid, riskStructHigh, 12.0, 18.0) : 20.0
+
 riskStructRaw = f_clamp(riskStructRawUnclamped, 0.0, 20.0)
+
 riskStructState =
-riskStructRaw <= 4 ? "structTight" :
-riskStructRaw <= 10 ? "structNorm" :
-riskStructRaw <= 15 ? "structStretch" : "structRisk"
-// Conflict risk contribution: 0 to 15
+     riskStructRaw <= 4 ? "structTight" :
+     riskStructRaw <= 10 ? "structNorm" :
+     riskStructRaw <= 15 ? "structStretch" : "structRisk"
+
 riskConflictBase =
-confidenceScore >= riskConfidenceRiskHigh ? 10.0 :
-confidenceScore <= riskConfidenceRiskLow ? 10.0 : 0.0
+     confidenceScore >= riskConfidenceRiskHigh ? 10.0 :
+     confidenceScore <= riskConfidenceRiskLow ? 10.0 : 0.0
+
 riskConflictRaw = f_clamp(riskConflictBase + (riskDiagConflictCross ? 5.0 : 0.0), 0.0, 15.0)
+
 riskConflictState =
-riskConflictRaw == 0 ? "conflictNone" :
-riskConflictRaw <= 5 ? "conflictMild" :
-riskConflictRaw <= 10 ? "conflictElevated" : "conflictHigh"
-// Total risk diagnostic score
+     riskConflictRaw == 0 ? "conflictNone" :
+     riskConflictRaw <= 5 ? "conflictMild" :
+     riskConflictRaw <= 10 ? "conflictElevated" : "conflictHigh"
+
 riskTotalRaw = riskVolRaw + riskExtRaw + riskStructRaw + riskConflictRaw
 riskSmoothedRaw = ta.sma(riskTotalRaw, riskSmoothingLength)
 riskScore = riskDiagInsufficientData ? na : f_clamp(riskSmoothedRaw, 0.0, 100.0)
-// Risk state
+
 riskState =
-na(riskScore) ? "unknown" :
-riskScore >= 75 ? "extreme" :
-riskScore >= 55 ? "tense" :
-riskScore >= 35 ? "elevated" :
-riskScore >= 15 ? "normal" : "calm"
-// Risk direction
+     na(riskScore) ? "unknown" :
+     riskScore >= 75 ? "extreme" :
+     riskScore >= 55 ? "tense" :
+     riskScore >= 35 ? "elevated" :
+     riskScore >= 15 ? "normal" : "calm"
+
 riskMultipleComponentsHigh = (riskVolRaw > 25 ? 1 : 0) + (riskExtRaw > 25 ? 1 : 0) + (riskStructRaw > 15 ? 1 : 0) + (riskConflictRaw > 10 ? 1 : 0)
 riskDirection =
 na(riskScore) ? "none" :
 riskConflictRaw >= 10 and riskVolRaw >= 15 ? "conflict" :
 riskMultipleComponentsHigh >= 2 ? "indeterminate" :
 not na(riskScore[1]) and riskScore > riskScore[1] + 5 ? "elevated" : "stable"
-// Risk reason
-
 riskReason =
 riskState == "unknown" ? "Insufficient risk data" :
 riskConflictRaw >= 10 and riskVolRaw >= 15 ? "Conflict and volatility pressure" :
@@ -519,288 +475,74 @@ riskExtRaw >= riskVolRaw and riskExtRaw >= riskStructRaw and riskExtRaw >= riskC
 riskStructRaw >= riskVolRaw and riskStructRaw >= riskExtRaw and riskStructRaw >= riskConflictRaw and riskStructRaw > 5 ? "Structure component dominant" :
 riskConflictRaw > 0 ? "Conflict component active" :
 riskState == "calm" ? "Low component pressure" : "Risk components within range"
-riskCol = f_riskColor(riskScore)
 // ─────────────────────────────────────────────────────────────────────────────
-// PLOTS
+// HELPER-ONLY EXPORT ALIASES
 // ─────────────────────────────────────────────────────────────────────────────
-plot(showFast ? f1 : na, "Fast 1", color=f_up(f1) ? fastUpCol : f_dn(f1) ? fastDnCol : color.gray, linewidth=1)
-plot(showFast ? f2 : na, "Fast 2", color=f_up(f2) ? fastUpCol : f_dn(f2) ? fastDnCol : color.gray, linewidth=1)
-plot(showFast ? f3 : na, "Fast 3", color=f_up(f3) ? fastUpCol : f_dn(f3) ? fastDnCol : color.gray, linewidth=1)
-plot(showMed ? m1 : na, "Medium 1", color=f_up(m1) ? medUpCol : f_dn(m1) ? medDnCol : color.gray, linewidth=2)
-plot(showMed ? m2 : na, "Medium 2", color=f_up(m2) ? medUpCol : f_dn(m2) ? medDnCol : color.gray, linewidth=2)
-plot(showMed ? m3 : na, "Medium 3", color=f_up(m3) ? medUpCol : f_dn(m3) ? medDnCol : color.gray, linewidth=2)
-plot(showSlow ? s1 : na, "Slow 1", color=f_up(s1) ? slowUpCol : f_dn(s1) ? slowDnCol : color.gray, linewidth=2)
-plot(showSlow ? s2 : na, "Slow 2", color=f_up(s2) ? slowUpCol : f_dn(s2) ? slowDnCol : color.gray, linewidth=3)
-plot(showSlow ? s3 : na, "Slow 3", color=f_up(s3) ? slowUpCol : f_dn(s3) ? slowDnCol : color.gray, linewidth=4)
-bgcolor(showBg ? color.new(confidenceCol, 90) : na)
-// ─────────────────────────────────────────────────────────────────────────────
-// SIGNALS
-// RiskEngine creates no signals or alerts in ATE v2.2
-// ─────────────────────────────────────────────────────────────────────────────
-goldenCross = ta.crossover(s1, s3)
-deathCross = ta.crossunder(s1, s3)
-strongBullStart = trendScore >= 80 and trendScore[1] < 80
-strongBearStart = trendScore <= 20 and trendScore[1] > 20
-momentumBull = momentumScore >= 70 and momentumScore[1] < 70
-momentumBear = momentumScore <= 30 and momentumScore[1] > 30
-confidenceBull = confidenceScore >= 75 and confidenceScore[1] < 75
-confidenceBear = confidenceScore <= 30 and confidenceScore[1] > 30
-plotshape(showSignals and goldenCross, title="Golden Cross", style=shape.diamond, location=location.belowbar, color=medUpCol, size=size.normal, text="GOLDEN", textcolor=color.white)
-plotshape(showSignals and deathCross, title="Death Cross", style=shape.diamond, location=location.abovebar, color=medDnCol, size=size.normal, text="DEATH", textcolor=color.white)
-plotshape(showSignals and strongBullStart, title="Strong Bull Start", style=shape.triangleup, location=location.belowbar, color=color.lime, size=size.small, text="ATE BULL", textcolor=color.white)
-plotshape(showSignals and strongBearStart, title="Strong Bear Start", style=shape.triangledown, location=location.abovebar, color=color.red, size=size.small, text="ATE BEAR", textcolor=color.white)
-plotshape(showStructure and not na(swingHigh), title="Swing High", style=shape.circle, location=location.abovebar, color=color.red, size=size.tiny, offset=-pivotLen)
-plotshape(showStructure and not na(swingLow), title="Swing Low", style=shape.circle, location=location.belowbar, color=color.lime, size=size.tiny, offset=-pivotLen)
-plotshape(showStructure and bosBull, title="Bullish BOS", style=shape.labelup, location=location.belowbar, color=color.lime, text="BOS", textcolor=color.white, size=size.tiny)
-plotshape(showStructure and bosBear, title="Bearish BOS", style=shape.labeldown, location=location.abovebar, color=color.red, text="BOS", textcolor=color.white, size=size.tiny)
-// ─────────────────────────────────────────────────────────────────────────────
-// DASHBOARD
-// ─────────────────────────────────────────────────────────────────────────────
-var table dash = table.new(position.top_right, 2, 38, border_width=1)
-if barstate.islast
-table.clear(dash, 0, 0, 1, 37)
-if showDash
-table.cell(dash, 0, 0, "AUSTIN TRADING ENGINE", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
-table.cell(dash, 1, 0, "v2.2", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
-table.cell(dash, 0, 1, "Profile", text_color=color.white, bgcolor=color.new(color.gray, 70))
-table.cell(dash, 1, 1, profile, text_color=color.white, bgcolor=color.new(color.gray, 70))
-table.cell(dash, 0, 2, "Timeframe", text_color=color.white, bgcolor=color.new(color.gray, 70))
-table.cell(dash, 1, 2, timeframe.period, text_color=color.white, bgcolor=color.new(color.gray, 70))
-table.cell(dash, 0, 3, "Trend Score", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 3, str.tostring(trendScore, "#") + " / 100", text_color=stateCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 4, "Market State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 4, marketState, text_color=stateCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 5, "Structure Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 5, str.tostring(structureScore, "#") + " / 100", text_color=structureCol, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 6, "Structure State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 6, structureState, text_color=structureCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 7, "Momentum Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 7, str.tostring(momentumScore, "#") + " / 100", text_color=momentumCol, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 8, "Momentum State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 8, momentumState, text_color=momentumCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 9, "Confidence Score", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 9, str.tostring(confidenceScore, "#") + " / 100", text_color=confidenceCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 10, "Confidence State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 10, confidenceState, text_color=confidenceCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 11, "Volatility Score", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 11, na(volScore) ? "na" : str.tostring(volScore, "#") + " / 100", text_color=volCol, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 12, "Volatility State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 12, volState, text_color=volCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 13, "Vol Direction", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 13, volDirection, text_color=volCol, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 14, "ATR % / Ratio", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 14, f_fmt(volAtrPercent) + " / " + f_fmt(volAtrRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 15, "BB Ratio", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 15, f_fmt(volBbWidthRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 16, "Combined Vol", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 16, f_fmt(volCombinedRatio), text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 17, "Shock Flag", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 17, volShockFlag ? "TRUE" : "false", text_color=volShockFlag ? color.red : color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 18, "Vol Reason", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 18, volReason, text_color=volCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 19, "Risk Score", text_color=color.white, bgcolor=color.new(color.black, 20))
-
-table.cell(dash, 1, 19, na(riskScore) ? "na" : str.tostring(riskScore, "#") + " / 100", text_color=riskCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 20, "Risk State", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 20, riskState, text_color=riskCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 21, "Risk Direction", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 21, riskDirection, text_color=riskCol, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 22, "Risk Reason", text_color=color.white, bgcolor=color.new(color.black, 20))
-table.cell(dash, 1, 22, riskReason, text_color=riskCol, bgcolor=color.new(color.black, 20))
-table.cell(dash, 0, 23, "Risk Engine", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 1, 23, riskEngineVersion + " diagnostic", text_color=color.white, bgcolor=color.new(color.gray, 80))
-table.cell(dash, 0, 24, "Vol Risk State", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 24, riskVolState, text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 25, "Ext Risk State", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 25, riskExtState, text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 26, "Struct Risk State", text_color=color.white, bgcolor=color.new(color.gray, 85))
-
-table.cell(dash, 1, 26, riskStructState, text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 27, "Conflict Risk State", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 27, riskConflictState, text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 28, "Vol Risk Contrib", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 28, f_fmt(riskVolRaw) + " / 35", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 29, "Ext Risk Contrib", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 29, f_fmt(riskExtRaw) + " / 30", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 30, "Struct Risk Contrib", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 30, f_fmt(riskStructRaw) + " / 20", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 31, "Conflict Risk Contrib", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 31, f_fmt(riskConflictRaw) + " / 15", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 32, "Smoothed Risk Score", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 32, f_fmt(riskSmoothedRaw), text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 33, "Price Score", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 33, str.tostring(priceScore, "#") + " / 20", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 34, "Slow Align", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 34, str.tostring(slowAlignScore, "#") + " / 30", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 35, "Slope Score", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 35, str.tostring(slopeScore, "#") + " / 20", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 36, "RSI/MACD/ADX", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 36, str.tostring(rsiScore, "#") + "/" + str.tostring(macdScore, "#") + "/" + str.tostring(adxScore, "#"), text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 0, 37, "Vol Engine", text_color=color.white, bgcolor=color.new(color.gray, 85))
-table.cell(dash, 1, 37, volEngineVersion + " diagnostic", text_color=color.white, bgcolor=color.new(color.gray, 85))
-
-// ─────────────────────────────────────────────────────────────────────────────
-// RESEARCH MODE
-// ─────────────────────────────────────────────────────────────────────────────
-var table research = table.new(position.bottom_right, 1, 1, border_width=1)
-if barstate.islast
-table.clear(research, 0, 0, 0, 0)
-if showResearch
-researchText =
-"ATE_RESEARCH_LOG\n" +
-"ATEVersion: v2.2\n" +
-"Symbol: " + syminfo.ticker + "\n" +
-"Timeframe: " + timeframe.period + "\n" +
-"Profile: " + profile + "\n" +
-"TrendScore: " + str.tostring(trendScore, "#") + "\n" +
-"StructureScore: " + str.tostring(structureScore, "#") + "\n" +
-"MomentumScore: " + str.tostring(momentumScore, "#") + "\n" +
-"ConfidenceScore: " + str.tostring(confidenceScore, "#") + "\n" +
-"MarketState: " + marketState + "\n" +
-"StructureState: " + structureState + "\n" +
-"MomentumState: " + momentumState + "\n" +
-"VolatilityEngineVersion: " + volEngineVersion + "\n" +
-"VolatilityScore: " + f_fmt(volScore) + "\n" +
-"VolatilityState: " + volState + "\n" +
-"VolatilityDirection: " + volDirection + "\n" +
-"VolatilityReason: " + volReason + "\n" +
-"ATRPercent: " + f_fmt(volAtrPercent) + "\n" +
-"ATRRatio: " + f_fmt(volAtrRatio) + "\n" +
-"BBWidthRatio: " + f_fmt(volBbWidthRatio) + "\n" +
-"CombinedVolRatio: " + f_fmt(volCombinedRatio) + "\n" +
-"VolSlope: " + f_fmt(volSlope) + "\n" +
-"ShockFlag: " + str.tostring(volShockFlag) + "\n" +
-"RiskEngineVersion: " + riskEngineVersion + "\n" +
-"RiskScore: " + f_fmt(riskScore) + "\n" +
-"RiskState: " + riskState + "\n" +
-"RiskDirection: " + riskDirection + "\n" +
-"RiskReason: " + riskReason + "\n" +
-"VolRiskContribution: " + f_fmt(riskVolRaw) + "\n" +
-"ExtRiskContribution: " + f_fmt(riskExtRaw) + "\n" +
-"StructRiskContribution: " + f_fmt(riskStructRaw) + "\n" +
-"ConflictRiskContribution: " + f_fmt(riskConflictRaw) + "\n" +
-"VolRiskState: " + riskVolState + "\n" +
-"ExtRiskState: " + riskExtState + "\n" +
-"StructRiskState: " + riskStructState + "\n" +
-"ConflictRiskState: " + riskConflictState + "\n" +
-"BarRangeATR: " + f_fmt(riskDiagExtBarRangeAtr) + "\n" +
-"LastSwingATR: " + f_fmt(riskDiagStructLastSwingAtr) + "\n" +
-"RiskInsufficientData: " + str.tostring(riskDiagInsufficientData) + "\n" +
-"Close: " + str.tostring(close, "#.##")
-table.cell(research, 0, 0, researchText, text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.small)
-// ─────────────────────────────────────────────────────────────────────────────
-// ALERTS
-// No RiskEngine alerts in ATE v2.2.
-// Existing ATE alert behaviour preserved.
-// ─────────────────────────────────────────────────────────────────────────────
-alertcondition(goldenCross, "ATE Golden Cross", "Austin Trading Engine: Golden Cross detected")
-alertcondition(deathCross, "ATE Death Cross", "Austin Trading Engine: Death Cross detected")
-alertcondition(strongBullStart, "ATE Strong Bull", "Austin Trading Engine: Strong Bull market state started")
-alertcondition(strongBearStart, "ATE Strong Bear", "Austin Trading Engine: Strong Bear market state started")
-alertcondition(bosBull, "ATE Bullish BOS", "Austin Trading Engine: Bullish Break of Structure")
-alertcondition(bosBear, "ATE Bearish BOS", "Austin Trading Engine: Bearish Break of Structure")
-alertcondition(momentumBull, "ATE Momentum Bullish", "Austin Trading Engine: Momentum became bullish")
-alertcondition(momentumBear, "ATE Momentum Bearish", "Austin Trading Engine: Momentum became bearish")
-alertcondition(confidenceBull, "ATE High Confidence Bull", "Austin Trading Engine: Confidence crossed bullish threshold")
-alertcondition(confidenceBear, "ATE Low Confidence Bear", "Austin Trading Engine: Confidence crossed bearish threshold")
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// RDR-004 EXPORT HELPER ONLY — TEMPORARY ADDITIONS
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════
-//
-// Everything below this divider is RDR-004 export scaffolding. It is NOT part
-// of ATE v2.2. It is a temporary export helper that wraps the ATE v2.2 release
-// (verified byte-identical to pine/releases/ATE_v2.2.pine above this divider,
-// release SHA-256: d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239)
-// to expose per-bar RiskEngine fields for TradingView CSV export.
-//
-// ONLY THE FOLLOWING ADDITIONS ARE MADE BELOW THIS DIVIDER:
-//   1. Helper comments / section header
-//   2. Helper-only inputs (RDR-004 session id)
-//   3. Export aliases (rename only — no calculations)
-//   4. Per-bar Research Mode text (one row per bar) for RDR-004 CSV export
-//   5. plot() outputs for the eight numeric RiskEngine export fields
-//      (display=display.none — helper-only, do not promote)
-//
-// NO MA / MOMENTUM / VOLATILITY / CONFIDENCE / STRUCTURE / RISK CALCULATIONS
-// ARE REWRITTEN. Every numeric value emitted below is a direct read of a
-// variable that was computed above this divider in the verbatim ATE v2.2 block.
-//
-// DO NOT USE THIS FILE FOR LIVE TRADING. DO NOT PROMOTE plot() CALLS OR THE
-// RESEARCH MODE TABLE BACK INTO pine/releases/ATE_v2.2.pine.
-//
-// ─────────────────────────────────────────────────────────────────────────────
-// Helper-only input
-// ─────────────────────────────────────────────────────────────────────────────
-
-rdr004_session_id = input.string("rdr004-001", "RDR-004 session id", group=grpResearch)
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Export aliases (no calculations — pure rename of vars already computed above)
-// ─────────────────────────────────────────────────────────────────────────────
-
-barRangeATR          = riskDiagExtBarRangeAtr
-lastSwingATR         = riskDiagStructLastSwingAtr
+barRangeATR = riskDiagExtBarRangeAtr
+lastSwingATR = riskDiagStructLastSwingAtr
 riskInsufficientData = riskDiagInsufficientData
-tv_symbol            = syminfo.ticker
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Per-bar Research Mode render — RDR-004 export-friendly text
-// One row per bar, CSV-shaped, ready to paste into Pine Log / copy out.
-// ─────────────────────────────────────────────────────────────────────────────
-
+tv_symbol = syminfo.prefix + ":" + syminfo.ticker
+barTimeUnixSeconds = math.floor(time / 1000)
+rdrHeader = "time,RiskScore,RiskState,RiskDirection,RiskReason,volRiskContribution,extRiskContribution,structRiskContribution,conflictRiskContribution,volRiskState,extRiskState,structRiskState,conflictRiskState,BarRangeATR,LastSwingATR,RiskInsufficientData,RiskEngineVersion,tv_symbol,session_id"
 rdrExportBar =
-     str.tostring(time) + ",time,"
-   + f_fmt(riskScore) + ","
-   + riskState + ","
-   + riskDirection + ","
-   + riskReason + ","
-   + f_fmt(riskVolRaw) + ","
-   + f_fmt(riskExtRaw) + ","
-   + f_fmt(riskStructRaw) + ","
-   + f_fmt(riskConflictRaw) + ","
-   + riskVolState + ","
-   + riskExtState + ","
-   + riskStructState + ","
-   + riskConflictState + ","
-   + f_fmt(barRangeATR) + ","
-   + f_fmt(lastSwingATR) + ","
-   + (riskInsufficientData ? "true" : "false") + ","
-   + riskEngineVersion + ","
-   + tv_symbol + ","
-   + rdr004_session_id
+str.tostring(barTimeUnixSeconds) + "," +
+f_fmt(riskScore) + "," +
+riskState + "," +
+riskDirection + "," +
+riskReason + "," +
+f_fmt(riskVolRaw) + "," +
+f_fmt(riskExtRaw) + "," +
+f_fmt(riskStructRaw) + "," +
+f_fmt(riskConflictRaw) + "," +
+riskVolState + "," +
+riskExtState + "," +
+riskStructState + "," +
+riskConflictState + "," +
+f_fmt(barRangeATR) + "," +
+f_fmt(lastSwingATR) + "," +
+f_bool(riskInsufficientData) + "," +
+riskEngineVersion + "," +
+tv_symbol + "," +
+rdr004_session_id
+// ─────────────────────────────────────────────────────────────────────────────
+// HELPER-ONLY PLOTS FOR EXPORT
+// ─────────────────────────────────────────────────────────────────────────────
+plot(riskScore, title="RDR004_RiskScore", display=display.none)
+plot(riskVolRaw, title="RDR004_volRiskContribution", display=display.none)
+plot(riskExtRaw, title="RDR004_extRiskContribution", display=display.none)
+plot(riskStructRaw, title="RDR004_structRiskContribution", display=display.none)
+plot(riskConflictRaw, title="RDR004_conflictRiskContribution", display=display.none)
+plot(barRangeATR, title="RDR004_BarRangeATR", display=display.none)
+plot(lastSwingATR, title="RDR004_LastSwingATR", display=display.none)
+plot(riskInsufficientData ? 1.0 : 0.0, title="RDR004_RiskInsufficientData", display=display.none)
 
-var table _rdrResearch = table.new(position.bottom_right, 1, 1, border_width=1)
+// ─────────────────────────────────────────────────────────────────────────────
+// VISUALS
+// ─────────────────────────────────────────────────────────────────────────────
+plot(showFast ? f1 : na, "Fast 1", color=color.new(color.aqua, 0), linewidth=1)
+plot(showFast ? f2 : na, "Fast 2", color=color.new(color.aqua, 0), linewidth=1)
+plot(showFast ? f3 : na, "Fast 3", color=color.new(color.aqua, 0), linewidth=1)
+plot(showMed ? m1 : na, "Medium 1", color=color.new(color.green, 0), linewidth=2)
+plot(showMed ? m2 : na, "Medium 2", color=color.new(color.green, 0), linewidth=2)
+plot(showMed ? m3 : na, "Medium 3", color=color.new(color.green, 0), linewidth=2)
+plot(showSlow ? s1 : na, "Slow 1", color=color.new(color.blue, 0), linewidth=2)
+plot(showSlow ? s2 : na, "Slow 2", color=color.new(color.blue, 0), linewidth=3)
+plot(showSlow ? s3 : na, "Slow 3", color=color.new(color.blue, 0), linewidth=4)
+bgcolor(showBg ? color.new(f_riskColor(riskScore), 90) : na)
+// ─────────────────────────────────────────────────────────────────────────────
+// RESEARCH OUTPUT TABLE
+// ─────────────────────────────────────────────────────────────────────────────
+var table rdrTable = table.new(position.bottom_right, 1, 1, border_width=1)
 if barstate.islast
-    table.clear(_rdrResearch, 0, 0, 0, 0)
-    table.cell(_rdrResearch, 0, 0,
-        "ATE_RDR004_EXPORT\n" +
-        "ATEVersion: v2.2 (export helper)\n" +
-        "RiskEngineVersion: " + riskEngineVersion + "\n" +
-        "session_id: " + rdr004_session_id + "\n" +
-        "tv_symbol: " + tv_symbol + "\n" +
-        "<row>\n" + rdrExportBar + "\n</row>",
-        text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.small)
-
-
-// ─────────────────────────────────────────────────────────────────────────────
-// plot() outputs for the eight numeric RiskEngine export fields.
-// These are helper-only and must NOT be promoted into pine/releases/ATE_v2.2.pine.
-// display=display.none hides them from the chart but still emits values into
-// Pine Log (Pro/Premium) for column-major CSV export.
-// ─────────────────────────────────────────────────────────────────────────────
-
-plot(riskScore,                       title="RDR004_RiskScore",               display=display.none)
-plot(riskVolRaw,                      title="RDR004_volRiskContribution",     display=display.none)
-plot(riskExtRaw,                      title="RDR004_extRiskContribution",     display=display.none)
-plot(riskStructRaw,                   title="RDR004_structRiskContribution",  display=display.none)
-plot(riskConflictRaw,                 title="RDR004_conflictRiskContribution", display=display.none)
-plot(barRangeATR,                     title="RDR004_BarRangeATR",              display=display.none)
-plot(lastSwingATR,                    title="RDR004_LastSwingATR",             display=display.none)
-plot(riskInsufficientData ? 1.0 : 0.0, title="RDR004_RiskInsufficientData",   display=display.none)
-
-
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════
-// END OF RDR-004 EXPORT HELPER.
-// ════════════════════════════════════════════════════════════════════════════════════════════════════════════
+table.clear(rdrTable, 0, 0, 0, 0)
+if showResearch
+tableText =
+"ATE_RDR004_EXPORT\n" +
+"Copy the HEADER and ROW below into CSV if required.\n\n" +
+"HEADER\n" +
+rdrHeader + "\n\n" +
+"ROW\n" +
+rdrExportBar
+table.cell(rdrTable, 0, 0, tableText, text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.small)
+// ═════════════════════════════════════════════════════════════════════════════
+// END OF TEMPORARY EXPORT HELPER

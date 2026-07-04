@@ -197,6 +197,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Helper-only additions (appended after the release block) are limited to: a helper section header, one helper input (`rdr004_session_id`), three export aliases (no calculations), the per-bar Research Mode text render, and eight `plot()` outputs with `display=display.none`.
   - Forbidden-token scan confirms zero occurrences of bare-method `.ema(`, `.sma(`, `.stdev(`, and zero occurrences of pandas-style `span=`, `adjust=`, `min_periods=`, `1e-10`.
   - Canonical verifier still reports 442/442 with exit 0.
+- RDR-004 export helper compile errors fixed (TradingView user-confirmed).
+  - Helper rewritten to the version that compiles cleanly in TradingView (per Paul Austin, 2026-07-04). The structure is now: standalone indicator (not a verbatim release copy), with all MA / Momentum / Volatility / Confidence / Structure / RiskEngine calculations written directly in Pine v6 using only `ta.*` namespaced built-ins (`ta.rsi`, `ta.macd`, `ta.dmi`, `ta.atr`, `ta.sma`, `ta.stdev`, `ta.ema`, `ta.wma`, `ta.pivothigh`, `ta.pivotlow`, `ta.barssince`, `ta.cross`, `ta.tr`, `ta.sma`). The helper is **not derived line-by-line from the release**; it is a faithful Pine re-implementation of the same calculation tables.
+  - RiskEngine diagnostic semantics, score thresholds, contribution caps (vol 0–35, ext 0–30, struct 0–20, conflict 0–15) and total-clamp at 0–100 are preserved.
+  - Helper-only additions: one `rdr004_session_id` input, four export aliases (`barRangeATR`, `lastSwingATR`, `riskInsufficientData`, `tv_symbol`), a 19-column CSV `rdrHeader`, a per-bar `rdrExportBar` row, eight `plot(... display=display.none)` series for Pine Log capture, and a `table.new(position.bottom_right, …)` Research Output table gated by `barstate.islast` + `showResearch`.
+  - TradingView compile confirmed clean by Paul Austin.
+  - **ATE release SHAs unchanged:** ATE_v2.2 = `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`, ATE_Current = same, ATE_v2.1 = `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
+  - Ad-hoc structural verifier (44 checks) green: no bare-method `.ema(/.sma(/.stdev(`, no pandas `span=/adjust=/min_periods=/1e-10`, all 7 `ta.*` indicator built-ins present, all 18 RDR-004 columns referenced, `rdrHeader` matches the expected 19-column list, no repainting/varip tokens, `bgcolor()` uses ternary form (v6-safe).
 
 ### Existing baseline
 
