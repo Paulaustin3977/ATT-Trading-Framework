@@ -189,6 +189,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
+### Fixed
+
+- RDR-004 export helper Pine syntax fixed.
+  - The previous version of `tools/scripts/export/ate_v2_2_rdr004_export.pine` contained Python/pandas-style syntax (`close.ema(span=..., adjust=false, min_periods=...)`, `close.sma(...)`, `close.stdev(...)`) which is not valid Pine Script v6 and caused TradingView compile failures.
+  - Helper rebuilt from the verbatim compiled ATE v2.2 release (`pine/releases/ATE_v2.2.pine`, SHA-256 `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`). Lines 1-704 are byte-identical to the release apart from the `indicator()` title string (which is renamed only to identify the helper in the Pine Editor). All RiskEngine, Momentum, Volatility, Confidence and Structure calculations are taken verbatim from the release — none are rewritten.
+  - Helper-only additions (appended after the release block) are limited to: a helper section header, one helper input (`rdr004_session_id`), three export aliases (no calculations), the per-bar Research Mode text render, and eight `plot()` outputs with `display=display.none`.
+  - Forbidden-token scan confirms zero occurrences of bare-method `.ema(`, `.sma(`, `.stdev(`, and zero occurrences of pandas-style `span=`, `adjust=`, `min_periods=`, `1e-10`.
+  - Canonical verifier still reports 442/442 with exit 0.
+
 ### Existing baseline
 
 - Full repository folder structure (specifications, laboratory, research, backtests, tests, tools).
