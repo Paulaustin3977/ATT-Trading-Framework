@@ -176,6 +176,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Risk Score table now matches the ATE v2.2 dashboard `riskState` thresholds.
   - 10 alert list matches the preserved ATE v2.2 alertcondition calls (Golden Cross, Death Cross, Strong Bull, Strong Bear, Bullish BOS, Bearish BOS, Momentum Bullish, Momentum Bearish, High Confidence Bull, Low Confidence Bear) — no RiskEngine alert added.
   - No Pine code modified.
+- Temporary RDR-004 TradingView export helper added.
+  - Helper path: `tools/scripts/export/ate_v2_2_rdr004_export.pine`.
+  - Helper is **not part of the ATE v2.2 release**. It is a temporary export-only script kept under `tools/scripts/export/` for one-time use during RDR-004 parity capture. After RDR-004 completes it should be archived under `tools/scripts/export/archived_helpers/`.
+  - Helper reproduces ATE v2.2 RiskEngine calculations verbatim (verbatim copy of ATE v2.2's RiskEngine block, lines 411..521) so that per-bar numeric RiskEngine output is bit-identical to the official ATE v2.2 release.
+  - Helper-only additions: temporary `plot()` calls (display=none) for the seven numeric RDR-004 export fields, plus a per-bar Research Mode render of `_rdrExportBar` carrying the 17 CSV columns (time, RiskScore, RiskState, RiskDirection, RiskReason, vol/ext/struct/conflict RiskContribution + State, BarRangeATR, LastSwingATR, RiskInsufficientData, RiskEngineVersion, tv_symbol, session_id).
+  - Helper does not modify the official ATE v2.2 release.
+  - **ATE v2.1 SHA remains unchanged:** `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
+  - **ATE v2.2 SHA remains unchanged:** `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`.
+  - Canonical verifier still expected to report 442/442 with exit 0 after the helper is added.
+  - Author instructions for TradingView capture are documented at the top of the helper file itself.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
