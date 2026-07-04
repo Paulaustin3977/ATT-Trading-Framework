@@ -136,6 +136,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Negative findings: state distribution heavily calm-skewed (median pct_calm ~70%); `tense`/`extreme` states very rare and thin on evidence; volatility component dominates >60% of bars in 6/16 assets (FX, TLT, IGLT.L, CL); conflict component small in most bars; what is measured here is the deterministic Python mirror, not the actual Pine implementation, until a separate Pine-vs-Python parity check is performed.
   - Follow-up: RDR-003W weekly validation, Pine-vs-Python parity check, threshold retest before any downstream consumption.
   - No ATE Pine logic modified. No broker, no paper-trading API. Diagnostic only.
+- RDR-003W RiskEngine weekly diagnostic validation completed.
+  - Same 16-asset universe as RDR-003 daily; 8,355 weekly bars between 2014-01-01 and 2026-07-03.
+  - Verifier pre-flight confirmed clean: 442/442 checks pass, exit 0; v2.2 SHA matches manifest; v2.2 release/dev byte-identical; v2.1 SHA unchanged.
+  - **Classification: Supported.** **Recommendation: Keep Diagnostic; allow controlled weekly research use; DecisionEngine / ConfidenceEngine integration remains deferred.**
+  - RiskEngine remains diagnostic-only on weekly aggregations as well.
+  - Artefacts:
+    - Report: `research/Reports/RDR/RDR-003W-riskengine-weekly-diagnostic-validation.md`
+    - Manifest: `backtests/Hermes/ATE_v2.2/Weekly/Diagnostic_Validation/RDR-003W/RDR-003W_Manifest.md`
+    - Summary CSV: `RDR-003W_Summary.csv`
+    - Durations CSV: `RDR-003W_Durations.csv`
+    - Transitions CSV: `RDR-003W_Transitions.csv`
+    - Class summary CSV: `RDR-003W_Class_Summary.csv`
+    - Overlap CSV: `RDR-003W_Overlap.csv`
+    - Hidden bias CSV: `RDR-003W_HiddenBias.csv`
+    - Adverse movement CSV: `RDR-003W_Adverse.csv`
+    - Sampled explainers CSV: `RDR-003W_Sampled_Explainers.csv`
+    - Reserved language audit CSV: `RDR-003W_Reserved_Language_Audit.csv`
+    - Per-asset charts: `charts/<symbol>_risk_states_weekly.png`
+    - Reproduction script: `run_rdr003w_validation.py`
+  - Daily-vs-weekly comparison: state_changes_per_100_bars median 9.89 → 10.15 (stable); median `dominant_vol_pct` 51.29% → 48.08% (-3.2pp); assets with `dominant_vol_pct > 60` 6 → 4 (clears the 4-asset daily threshold); median `pct_calm` 70.30% → 68.04% (-2.3pp); median abs Spearman vs VolScore 0.167 → 0.211 (+0.044); vs Momentum 0.309 → 0.258 (-0.051); vs Confidence 0.425 → 0.405 (-0.020); median max |pct_up-50| 4.52pp → 7.48pp (small-sample weekly noise, both below 12pp threshold); reserved-language audit 0/418 hits.
+  - Key findings: all 9 weekly classification rules pass; weekly sequence length is comparable to daily per-100-bars; volatility dominance in low-vol asset classes (FX, TLT, IGLT.L, CL=F) attenuates on weekly aggregation; overlap with Volatility and Momentum remains in the acceptable range; diagnostic-only governance unchanged.
+  - Negative findings: state distribution still calm/normal-skewed (median pct_calm 68.0%); `tense`/`extreme` evidence remains thin on weekly bars; hidden-bias median moves modestly upward 4.5pp → 7.5pp due to small `extreme`/`tense` weekly samples; Conflict component remains small in most bars; what is measured here is the deterministic Python mirror; Pine-vs-Python parity check remains a separate prerequisite before any downstream consumption claim.
+  - Follow-up: Pine-vs-Python parity check; any future daily threshold retest must be re-validated on weekly bars before re-classifying RiskEngine from "Supported" → "Confirmed-Supported".
+  - No ATE Pine logic modified. No broker, no paper-trading API. Diagnostic only.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
