@@ -1,0 +1,199 @@
+symbol,asset_name,asset_class,date,state,riskScore,riskDirection,riskReason,volRiskContribution,extRiskContribution,structRiskContribution,conflictRiskContribution,smoothedRiskScore,volScore,momentumScore,confidenceScore,close
+GC=F,Gold futures,Metals,2018-01-31,calm,11.666666666666666,stable,All risk components low,5.0,0.0,0.0,0.0,11.666666666666666,85.0,64.0,78.7,1339.0
+GC=F,Gold futures,Metals,2018-02-01,calm,8.333333333333334,stable,All risk components low,5.0,0.0,0.0,0.0,8.333333333333334,85.0,64.0,78.7,1344.300048828125
+GC=F,Gold futures,Metals,2018-02-02,calm,7.350312303772729,stable,All risk components low,5.0,4.798763027559059,2.2521738837591325,0.0,7.350312303772729,85.0,57.0,73.80000000000001,1333.699951171875
+GC=F,Gold futures,Metals,2018-01-22,normal,28.333333333333332,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,28.333333333333332,85.0,86.0,85.3,1330.9000244140625
+GC=F,Gold futures,Metals,2018-01-23,normal,21.666666666666668,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,21.666666666666668,85.0,93.0,87.4,1335.699951171875
+GC=F,Gold futures,Metals,2018-01-24,normal,25.0,conflict,Risk components within expected range,35.0,0.0,0.0,10.0,25.0,10.0,93.0,87.4,1355.9000244140625
+GC=F,Gold futures,Metals,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,79.0,80.4,1313.699951171875
+GC=F,Gold futures,Metals,2018-01-03,elevated,32.5,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,32.5,70.0,79.0,83.2,1316.199951171875
+GC=F,Gold futures,Metals,2018-01-04,elevated,31.666666666666668,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,31.666666666666668,70.0,86.0,85.3,1319.4000244140625
+GC=F,Gold futures,Metals,2019-06-04,tense,52.49865961427813,conflict,Multiple risk components elevated,5.0,0.0,7.749821851507223,15.0,52.49865961427813,85.0,86.0,95.8,1323.4000244140625
+GC=F,Gold futures,Metals,2020-01-06,tense,58.347839776317905,conflict,Multiple risk components elevated,35.0,1.667823352046399,20.0,10.0,58.347839776317905,10.0,80.0,94.0,1566.199951171875
+GC=F,Gold futures,Metals,2020-01-07,tense,56.68117310965124,conflict,Multiple risk components elevated,0.0,0.0,20.0,10.0,56.68117310965124,70.0,80.0,94.0,1571.800048828125
+GC=F,Gold futures,Metals,2026-01-30,extreme,78.33333333333336,conflict,Risk components at extreme or conflict dominant,35.0,30.0,0.0,10.0,78.33333333333336,10.0,80.0,94.0,4713.89990234375
+GC=F,Gold futures,Metals,2026-02-02,extreme,76.41803732119558,conflict,Risk components at extreme or conflict dominant,35.0,14.254111963586695,0.0,10.0,76.41803732119558,10.0,47.0,81.3,4622.5
+SI=F,Silver futures,Metals,2018-01-26,calm,13.333333333333334,stable,All risk components low,0.0,0.0,0.0,5.0,13.333333333333334,55.0,79.0,77.2,17.381999969482422
+SI=F,Silver futures,Metals,2018-01-30,calm,3.8118414510582563,stable,All risk components low,0.0,0.0,1.4355243531747686,5.0,3.8118414510582563,55.0,72.0,75.1,17.01300048828125
+SI=F,Silver futures,Metals,2018-01-31,calm,5.478508117724924,stable,All risk components low,0.0,0.0,0.0,5.0,5.478508117724924,55.0,56.0,74.8,17.20400047302246
+SI=F,Silver futures,Metals,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,86.0,67.3,17.121000289916992
+SI=F,Silver futures,Metals,2018-01-03,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,86.0,67.3,17.184999465942383
+SI=F,Silver futures,Metals,2018-01-04,normal,23.333333333333332,indeterminate,Risk components within expected range,0.0,0.0,20.0,0.0,23.333333333333332,70.0,93.0,72.6,17.18899917602539
+SI=F,Silver futures,Metals,2018-02-09,elevated,33.95426131866633,indeterminate,At least one risk component elevated,5.0,0.0,20.0,5.0,33.95426131866633,85.0,29.0,35.9,16.115999221801758
+SI=F,Silver futures,Metals,2018-06-15,elevated,32.243684270731165,conflict,At least one risk component elevated,35.0,30.0,0.0,0.0,32.243684270731165,10.0,54.0,55.7,16.45199966430664
+SI=F,Silver futures,Metals,2018-06-18,elevated,31.66666666666667,indeterminate,At least one risk component elevated,5.0,0.0,0.0,0.0,31.66666666666667,85.0,54.0,50.5,16.41200065612793
+SI=F,Silver futures,Metals,2019-09-03,tense,67.76126329469817,conflict,Multiple risk components elevated,35.0,30.0,20.0,10.0,67.76126329469817,10.0,80.0,94.0,19.07900047302246
+SI=F,Silver futures,Metals,2019-09-04,tense,51.666666666666664,conflict,Multiple risk components elevated,0.0,0.0,20.0,10.0,51.666666666666664,45.0,74.0,92.2,19.391000747680664
+SI=F,Silver futures,Metals,2019-09-05,tense,69.05522952433178,conflict,Multiple risk components elevated,35.0,17.165688572995343,20.0,10.0,69.05522952433178,10.0,80.0,94.0,18.6560001373291
+SI=F,Silver futures,Metals,2025-12-30,extreme,80.76919943060388,conflict,Risk components at extreme or conflict dominant,35.0,8.516010949186553,20.0,10.0,80.76919943060388,10.0,93.0,97.9,77.3740005493164
+HG=F,Copper futures,Metals,2018-01-30,calm,5.47505972399453,stable,All risk components low,5.0,0.0,1.42517917198359,0.0,5.47505972399453,85.0,59.0,60.900000000000006,3.177000045776367
+HG=F,Copper futures,Metals,2018-01-31,calm,3.8083930573278635,stable,All risk components low,0.0,0.0,0.0,0.0,3.8083930573278635,55.0,59.0,74.4,3.184000015258789
+HG=F,Copper futures,Metals,2018-02-01,calm,2.1417263906611965,stable,All risk components low,0.0,0.0,0.0,0.0,2.1417263906611965,55.0,59.0,74.4,3.197000026702881
+HG=F,Copper futures,Metals,2018-01-10,normal,28.333333333333332,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,28.333333333333332,85.0,64.0,75.9,3.2149999141693115
+HG=F,Copper futures,Metals,2018-01-11,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,57.0,73.80000000000001,3.2135000228881836
+HG=F,Copper futures,Metals,2018-01-12,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,57.0,73.80000000000001,3.200000047683716
+HG=F,Copper futures,Metals,2018-01-02,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,70.0,86.0,85.3,3.25600004196167
+HG=F,Copper futures,Metals,2018-01-03,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,70.0,86.0,85.3,3.236999988555908
+HG=F,Copper futures,Metals,2018-01-04,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,70.0,93.0,87.4,3.242500066757202
+HG=F,Copper futures,Metals,2020-07-13,tense,52.9014583145777,conflict,Multiple risk components elevated,35.0,10.540505643996035,20.0,10.0,52.9014583145777,10.0,80.0,88.0,2.941999912261963
+HG=F,Copper futures,Metals,2020-07-14,tense,51.23479164791104,conflict,Multiple risk components elevated,5.0,0.0,20.0,10.0,51.23479164791104,85.0,73.0,85.9,2.9159998893737793
+HG=F,Copper futures,Metals,2021-02-26,tense,60.72416440716919,conflict,Multiple risk components elevated,35.0,9.616198320424013,20.0,10.0,60.72416440716919,10.0,86.0,95.8,4.0945000648498535
+NQ=F,Nasdaq futures,Index proxies,2018-02-14,calm,11.246487465948318,stable,All risk components low,0.0,0.0,1.776702365072941,0.0,11.246487465948318,45.0,67.0,75.30000000000001,6687.0
+NQ=F,Nasdaq futures,Index proxies,2018-02-15,calm,7.913154132614984,conflict,All risk components low,0.0,0.0,0.0,10.0,7.913154132614984,45.0,74.0,83.4,6816.0
+NQ=F,Nasdaq futures,Index proxies,2018-02-16,calm,3.925567455024314,stable,All risk components low,0.0,0.0,0.0,0.0,3.925567455024314,45.0,67.0,76.80000000000001,6786.75
+NQ=F,Nasdaq futures,Index proxies,2018-02-09,normal,23.25219444427726,indeterminate,Risk components within expected range,0.0,3.09735212828494,20.0,0.0,23.25219444427726,45.0,43.0,66.10000000000001,6417.75
+NQ=F,Nasdaq futures,Index proxies,2018-02-12,normal,23.25219444427726,indeterminate,Risk components within expected range,0.0,0.0,20.0,0.0,23.25219444427726,45.0,53.0,69.10000000000001,6531.75
+NQ=F,Nasdaq futures,Index proxies,2018-02-13,normal,18.353370720352316,stable,Risk components within expected range,0.0,0.0,11.96276003277201,0.0,18.353370720352316,45.0,63.0,72.1,6560.5
+NQ=F,Nasdaq futures,Index proxies,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,66.0,83.8,6514.75
+NQ=F,Nasdaq futures,Index proxies,2018-01-03,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,86.0,95.8,6584.5
+NQ=F,Nasdaq futures,Index proxies,2018-01-04,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,86.0,95.8,6603.5
+NQ=F,Nasdaq futures,Index proxies,2018-02-05,tense,64.46496492677456,conflict,Multiple risk components elevated,35.0,30.0,20.0,0.0,64.46496492677456,10.0,43.0,68.9,6429.25
+NQ=F,Nasdaq futures,Index proxies,2018-02-07,tense,55.87936141663082,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,55.87936141663082,45.0,43.0,66.10000000000001,6555.75
+NQ=F,Nasdaq futures,Index proxies,2020-01-08,tense,50.865858556547714,conflict,Multiple risk components elevated,35.0,16.52278523507026,20.0,10.0,50.865858556547714,10.0,87.0,96.1,8944.5
+NQ=F,Nasdaq futures,Index proxies,2018-02-06,extreme,73.67765967673873,conflict,Risk components at extreme or conflict dominant,35.0,18.749015625184906,8.889068624707567,0.0,73.67765967673873,10.0,53.0,71.10000000000001,6653.75
+SPY,S&P 500 ETF,Index proxies,2018-03-08,calm,10.0,stable,All risk components low,5.0,0.0,0.0,5.0,10.0,85.0,79.0,69.7,274.1000061035156
+SPY,S&P 500 ETF,Index proxies,2018-03-09,calm,11.666666666666666,conflict,All risk components low,5.0,0.0,0.0,10.0,11.666666666666666,85.0,86.0,85.3,278.8699951171875
+SPY,S&P 500 ETF,Index proxies,2018-03-12,calm,13.333333333333334,conflict,All risk components low,5.0,0.0,0.0,10.0,13.333333333333334,85.0,79.0,83.2,278.5199890136719
+SPY,S&P 500 ETF,Index proxies,2018-02-15,normal,26.872353062380725,indeterminate,Risk components within expected range,10.0,0.0,10.617059187142178,0.0,26.872353062380725,20.0,67.0,75.7,273.0299987792969
+SPY,S&P 500 ETF,Index proxies,2018-02-16,normal,23.97360059896837,indeterminate,Risk components within expected range,10.0,0.0,11.303742609762931,0.0,23.97360059896837,20.0,67.0,74.0,273.1099853515625
+SPY,S&P 500 ETF,Index proxies,2018-02-20,normal,23.97360059896837,indeterminate,Risk components within expected range,10.0,0.0,20.0,0.0,23.97360059896837,20.0,57.0,71.0,271.3999938964844
+SPY,S&P 500 ETF,Index proxies,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,66.0,89.8,268.7699890136719
+SPY,S&P 500 ETF,Index proxies,2018-01-03,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,73.0,91.9,270.4700012207031
+SPY,S&P 500 ETF,Index proxies,2018-01-04,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,97.9,271.6099853515625
+SPY,S&P 500 ETF,Index proxies,2018-02-05,tense,60.52433568241495,conflict,Multiple risk components elevated,35.0,30.0,20.0,0.0,60.52433568241495,10.0,37.0,65.1,263.92999267578125
+SPY,S&P 500 ETF,Index proxies,2018-02-07,tense,59.86993423259869,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,59.86993423259869,45.0,37.0,64.3,267.6700134277344
+SPY,S&P 500 ETF,Index proxies,2018-02-08,tense,54.227222121592035,conflict,Multiple risk components elevated,35.0,13.071863666980025,20.0,0.0,54.227222121592035,10.0,37.0,59.5,257.6300048828125
+SPY,S&P 500 ETF,Index proxies,2018-02-06,extreme,73.72760324834697,conflict,Risk components at extreme or conflict dominant,35.0,19.609802697796077,20.0,0.0,73.72760324834697,10.0,37.0,64.3,269.1300048828125
+SPY,S&P 500 ETF,Index proxies,2025-04-08,extreme,74.96465301642756,conflict,Risk components at extreme or conflict dominant,35.0,9.732689743396032,20.0,10.0,74.96465301642756,10.0,43.0,18.9,496.4800109863281
+SPY,S&P 500 ETF,Index proxies,2025-04-09,extreme,70.63151157060214,conflict,Risk components at extreme or conflict dominant,35.0,19.233885621506264,0.0,0.0,70.63151157060214,10.0,57.0,23.1,548.6199951171875
+NVDA,NVIDIA,Major equities,2018-02-09,calm,12.769466957556498,stable,All risk components low,0.0,6.717564795786123,0.0,0.0,12.769466957556498,70.0,67.0,78.1,5.802000045776367
+NVDA,NVIDIA,Major equities,2018-02-12,calm,10.237348361982235,stable,All risk components low,0.0,0.0,0.0,0.0,10.237348361982235,70.0,67.0,78.1,5.70074987411499
+NVDA,NVIDIA,Major equities,2018-02-13,calm,5.572521598595375,conflict,All risk components low,0.0,0.0,0.0,10.0,5.572521598595375,70.0,67.0,81.30000000000001,5.8157501220703125
+NVDA,NVIDIA,Major equities,2018-02-16,normal,15.0,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,15.0,85.0,79.0,87.7,6.0960001945495605
+NVDA,NVIDIA,Major equities,2018-02-20,normal,15.0,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,15.0,85.0,86.0,89.8,6.2270002365112305
+NVDA,NVIDIA,Major equities,2018-02-21,normal,15.0,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,15.0,85.0,72.0,85.6,6.037749767303467
+NVDA,NVIDIA,Major equities,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,87.0,82.80000000000001,4.983749866485596
+NVDA,NVIDIA,Major equities,2018-01-04,elevated,45.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,45.0,85.0,94.0,87.7,5.339749813079834
+NVDA,NVIDIA,Major equities,2018-01-05,elevated,45.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,45.0,85.0,94.0,87.7,5.385000228881836
+NVDA,NVIDIA,Major equities,2018-01-03,tense,50.0,conflict,Multiple risk components elevated,35.0,0.0,20.0,10.0,50.0,10.0,94.0,87.7,5.3117499351501465
+NVDA,NVIDIA,Major equities,2018-02-06,tense,58.78915039797251,conflict,Multiple risk components elevated,35.0,11.367451193917546,20.0,0.0,58.78915039797251,10.0,53.0,69.4,5.639500141143799
+NVDA,NVIDIA,Major equities,2018-02-07,tense,52.987935660213445,indeterminate,Multiple risk components elevated,5.0,0.0,2.596355786722789,0.0,52.987935660213445,85.0,67.0,78.1,5.71999979019165
+MSFT,Microsoft,Major equities,2018-02-13,calm,13.686392989723457,stable,All risk components low,0.0,0.0,5.854326427705589,0.0,13.686392989723457,70.0,67.0,73.6,89.83000183105469
+MSFT,Microsoft,Major equities,2018-02-14,calm,5.2870513490737725,stable,All risk components low,0.0,0.0,1.1143214195370845,0.0,5.2870513490737725,70.0,67.0,73.6,90.80999755859376
+MSFT,Microsoft,Major equities,2018-02-15,calm,7.322882615747557,conflict,All risk components low,5.0,0.0,0.0,10.0,7.322882615747557,85.0,74.0,81.7,92.66000366210938
+MSFT,Microsoft,Major equities,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,66.0,79.3,85.94999694824219
+MSFT,Microsoft,Major equities,2018-01-03,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,66.0,79.3,86.3499984741211
+MSFT,Microsoft,Major equities,2018-01-04,normal,28.333333333333332,conflict,Risk components within expected range,5.0,0.0,20.0,10.0,28.333333333333332,85.0,86.0,85.3,87.11000061035156
+MSFT,Microsoft,Major equities,2018-01-05,elevated,31.666666666666668,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,31.666666666666668,85.0,79.0,83.2,88.19000244140625
+MSFT,Microsoft,Major equities,2018-01-08,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,88.27999877929688
+MSFT,Microsoft,Major equities,2018-01-09,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,88.22000122070312
+MSFT,Microsoft,Major equities,2018-02-06,tense,59.18401350991609,conflict,Multiple risk components elevated,35.0,18.61848655270883,20.0,0.0,59.18401350991609,10.0,57.0,73.80000000000001,91.33000183105467
+MSFT,Microsoft,Major equities,2018-02-07,tense,55.54922608992902,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,55.54922608992902,70.0,47.0,67.6,89.61000061035156
+MSFT,Microsoft,Major equities,2024-01-31,tense,50.48540946599204,conflict,Multiple risk components elevated,35.0,16.456228397976098,20.0,10.0,50.48540946599204,10.0,80.0,83.5,397.5799865722656
+AAPL,Apple,Major equities,2018-02-15,calm,13.451722024717263,conflict,All risk components low,0.0,0.0,0.0,10.0,13.451722024717263,45.0,94.0,80.6,43.247501373291016
+AAPL,Apple,Major equities,2018-02-16,calm,8.451722024717263,stable,All risk components low,5.0,0.0,0.0,0.0,8.451722024717263,85.0,87.0,79.6,43.10749816894531
+AAPL,Apple,Major equities,2018-02-20,calm,6.666666666666667,stable,All risk components low,5.0,0.0,0.0,0.0,6.666666666666667,85.0,87.0,79.6,42.962501525878906
+AAPL,Apple,Major equities,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,51.0,68.8,43.064998626708984
+AAPL,Apple,Major equities,2018-01-03,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,51.0,68.8,43.057498931884766
+AAPL,Apple,Major equities,2018-01-04,normal,23.333333333333332,indeterminate,Risk components within expected range,0.0,0.0,20.0,0.0,23.333333333333332,55.0,51.0,72.0,43.25749969482422
+AAPL,Apple,Major equities,2018-01-10,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,71.0,85.3,43.5724983215332
+AAPL,Apple,Major equities,2018-01-11,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,78.0,87.4,43.81999969482422
+AAPL,Apple,Major equities,2018-01-12,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,78.0,87.4,44.272499084472656
+AAPL,Apple,Major equities,2018-02-05,tense,51.60176538498541,conflict,Multiple risk components elevated,35.0,10.745056494949992,20.0,0.0,51.60176538498541,10.0,29.0,50.3,39.122501373291016
+AAPL,Apple,Major equities,2018-02-06,tense,66.10498301760973,conflict,Multiple risk components elevated,35.0,13.509652897872957,20.0,0.0,66.10498301760973,10.0,53.0,61.5,40.75749969482422
+AAPL,Apple,Major equities,2018-02-07,tense,51.418236464274315,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,51.418236464274315,45.0,53.0,61.5,39.8849983215332
+AMZN,Amazon,Major equities,2018-03-02,calm,13.333333333333334,conflict,All risk components low,0.0,0.0,0.0,10.0,13.333333333333334,70.0,56.0,86.8,75.01249694824219
+AMZN,Amazon,Major equities,2018-03-05,calm,11.666666666666666,conflict,All risk components low,0.0,0.0,0.0,10.0,11.666666666666666,70.0,66.0,89.8,76.18049621582031
+AMZN,Amazon,Major equities,2018-03-06,calm,11.666666666666666,conflict,All risk components low,5.0,0.0,0.0,10.0,11.666666666666666,85.0,66.0,89.8,76.88200378417969
+AMZN,Amazon,Major equities,2018-01-02,normal,20.0,stable,Risk components within expected range,0.0,0.0,20.0,0.0,20.0,55.0,66.0,79.3,59.45050048828125
+AMZN,Amazon,Major equities,2018-01-03,normal,20.0,stable,Risk components within expected range,0.0,0.0,20.0,0.0,20.0,55.0,66.0,79.3,60.209999084472656
+AMZN,Amazon,Major equities,2018-01-04,normal,23.333333333333332,conflict,Risk components within expected range,0.0,0.0,20.0,10.0,23.333333333333332,55.0,86.0,85.3,60.47949981689453
+AMZN,Amazon,Major equities,2018-01-08,elevated,31.666666666666668,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,31.666666666666668,85.0,79.0,83.2,62.34349822998047
+AMZN,Amazon,Major equities,2018-01-09,elevated,33.333333333333336,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,33.333333333333336,85.0,93.0,87.4,62.6349983215332
+AMZN,Amazon,Major equities,2018-01-10,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,62.71649932861328
+AMZN,Amazon,Major equities,2018-02-06,tense,68.73893233102795,conflict,Multiple risk components elevated,0.0,5.849557263406981,20.0,10.0,68.73893233102795,45.0,94.0,87.7,72.14199829101562
+AMZN,Amazon,Major equities,2018-02-07,tense,50.283185754468995,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,50.283185754468995,70.0,57.0,76.6,70.83899688720703
+AMZN,Amazon,Major equities,2020-07-13,tense,51.01847926783318,conflict,Multiple risk components elevated,35.0,18.055437803499547,20.0,10.0,51.01847926783318,10.0,80.0,94.0,155.1999969482422
+AMZN,Amazon,Major equities,2018-02-05,extreme,70.69752817337186,conflict,Risk components at extreme or conflict dominant,35.0,30.0,20.0,10.0,70.69752817337186,10.0,80.0,83.5,69.5
+GOOGL,Alphabet,Major equities,2018-03-07,calm,11.666666666666666,stable,All risk components low,5.0,0.0,0.0,0.0,11.666666666666666,85.0,87.0,72.1,55.75199890136719
+GOOGL,Alphabet,Major equities,2018-03-08,calm,5.0,stable,All risk components low,5.0,0.0,0.0,0.0,5.0,85.0,86.0,71.8,56.46900177001953
+GOOGL,Alphabet,Major equities,2018-03-09,calm,8.333333333333334,conflict,All risk components low,5.0,0.0,0.0,10.0,8.333333333333334,85.0,86.0,85.3,58.04199981689453
+GOOGL,Alphabet,Major equities,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,66.0,79.3,53.660499572753906
+GOOGL,Alphabet,Major equities,2018-02-09,normal,23.51183635149593,indeterminate,Risk components within expected range,0.0,3.5059308916531267,20.0,0.0,23.51183635149593,45.0,47.0,62.5,52.313499450683594
+GOOGL,Alphabet,Major equities,2018-02-12,normal,23.51183635149593,indeterminate,Risk components within expected range,0.0,0.0,20.0,0.0,23.51183635149593,45.0,47.0,62.5,52.72800064086914
+GOOGL,Alphabet,Major equities,2018-01-03,elevated,30.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,30.0,85.0,86.0,85.3,54.57600021362305
+GOOGL,Alphabet,Major equities,2018-01-04,elevated,31.666666666666668,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,31.666666666666668,85.0,100.0,89.5,54.78799819946289
+GOOGL,Alphabet,Major equities,2018-01-05,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,55.51449966430664
+GOOGL,Alphabet,Major equities,2018-02-05,tense,52.38616138642724,conflict,Multiple risk components elevated,35.0,12.158484159281741,20.0,0.0,52.38616138642724,10.0,37.0,67.1,53.11949920654297
+GOOGL,Alphabet,Major equities,2018-02-06,tense,61.999264883718915,conflict,Multiple risk components elevated,35.0,8.839310491874995,20.0,0.0,61.999264883718915,10.0,37.0,64.3,54.22150039672851
+GOOGL,Alphabet,Major equities,2018-02-07,tense,50.332598217052244,indeterminate,Multiple risk components elevated,0.0,0.0,20.0,0.0,50.332598217052244,45.0,37.0,62.300000000000004,52.77050018310547
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-03-01,calm,12.66711214976232,stable,All risk components low,5.0,0.0,3.00133644928696,0.0,12.66711214976232,85.0,69.0,29.9,119.31999969482422
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-03-02,calm,6.000445483095653,stable,All risk components low,5.0,0.0,0.0,0.0,6.000445483095653,85.0,52.0,24.799999999999997,118.3499984741211
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-03-05,calm,6.000445483095653,stable,All risk components low,5.0,0.0,0.0,0.0,6.000445483095653,85.0,52.0,24.799999999999997,118.02999877929688
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,31.0,58.0,125.48999786376952
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-03,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,41.0,69.0,126.08999633789062
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-04,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,41.0,66.2,126.06999969482422
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-11,elevated,30.0,indeterminate,At least one risk component elevated,5.0,0.0,20.0,5.0,30.0,85.0,31.0,21.3,124.30999755859376
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-12,elevated,31.666666666666668,indeterminate,At least one risk component elevated,5.0,0.0,20.0,5.0,31.666666666666668,85.0,31.0,21.3,124.5199966430664
+TLT,US Treasury bond ETF,Bonds / rates proxies,2018-01-16,elevated,30.0,indeterminate,At least one risk component elevated,5.0,0.0,20.0,5.0,30.0,85.0,41.0,24.3,125.04000091552734
+TLT,US Treasury bond ETF,Bonds / rates proxies,2020-03-03,tense,51.666666666666664,conflict,Multiple risk components elevated,35.0,30.0,20.0,10.0,51.666666666666664,10.0,93.0,97.9,156.3300018310547
+TLT,US Treasury bond ETF,Bonds / rates proxies,2020-03-04,tense,51.666666666666664,conflict,Multiple risk components elevated,0.0,0.0,20.0,10.0,51.666666666666664,45.0,86.0,95.8,154.6699981689453
+TLT,US Treasury bond ETF,Bonds / rates proxies,2020-03-05,tense,51.666666666666664,conflict,Multiple risk components elevated,0.0,0.0,20.0,10.0,51.666666666666664,45.0,93.0,97.9,158.52000427246094
+TLT,US Treasury bond ETF,Bonds / rates proxies,2020-03-10,extreme,74.9446155375753,conflict,Risk components at extreme or conflict dominant,35.0,13.98134341893649,20.0,10.0,74.9446155375753,10.0,80.0,94.0,162.50999450683594
+TLT,US Treasury bond ETF,Bonds / rates proxies,2020-03-11,extreme,72.09946602713994,conflict,Risk components at extreme or conflict dominant,35.0,11.761604271903067,2.4289953959811754,10.0,72.09946602713994,10.0,80.0,94.0,156.52999877929688
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-22,calm,11.666666666666666,stable,All risk components low,5.0,0.0,0.0,0.0,11.666666666666666,85.0,21.0,29.0,13.05500030517578
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-23,calm,5.0,stable,All risk components low,5.0,0.0,0.0,0.0,5.0,85.0,31.0,28.8,13.072500228881836
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-24,calm,5.0,stable,All risk components low,5.0,0.0,0.0,0.0,5.0,85.0,21.0,25.8,13.010000228881836
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-02,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,31.0,43.599999999999994,13.104000091552734
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-03,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,51.0,64.9,13.1899995803833
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-04,normal,25.0,indeterminate,Risk components within expected range,5.0,0.0,20.0,0.0,25.0,85.0,51.0,64.9,13.182499885559082
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-01-11,elevated,30.0,indeterminate,At least one risk component elevated,5.0,0.0,20.0,5.0,30.0,85.0,21.0,31.8,13.092499732971191
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2018-11-16,elevated,33.462029144929424,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,33.462029144929424,85.0,21.0,16.8,12.895000457763672
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2019-06-10,elevated,32.26683295814874,conflict,At least one risk component elevated,5.0,0.0,11.800498874446212,10.0,32.26683295814874,85.0,72.0,91.6,13.704999923706056
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2020-03-11,tense,54.77940897495168,indeterminate,Multiple risk components elevated,0.0,0.0,8.002421981089832,0.0,54.77940897495168,45.0,86.0,71.8,14.925000190734863
+IGLT.L,iShares Core UK Gilts ETF (gilt proxy),Bonds / rates proxies,2020-03-10,extreme,74.46355791925112,conflict,Risk components at extreme or conflict dominant,35.0,30.0,20.0,0.0,74.46355791925112,10.0,80.0,70.0,15.095000267028809
+EURUSD=X,EUR/USD,FX,2018-02-05,calm,10.0,conflict,All risk components low,0.0,0.0,0.0,10.0,10.0,70.0,80.0,88.0,1.244694471359253
+EURUSD=X,EUR/USD,FX,2018-02-06,calm,11.666666666666666,conflict,All risk components low,5.0,0.0,0.0,10.0,11.666666666666666,85.0,57.0,81.1,1.2367818355560305
+EURUSD=X,EUR/USD,FX,2018-02-07,calm,13.333333333333334,conflict,All risk components low,5.0,0.0,0.0,10.0,13.333333333333334,85.0,64.0,83.2,1.238129496574402
+EURUSD=X,EUR/USD,FX,2018-02-01,normal,23.333333333333332,conflict,Risk components within expected range,0.0,0.0,0.0,10.0,23.333333333333332,70.0,80.0,88.0,1.241865873336792
+EURUSD=X,EUR/USD,FX,2018-02-02,normal,16.666666666666668,conflict,Risk components within expected range,0.0,0.0,0.0,10.0,16.666666666666668,70.0,87.0,90.1,1.2510008811950684
+EURUSD=X,EUR/USD,FX,2018-05-08,normal,16.86969876978383,stable,Risk components within expected range,0.0,0.0,20.0,5.0,16.86969876978383,70.0,53.0,27.9,1.1933743953704834
+EURUSD=X,EUR/USD,FX,2018-01-01,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,86.0,95.8,1.200494647026062
+EURUSD=X,EUR/USD,FX,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,86.0,95.8,1.2011579275131226
+EURUSD=X,EUR/USD,FX,2018-01-03,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,97.9,1.2063454389572144
+GBPUSD=X,GBP/USD,FX,2018-02-05,calm,10.0,conflict,All risk components low,0.0,0.0,0.0,10.0,10.0,70.0,80.0,88.0,1.411133885383606
+GBPUSD=X,GBP/USD,FX,2018-02-06,calm,9.355832739768372,stable,All risk components low,0.0,0.0,8.067498219305119,0.0,9.355832739768372,70.0,57.0,78.30000000000001,1.3943694829940796
+GBPUSD=X,GBP/USD,FX,2018-02-07,calm,10.112460740015258,stable,All risk components low,5.0,0.0,7.269884000740657,0.0,10.112460740015258,85.0,57.0,78.30000000000001,1.395868182182312
+GBPUSD=X,GBP/USD,FX,2018-02-01,normal,23.333333333333332,conflict,Risk components within expected range,0.0,0.0,0.0,10.0,23.333333333333332,70.0,80.0,88.0,1.420051097869873
+GBPUSD=X,GBP/USD,FX,2018-02-02,normal,16.666666666666668,conflict,Risk components within expected range,0.0,0.0,0.0,10.0,16.666666666666668,70.0,80.0,88.0,1.4266760349273682
+GBPUSD=X,GBP/USD,FX,2018-02-16,normal,15.34471775967149,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,15.34471775967149,85.0,80.0,88.0,1.4104173183441162
+GBPUSD=X,GBP/USD,FX,2018-01-01,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,78.0,87.4,1.351607084274292
+GBPUSD=X,GBP/USD,FX,2018-01-02,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,71.0,85.3,1.3511322736740112
+GBPUSD=X,GBP/USD,FX,2018-01-03,elevated,30.0,conflict,At least one risk component elevated,0.0,0.0,20.0,10.0,30.0,55.0,86.0,95.8,1.359619379043579
+GBPUSD=X,GBP/USD,FX,2020-03-20,tense,50.16167987830974,indeterminate,Multiple risk components elevated,10.0,2.343294870233509,20.0,5.0,50.16167987830974,20.0,43.0,38.4,1.149438500404358
+JPY=X,USD/JPY,FX,2018-02-02,calm,13.333333333333334,stable,All risk components low,0.0,0.0,0.0,0.0,13.333333333333334,70.0,47.0,26.1,109.40599822998048
+JPY=X,USD/JPY,FX,2018-02-05,calm,8.333333333333334,stable,All risk components low,5.0,0.0,0.0,0.0,8.333333333333334,85.0,47.0,26.1,110.03500366210938
+JPY=X,USD/JPY,FX,2018-02-06,calm,3.3333333333333335,stable,All risk components low,5.0,0.0,0.0,0.0,3.3333333333333335,85.0,53.0,27.9,109.09500122070312
+JPY=X,USD/JPY,FX,2018-01-01,normal,20.0,stable,Risk components within expected range,0.0,0.0,20.0,0.0,20.0,55.0,31.0,64.0,112.66600036621094
+JPY=X,USD/JPY,FX,2018-01-02,normal,20.0,stable,Risk components within expected range,0.0,0.0,20.0,0.0,20.0,55.0,31.0,62.8,112.7699966430664
+JPY=X,USD/JPY,FX,2018-01-03,normal,20.0,stable,Risk components within expected range,0.0,0.0,20.0,0.0,20.0,55.0,21.0,53.0,112.24400329589844
+JPY=X,USD/JPY,FX,2018-01-10,elevated,31.666666666666668,conflict,At least one risk component elevated,35.0,0.0,20.0,0.0,31.666666666666668,10.0,31.0,64.0,112.75499725341795
+JPY=X,USD/JPY,FX,2018-01-11,elevated,33.333333333333336,indeterminate,At least one risk component elevated,5.0,0.0,20.0,0.0,33.333333333333336,85.0,21.0,46.199999999999996,111.44400024414062
+JPY=X,USD/JPY,FX,2018-01-12,elevated,35.0,indeterminate,At least one risk component elevated,5.0,0.0,20.0,0.0,35.0,85.0,21.0,43.4,111.29399871826172
+JPY=X,USD/JPY,FX,2022-03-29,tense,51.515402844804356,conflict,Multiple risk components elevated,10.0,4.420633712249528,20.0,10.0,51.515402844804356,20.0,80.0,94.0,123.66000366210938
+JPY=X,USD/JPY,FX,2022-03-30,tense,54.84873617813769,conflict,Multiple risk components elevated,10.0,0.0,20.0,10.0,54.84873617813769,20.0,86.0,95.8,123.125
+JPY=X,USD/JPY,FX,2024-04-29,tense,68.76730763521009,conflict,Multiple risk components elevated,35.0,30.0,20.0,10.0,68.76730763521009,10.0,80.0,94.0,158.2239990234375
+CL=F,WTI crude oil futures,Commodities,2018-02-05,calm,11.804469091133756,stable,All risk components low,5.0,0.41340727340127026,0.0,0.0,11.804469091133756,85.0,57.0,78.30000000000001,64.1500015258789
+CL=F,WTI crude oil futures,Commodities,2018-02-06,calm,8.471135757800424,stable,All risk components low,5.0,0.0,0.0,0.0,8.471135757800424,85.0,57.0,78.30000000000001,63.38999938964844
+CL=F,WTI crude oil futures,Commodities,2018-02-07,calm,7.75943337979533,stable,All risk components low,5.0,7.86489286598472,0.0,0.0,7.75943337979533,85.0,37.0,69.1,61.790000915527344
+CL=F,WTI crude oil futures,Commodities,2018-01-23,normal,28.333333333333332,conflict,Risk components within expected range,5.0,0.0,0.0,10.0,28.333333333333332,85.0,87.0,90.1,64.47000122070312
+CL=F,WTI crude oil futures,Commodities,2018-01-24,normal,22.50547778479395,conflict,Risk components within expected range,5.0,2.516433354381844,0.0,10.0,22.50547778479395,85.0,87.0,96.1,65.61000061035156
+CL=F,WTI crude oil futures,Commodities,2018-01-25,normal,15.840127520616742,conflict,Risk components within expected range,5.0,0.003949207468378901,0.0,10.0,15.840127520616742,85.0,87.0,96.1,65.51000213623047
+CL=F,WTI crude oil futures,Commodities,2018-01-02,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,60.369998931884766
+CL=F,WTI crude oil futures,Commodities,2018-01-03,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,61.630001068115234
+CL=F,WTI crude oil futures,Commodities,2018-01-04,elevated,35.0,conflict,At least one risk component elevated,5.0,0.0,20.0,10.0,35.0,85.0,93.0,87.4,62.0099983215332
+CL=F,WTI crude oil futures,Commodities,2020-03-09,tense,54.30157619207123,conflict,Multiple risk components elevated,35.0,12.063777914573723,20.0,10.0,54.30157619207123,10.0,43.0,12.9,31.1299991607666
+CL=F,WTI crude oil futures,Commodities,2020-03-10,tense,64.30157619207124,conflict,Multiple risk components elevated,10.0,0.0,20.0,10.0,64.30157619207124,20.0,43.0,12.9,34.36000061035156
+CL=F,WTI crude oil futures,Commodities,2020-03-11,tense,52.35459263819124,conflict,Multiple risk components elevated,10.0,0.0,20.0,10.0,52.35459263819124,20.0,43.0,12.9,32.97999954223633
+CL=F,WTI crude oil futures,Commodities,2026-03-09,extreme,81.21723761795899,conflict,Risk components at extreme or conflict dominant,35.0,30.0,20.0,15.0,81.21723761795899,10.0,80.0,94.0,94.7699966430664
+CL=F,WTI crude oil futures,Commodities,2026-03-10,extreme,85.0508848711303,conflict,Risk components at extreme or conflict dominant,35.0,6.604663391349472,3.5479912220413983,10.0,85.0508848711303,10.0,80.0,94.0,83.44999694824219

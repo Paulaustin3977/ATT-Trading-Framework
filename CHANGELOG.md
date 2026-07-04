@@ -112,6 +112,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - No ATE Pine logic modified.
   - Verifier run result: 442/442 checks pass (exit code 0). v2.2 release SHA-256 matches manifest, dev mirror byte-identical, v2.1 SHA-256 unchanged.
   - This is a verifier-infrastructure extension. It does NOT claim empirical usefulness of the RiskEngine; RDR-003 / RDR-003W remain required for any diagnostic-to-downstream change.
+- RDR-003 RiskEngine daily diagnostic validation completed.
+  - 16-asset daily validation across metals (Gold, Silver, Copper), index proxies (Nasdaq, S&P 500), major equities (NVDA, MSFT, AAPL, AMZN, GOOGL), bonds / rates proxies (TLT, IGLT.L as gilt proxy), FX (EUR/USD, GBP/USD, USD/JPY), and commodities (WTI crude); 34,436 daily bars between 2018-01-02 and 2026-07-03.
+  - Verifier pre-flight confirmed clean: 442/442 checks pass, exit 0; v2.2 SHA matches manifest, v2.2 release/dev byte-identical, v2.1 SHA unchanged.
+  - **Classification: Weakly Supported.**
+  - **Recommendation: Keep Diagnostic; weekly RDR-003W and threshold review before any confidence-integration attempt.**
+  - RiskEngine remains diagnostic-only: DecisionEngine integration remains deferred, ConfidenceEngine integration remains deferred, alerts remain prohibited.
+  - Artefacts:
+    - Report: `research/Reports/RDR/RDR-003-riskengine-daily-diagnostic-validation.md`
+    - Manifest: `backtests/Hermes/ATE_v2.2/Daily/Diagnostic_Validation/RDR-003/RDR-003_Manifest.md`
+    - Summary CSV: `RDR-003_Summary.csv`
+    - Durations CSV: `RDR-003_Durations.csv`
+    - Transitions CSV: `RDR-003_Transitions.csv`
+    - Class summary CSV: `RDR-003_Class_Summary.csv`
+    - Overlap CSV: `RDR-003_Overlap.csv`
+    - Hidden bias CSV: `RDR-003_HiddenBias.csv`
+    - Adverse movement CSV: `RDR-003_Adverse.csv`
+    - Sampled explainers CSV: `RDR-003_Sampled_Explainers.csv`
+    - Reserved language audit CSV: `RDR-003_Reserved_Language_Audit.csv`
+    - Per-asset charts: `charts/<symbol>_risk_states.png`
+    - Reproduction script: `run_rdr003_validation.py`
+  - Key findings: median absolute Spearman of RiskScore vs VolatilityScore 0.17 (low, not a renamed VolatilityEngine); vs Momentum 0.31 (low); vs Confidence 0.43 (moderate but distinct); median state_changes_per_100_bars 9.89 (not noisy); median max |pct_up-50| 4.5pp (low directional bias); reserved-language audit 0/432 hits.
+  - Negative findings: state distribution heavily calm-skewed (median pct_calm ~70%); `tense`/`extreme` states very rare and thin on evidence; volatility component dominates >60% of bars in 6/16 assets (FX, TLT, IGLT.L, CL); conflict component small in most bars; what is measured here is the deterministic Python mirror, not the actual Pine implementation, until a separate Pine-vs-Python parity check is performed.
+  - Follow-up: RDR-003W weekly validation, Pine-vs-Python parity check, threshold retest before any downstream consumption.
+  - No ATE Pine logic modified. No broker, no paper-trading API. Diagnostic only.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
