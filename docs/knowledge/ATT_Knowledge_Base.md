@@ -114,6 +114,12 @@ Evidence: `docs/user/ATE_User_Handbook.md` was added as the plain-English user g
 
 Knowledge entry: ATE v2.2 is a user-facing TradingView market analysis indicator with a dashboard. VolatilityEngine and RiskEngine are user-visible on the dashboard but remain diagnostic-only. ATE does not place trades, does not connect to a broker, does not manage positions, does not guarantee profit, and does not issue financial advice. The 10 ATE alerts are Golden Cross, Death Cross, Strong Bull, Strong Bear, Bullish BOS, Bearish BOS, Momentum Bullish, Momentum Bearish, High Confidence Bull, and Low Confidence Bear. These are the only alerts produced by ATE v2.2. ConfidenceEngine does not consume VolatilityEngine or RiskEngine. The handbook is plain-English and contains no research methodology or technical implementation detail.
 
+### ATE v2.2 user handbook approved
+
+Evidence: Paul Austin approved `docs/user/ATE_User_Handbook.md` as the official ATE v2.2 user handbook following the sanity-review pass that aligned the Confidence Score and Risk Score band tables with the ATE v2.2 dashboard thresholds.
+
+Knowledge entry: The ATE v2.2 user handbook at `docs/user/ATE_User_Handbook.md` is the official plain-English reader guide for the ATE v2.2 TradingView chart. The Confidence Score table now matches the dashboard `confidenceState` thresholds used by the Pine source; the Risk Score table now matches the dashboard `riskState` thresholds. The 10 alert list matches the preserved ATE v2.2 alertcondition calls exactly, and no RiskEngine alert was added. The no-execution boundary (no trades, no broker, no positions, no financial advice) and the diagnostic-only status of VolatilityEngine and RiskEngine are both preserved. No Pine code was modified as part of this approval. The handbook is approved documentation, not a research artefact; it contains no research methodology and no technical implementation detail.
+
 ## Open Governance Questions
 
 - What manual TradingView validation evidence is acceptable when automated checks are unavailable?

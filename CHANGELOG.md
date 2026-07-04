@@ -167,6 +167,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Preserves the no-execution boundary.
   - 10 alert list matches preserved ATE alertcondition calls exactly.
   - No Pine logic modified.
+- ATE v2.2 user handbook approved and published.
+  - Handbook confirmed as the official ATE v2.2 user handbook.
+  - Plain-English guide for reading the TradingView chart; no research methodology, no technical implementation detail.
+  - Preserves the no-execution boundary (no trades, no broker, no positions, no advice).
+  - Preserves the diagnostic-only status of VolatilityEngine and RiskEngine.
+  - Confidence Score table now matches the ATE v2.2 dashboard `confidenceState` thresholds.
+  - Risk Score table now matches the ATE v2.2 dashboard `riskState` thresholds.
+  - 10 alert list matches the preserved ATE v2.2 alertcondition calls (Golden Cross, Death Cross, Strong Bull, Strong Bear, Bullish BOS, Bearish BOS, Momentum Bullish, Momentum Bearish, High Confidence Bull, Low Confidence Bear) — no RiskEngine alert added.
+  - No Pine code modified.
 - Draft governance standards covering quality, risk, data, security, AI-agent governance, feature lifecycle, deprecation, decision records, project review and specification templates.
 - Draft Austin Trading Knowledge Base entries from the ATOS-001 review.
 
