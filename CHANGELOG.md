@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Recognised MetaTrader 5 as a governed ATT Trading Framework subsystem.
+- Added Austin M15 Scalper v1.0 research release and byte-identical development alias.
+- Added MT5 specification, acceptance criteria, research journal, and XAUUSD backtest evidence structure.
+- Recorded the first 99%-quality XAUUSD M15 baseline backtest: 7 trades, -49.51 net profit, 0.60 profit factor, and 0.87% maximum equity drawdown.
+- Classified Austin M15 Scalper v1.0 as research-only and not approved for live trading.
 - Active Architecture.md baseline approved by Paul Austin:
   - RiskEngine moved after ConfidenceEngine.
   - Engine Output Contract added.
@@ -204,6 +209,42 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - TradingView compile confirmed clean by Paul Austin.
   - **ATE release SHAs unchanged:** ATE_v2.2 = `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`, ATE_Current = same, ATE_v2.1 = `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
   - Ad-hoc structural verifier (44 checks) green: no bare-method `.ema(/.sma(/.stdev(`, no pandas `span=/adjust=/min_periods=/1e-10`, all 7 `ta.*` indicator built-ins present, all 18 RDR-004 columns referenced, `rdrHeader` matches the expected 19-column list, no repainting/varip tokens, `bgcolor()` uses ternary form (v6-safe).
+- CDC-001 created: `docs/governance/CDC-001_Command_Centre_Governance_v1.0.md` (v1.0.0, Draft).
+  - Establishes governance, scope, architecture, quality gates, ownership, release policy and documentation framework for the ATE Command Centre as an official governed subsystem independent of the TradingView Pine indicator.
+  - Defines 12 quality gates, 6 release stages, SemVer versioning, 12 design principles, 7 explicit no-execution out-of-scope items, and 11 reserved future-expansion modules.
+  - Reserves the Command Centre documentation hierarchy: CCM-001 (Maintenance), CCU-001 (User), CCR-001 (Release Notes), CCV-001 (Validation), CCA-001 (Architecture), CCP-001 (Product Vision) — each requires its own CDC amendment before authoring.
+  - Ownership: Product Owner Paul Austin; Primary Development Agent Hermes; Verification Authority Hermes Verifier; Final Approval Authority Paul Austin. Hermes recommends; only Paul Austin approves governance changes.
+  - No-execution boundary preserved: Command Centre remains an operational information system; no broker, paper trading, live trading, order execution, position/account management, financial advice, automatic trading, credential storage, or unauthorised research-artefact modification.
+  - Relationship to ATE: CDC-001 governs only the Command Centre; ATOS governs the overall Austin Trading Engine; ambiguity resolves to ATOS unless an explicit CDC amendment is approved.
+  - Status: Draft — must not be cited as authority until Paul Austin sets the `Status` field to `Approved`.
+  - No Pine files modified. No verifier scripts modified. No research artefacts modified. No backtests modified.
+- ATE Command Centre officially recognised as a governed subsystem of the Austin Trading Engine.
+- ATE Command Centre Milestone 2.2 MVP delivered: `~/Documents/Austin Trading Team/ATE_Command_Centre/` (Streamlit + Python).
+  - 10 pages: Home, Research Journal, RDR Library, Design Decisions, Evidence Map, Open Research Questions, Backtests, Roadmap, Links, Team.
+  - Ad-hoc verifier (20/20 checks PASS) green: py_compile, scanner sweep, Streamlit AppTest across all 10 pages, source-folder read-only verification, repo clean.
+  - Outside the ATE repo on purpose — local-only MVP, does not consume any Pine release path.
+- RDR-010 — TrendEngine Validation authored and classified as `INSUFFICIENT EVIDENCE — RETEST REQUIRED`.
+  - Report: `research/Reports/RDR/RDR-010-trendengine-validation.md`.
+  - Manifest: `backtests/Hermes/ATE_v2.2/Diagnostic_Validation/RDR-010/RDR-010_Manifest.md`.
+  - Reason: `specifications/ATE/TrendEngine.md` is a 34-line placeholder at version `0.1.0-spec`, status "Specification draft. Implementation pending."; no Pine file contains `trendState`, `trendStrength`, or `trendAge`; no Python mirror `tools/scripts/_trendengine_compute.py` exists; no TrendEngine fixtures under `tests/fixtures/ATE_v2_2/`; no TrendEngine backtest data under `backtests/Hermes/ATE_v2.2/`.
+  - Verdict: `INSUFFICIENT EVIDENCE`. Recommendation: `Retest`. Classification: `Inconclusive`. No promotion to ATE v2.2 production. No coupling to ConfidenceEngine, DecisionEngine, entry/exit, sizing, stops, or alerts.
+  - RiskEngine diagnostic-only status preserved.
+  - ATE release SHAs unchanged: ATE_v2.2 = `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`, ATE_v2.1 = `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
+  - No Pine code modified. No verifier script modified. No broker / paper-trading / execution API used.
+- RDR-010 follow-up implemented: TrendEngine `0.2.0-spec-impl` research cycle complete.
+  - Implementation plan: `docs/releases/TrendEngine_Implementation_Plan.md` (TREND-IMPL-PLAN).
+  - Spec upgrade: `specifications/ATE/TrendEngine.md` promoted from `0.1.0-spec` placeholder to `0.2.0-spec-impl` ("Approved for Research Implementation Planning"). Status: research-only; no coupling to ConfidenceEngine, DecisionEngine, entry/exit, sizing, stops, or alerts.
+  - Pine research implementation: `pine/development/ATE_Current.pine` extended with TrendEngine block (7 inputs, 12 EOC + diagnostic variables, 5 dashboard rows, 12 Research Mode fields). TrendEngine is **additive** and **parallel** to existing `trendScore` / `marketState` — it does not replace them. Pine v6 constraints honoured: `maxval`/`minval` literal, no repainting/varip tokens, no alerts, no buy/sell colour mapping, reserved language absent from labels.
+  - Python mirror: `tools/scripts/_trendengine_compute.py` mirrors the Pine rule set deterministically (bar-close, no repainting, agreement-based strength, `ta.barssince`-based age).
+  - Four TrendEngine fixtures seeded: `tests/fixtures/ATE_v2_2/{up_strong,down_strong,range_choppy,transition}.csv` plus `tests/fixtures/ATE_v2_2/trendfixture_spec.json`. Each is deterministic OHLC exercising a distinct trend regime.
+  - Verifier extension: `tools/scripts/verify_ate.py` extended with TrendEngine contract + behaviour checks. The `v22:release_dev_byte_identical` invariant is preserved as either byte-identical (pre-TrendEngine) or dev-mirror-divergence-with-TrendEngine-only-in-dev (the new intentional state). Existing RiskEngine invariants unchanged.
+  - Verifier result: 530/530 PASS, exit 0. Existing 442/442 baseline plus 88 new TrendEngine checks (spec, plan, mirror, dev-mirror block, EOC, inputs, version literal, no alerts, no reserved language, dashboard rows, Research Mode fields, boundary, four-fixture behaviour, strength bounds, age bounds).
+  - ATE v2.2 release file SHA unchanged: `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`.
+  - ATE v2.1 release file SHA unchanged: `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
+  - ATE_Current.pine new SHA: `7558510a07977e6f419c26ac73952429d34f3c77f13829139e899e991cbbce79` (intentional divergence from release, dev-mirror only).
+  - RiskEngine diagnostic-only status preserved.
+  - No live trading, broker connectivity, paper-trading API, or execution path introduced.
+  - Empirical usefulness remains deferred to a future RDR-010 re-attempt.
 
 ### Existing baseline
 
