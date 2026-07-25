@@ -1,0 +1,3 @@
+filter,mean_oos_sharpe,median_oos_sharpe,n_combos
+with_risk_filter,-0.9167215245959319,-0.9098310181384941,18
+without_risk_filter,-0.8471445540490884,-0.8585307245862793,9

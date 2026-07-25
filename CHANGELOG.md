@@ -210,7 +210,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - **ATE release SHAs unchanged:** ATE_v2.2 = `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`, ATE_Current = same, ATE_v2.1 = `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
   - Ad-hoc structural verifier (44 checks) green: no bare-method `.ema(/.sma(/.stdev(`, no pandas `span=/adjust=/min_periods=/1e-10`, all 7 `ta.*` indicator built-ins present, all 18 RDR-004 columns referenced, `rdrHeader` matches the expected 19-column list, no repainting/varip tokens, `bgcolor()` uses ternary form (v6-safe).
 - CDC-001 created: `docs/governance/CDC-001_Command_Centre_Governance_v1.0.md` (v1.0.0, Draft).
-  - Establishes governance, scope, architecture, quality gates, ownership, release policy and documentation framework for the ATE Command Centre as an official governed subsystem independent of the TradingView Pine indicator.
+  - Proposes governance, scope, architecture, quality gates, ownership, release policy and documentation framework for the ATE Command Centre as a candidate governed subsystem independent of the TradingView Pine indicator; it has no governing force until approved by Paul Austin.
   - Defines 12 quality gates, 6 release stages, SemVer versioning, 12 design principles, 7 explicit no-execution out-of-scope items, and 11 reserved future-expansion modules.
   - Reserves the Command Centre documentation hierarchy: CCM-001 (Maintenance), CCU-001 (User), CCR-001 (Release Notes), CCV-001 (Validation), CCA-001 (Architecture), CCP-001 (Product Vision) — each requires its own CDC amendment before authoring.
   - Ownership: Product Owner Paul Austin; Primary Development Agent Hermes; Verification Authority Hermes Verifier; Final Approval Authority Paul Austin. Hermes recommends; only Paul Austin approves governance changes.
@@ -241,10 +241,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
   - Verifier result: 530/530 PASS, exit 0. Existing 442/442 baseline plus 88 new TrendEngine checks (spec, plan, mirror, dev-mirror block, EOC, inputs, version literal, no alerts, no reserved language, dashboard rows, Research Mode fields, boundary, four-fixture behaviour, strength bounds, age bounds).
   - ATE v2.2 release file SHA unchanged: `d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239`.
   - ATE v2.1 release file SHA unchanged: `7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893`.
-  - ATE_Current.pine new SHA: `7558510a07977e6f419c26ac73952429d34f3c77f13829139e899e991cbbce79` (intentional divergence from release, dev-mirror only).
+  - ATE_Current.pine new SHA: `66d2ffe890f94a11084b7e1fd8c2da8f21ef5607cd10661032d8810435672f57` (intentional divergence from release, dev-mirror only; includes the pre-commit Pine/Python parity correction).
   - RiskEngine diagnostic-only status preserved.
   - No live trading, broker connectivity, paper-trading API, or execution path introduced.
-  - Empirical usefulness remains deferred to a future RDR-010 re-attempt.
+  - Empirical usefulness is now recorded by the measured RDR-010 re-attempt below; the result is mixed and does not authorise promotion.
+- RDR-010 deterministic measurement re-attempt completed on daily and weekly Gold, Silver, and Gilts.
+  - Classification: **Measured, mixed evidence, diagnostic-only; no promotion**.
+  - Daily pooled TrendEngine underperformed the always-long no-TrendEngine benchmark at 1/5/20 bars.
+  - Weekly evidence was stronger at longer horizons but remained sample-thin, overlapping, and heterogeneous; daily Gilts were negative at all horizons.
+  - `RANGE` was rare or absent after warm-up and state persistence was high; future rule-level review is required before any promotion proposal.
+  - Focused harness tests: 6/6 PASS; ad-hoc artefact verification: 56/56 PASS; canonical verifier: 530/530 PASS.
+  - Reproducible harness, CSV/JSON evidence, charts, execution log, manifest, and report stored under `backtests/Hermes/ATE_v2.2/Diagnostic_Validation/RDR-010/` and `research/Reports/RDR/`.
+  - ATE v2.2 and v2.1 release SHAs remain unchanged. No TradingView compile is claimed for the development-only TrendEngine.
+  - No ConfidenceEngine, RiskEngine, DecisionEngine, alert, broker, execution, entry/exit, sizing, or stop coupling was introduced.
+- ATE v2.2 UK/EU index-panel backtest research package added under `backtests/ATE_v22_UK100/`.
+  - Research-only six-symbol diagnostic-score study with reproducible environment metadata, deterministic tests, source, cached public data, and retained negative results.
+  - Corrected Pine-parity issues in Wilder RMA seeding, confirmed-pivot history, and RiskEngine conflict timing; removed stop/fill lookahead and corrected cost accounting in both state-machine simulators.
+  - Reclassified legacy rolling-segment output so it is not described as true walk-forward/OOS evidence.
+  - Removed promotion and tradeable-edge overclaims; the retained result remains negative/inconclusive and authorises no trading or release change.
 
 ### Existing baseline
 

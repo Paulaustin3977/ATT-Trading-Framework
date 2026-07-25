@@ -1,0 +1,49 @@
+{
+  "fixture_set_version": "0.2.0-spec-impl",
+  "engine_target": "ATE v2.2 / TrendEngine v0.2.0-spec-impl (research-only)",
+  "engine_reference": "specifications/ATE/TrendEngine.md (v0.2.0-spec-impl Approved for Research Implementation Planning)",
+  "plan_reference": "docs/releases/TrendEngine_Implementation_Plan.md",
+  "fixture_purpose": "TrendEngine behaviour checks. Each fixture is deterministic OHLC with a distinct trend regime. Inert columns (volScore, volShockFlag, confidenceScore, trendScore, momentumScore) are present for loader consistency with the RiskEngine fixtures but are not consumed by the TrendEngine compute path.",
+  "fixtures": {
+    "up_strong": {
+      "n": 250,
+      "seed_close": 11,
+      "regime": "persistent upward drift with controlled pullbacks to produce higher-high / higher-low structure",
+      "expected_dominant_state": "UP",
+      "expected_count_ge_UP_post_warmup_pct": 0.85
+    },
+    "down_strong": {
+      "n": 250,
+      "seed_close": 22,
+      "regime": "persistent downward drift with controlled bounces to produce lower-high / lower-low structure",
+      "expected_dominant_state": "DOWN",
+      "expected_count_ge_DOWN_post_warmup_pct": 0.85
+    },
+    "range_choppy": {
+      "n": 250,
+      "seed_close": 33,
+      "regime": "tight oscillation with mean-reverting behaviour; no persistent slope or structure agreement",
+      "expected_dominant_state": "RANGE",
+      "expected_count_ge_RANGE_post_warmup_pct": 0.85
+    },
+    "transition": {
+      "n": 250,
+      "seed_close": 44,
+      "regime": "UP for 0<=i<90, RANGE for 90<=i<160, DOWN for 160<=i<250",
+      "expected": "regime changes occur; the exact adoption timing depends on trendStructureBars confirmation window",
+      "expected_count_ge_states_post_warmup_pct": 0.20
+    }
+  },
+  "params": {
+    "trendEmaLen": 50,
+    "trendSlopeLookback": 5,
+    "trendSlopeMin": 0.001,
+    "trendSwingLen": 5,
+    "trendStructureBars": 3,
+    "trendStrengthScale": 50.0,
+    "trendAgeMax": 250
+  },
+  "warmup_bars": 55,
+  "warmup_derivation": "trendEmaLen + trendSlopeLookback = 50 + 5 = 55 bars before TrendEngine emits non-UNKNOWN states",
+  "compatibility": "Fixture loader must accept OHLC + Date and ignore the inert columns (volScore, volShockFlag, confidenceScore, trendScore, momentumScore) when present. These columns are present so the same loader that reads RiskEngine fixtures can also read TrendEngine fixtures."
+}

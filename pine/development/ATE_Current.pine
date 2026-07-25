@@ -99,6 +99,16 @@ slopeLookback = input.int(3, "MA Slope Lookback", minval=1, maxval=20, group=grp
 grpResearch = "ATE Research Mode"
 showResearch = input.bool(false, "Show Research Output", group=grpResearch)
 
+grpTrend = "Trend Engine v0.2.0-spec-impl"
+showTrend = input.bool(true, "Enable Trend Diagnostics", group=grpTrend)
+trendEmaLen = input.int(50, "Trend EMA Length", minval=5, maxval=400, group=grpTrend)
+trendSlopeLookback = input.int(5, "Trend Slope Lookback", minval=1, maxval=50, group=grpTrend)
+trendSlopeMin = input.float(0.001, "Trend Slope Min", minval=0.0, maxval=0.1, step=0.001, group=grpTrend)
+trendSwingLen = input.int(5, "Trend Swing Length", minval=2, maxval=50, group=grpTrend)
+trendStructureBars = input.int(3, "Trend Structure Confirm Bars", minval=1, maxval=20, group=grpTrend)
+trendStrengthScale = input.float(50.0, "Trend Strength Scale", minval=1.0, maxval=200.0, step=1.0, group=grpTrend)
+trendAgeMax = input.int(250, "Trend Age Max", minval=10, maxval=1000, group=grpTrend)
+
 
 // ─────────────────────────────────────────────────────────────────────────────
 // FUNCTIONS
@@ -521,6 +531,123 @@ riskConflictRaw > 0 ? "Conflict component active" :
 riskState == "calm" ? "Low component pressure" : "Risk components within range"
 riskCol = f_riskColor(riskScore)
 // ─────────────────────────────────────────────────────────────────────────────
+// TREND ENGINE v0.2.0-spec-impl
+//
+// TrendEngine v0.2.0-spec-impl:
+// - Dashboard display: YES (research-only, dev mirror)
+// - Research Mode output: YES (research-only, dev mirror)
+// - ConfidenceEngine impact: NO
+// - DecisionEngine impact: NO
+// - Entry/exit impact: NO
+// - Position sizing impact: NO
+// - Stop logic impact: NO
+// - Trend alerts: NO
+// - TrendEngine does NOT replace trendScore / marketState
+// ─────────────────────────────────────────────────────────────────────────────
+
+trendEngineVersion = "0.2.0-spec-impl"
+
+// Persistent state variable — declared before its first use to satisfy
+// Pine v6 forward-reference rules.
+var string trendState = "UNKNOWN"
+
+// Insufficient data check (warm-up)
+trendDiagInsufficientData = not showTrend or bar_index < trendEmaLen + trendSlopeLookback
+
+// EMA and slope
+trendEma = ta.ema(close, trendEmaLen)
+trendEmaPrior = trendEma[trendSlopeLookback]
+trendDiagEmaSlope = na(trendEmaPrior) or trendEmaPrior == 0 ? 0.0 : (trendEma - trendEmaPrior) / trendEmaPrior
+
+// Slope classification
+slopeIsUp   = trendDiagEmaSlope >  trendSlopeMin
+slopeIsDown = trendDiagEmaSlope < -trendSlopeMin
+slopeIsFlat = not slopeIsUp and not slopeIsDown
+
+// Structure classification. TrendEngine owns its pivot length and confirmed
+// pivot history; it must not silently inherit StructureEngine's `pivotLen`.
+trendPivotHigh = ta.pivothigh(high, trendSwingLen, trendSwingLen)
+trendPivotLow = ta.pivotlow(low, trendSwingLen, trendSwingLen)
+var float trendLastHigh = na
+var float trendPrevHigh = na
+var float trendLastLow = na
+var float trendPrevLow = na
+if not na(trendPivotHigh)
+    trendPrevHigh := trendLastHigh
+    trendLastHigh := trendPivotHigh
+if not na(trendPivotLow)
+    trendPrevLow := trendLastLow
+    trendLastLow := trendPivotLow
+trendDiagHigherHigh = not na(trendLastHigh) and not na(trendPrevHigh) and trendLastHigh > trendPrevHigh
+trendDiagHigherLow  = not na(trendLastLow) and not na(trendPrevLow) and trendLastLow > trendPrevLow
+trendDiagLowerHigh  = not na(trendLastHigh) and not na(trendPrevHigh) and trendLastHigh < trendPrevHigh
+trendDiagLowerLow   = not na(trendLastLow) and not na(trendPrevLow) and trendLastLow < trendPrevLow
+structIsUp   = trendDiagHigherHigh and trendDiagHigherLow
+structIsDown = trendDiagLowerHigh  and trendDiagLowerLow
+structIsFlat = not structIsUp and not structIsDown
+
+// Agreement metric
+trendDiagAgreement =
+     trendDiagInsufficientData ? 0.0 :
+     slopeIsUp   and structIsUp   ? 1.0 :
+     slopeIsDown and structIsDown ? 1.0 :
+     slopeIsUp   and structIsFlat ? 0.6 :
+     slopeIsFlat and structIsUp   ? 0.6 :
+     slopeIsDown and structIsFlat ? 0.6 :
+     slopeIsFlat and structIsDown ? 0.6 :
+     slopeIsFlat and structIsFlat ? 0.5 : 0.0
+
+// Candidate state
+candidateUp   = slopeIsUp   and structIsUp
+candidateDown = slopeIsDown and structIsDown
+candidateIsUpOrDown = candidateUp or candidateDown
+
+// State confirmation: candidate must hold for trendStructureBars bars
+trendCandidateState = candidateUp ? "UP" : candidateDown ? "DOWN" : "RANGE"
+var string trendCandidatePrior = na
+var int trendCandidateHoldCount = 0
+if trendCandidateState == trendCandidatePrior
+    trendCandidateHoldCount += 1
+else
+    trendCandidateHoldCount := 1
+trendCandidatePrior := trendCandidateState
+
+// Adopt candidate only after confirmation window (with one exception: warm-up from UNKNOWN)
+trendDiagStateConfirmBars = candidateUp or candidateDown ? trendCandidateHoldCount : 0
+
+// State adoption (with confirmation) — trendState is var, declared above.
+if trendDiagInsufficientData
+    trendState := "UNKNOWN"
+else
+    if trendState == "UNKNOWN"
+        // First non-UNKNOWN state adopted immediately
+        trendState := trendCandidateState
+    else
+        // Subsequent changes require confirmation window
+        if trendCandidateState != trendState and trendDiagStateConfirmBars >= trendStructureBars
+            trendState := trendCandidateState
+
+// Strength
+trendStrengthRaw = trendDiagInsufficientData ? na : (candidateIsUpOrDown ? trendDiagAgreement * trendStrengthScale / 100.0 : 0.0)
+trendStrength = trendDiagInsufficientData or na(trendStrengthRaw) ? na : f_clamp(trendStrengthRaw, 0.0, 1.0)
+
+// Age tracking — bars since current state was adopted.
+// ta.barssince counts bars since a true condition; using stateChanged = (trendState != trendState[1]).
+trendStateChanged = trendState != trendState[1]
+trendAgeBarsSinceChange = ta.barssince(trendStateChanged)
+trendAge =
+     trendDiagInsufficientData ? na :
+     trendState == "UNKNOWN" ? 0 :
+     na(trendAgeBarsSinceChange) ? 0 :
+     math.min(trendAgeMax, trendAgeBarsSinceChange)
+
+// Trend state colour (neutral diagnostic, not buy/sell)
+trendCol =
+     trendState == "UP"   ? color.new(color.teal, 0) :
+     trendState == "DOWN" ? color.new(color.maroon, 0) :
+     color.gray
+
+// ─────────────────────────────────────────────────────────────────────────────
 // PLOTS
 // ─────────────────────────────────────────────────────────────────────────────
 plot(showFast ? f1 : na, "Fast 1", color=f_up(f1) ? fastUpCol : f_dn(f1) ? fastDnCol : color.gray, linewidth=1)
@@ -556,9 +683,9 @@ plotshape(showStructure and bosBear, title="Bearish BOS", style=shape.labeldown,
 // ─────────────────────────────────────────────────────────────────────────────
 // DASHBOARD
 // ─────────────────────────────────────────────────────────────────────────────
-var table dash = table.new(position.top_right, 2, 38, border_width=1)
+var table dash = table.new(position.top_right, 2, 43, border_width=1)
 if barstate.islast
-table.clear(dash, 0, 0, 1, 37)
+table.clear(dash, 0, 0, 1, 42)
 if showDash
 table.cell(dash, 0, 0, "AUSTIN TRADING ENGINE", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
 table.cell(dash, 1, 0, "v2.2", text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.normal)
@@ -638,6 +765,16 @@ table.cell(dash, 0, 36, "RSI/MACD/ADX", text_color=color.white, bgcolor=color.ne
 table.cell(dash, 1, 36, str.tostring(rsiScore, "#") + "/" + str.tostring(macdScore, "#") + "/" + str.tostring(adxScore, "#"), text_color=color.white, bgcolor=color.new(color.gray, 85))
 table.cell(dash, 0, 37, "Vol Engine", text_color=color.white, bgcolor=color.new(color.gray, 85))
 table.cell(dash, 1, 37, volEngineVersion + " diagnostic", text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 0, 38, "Trend State", text_color=color.white, bgcolor=color.new(color.black, 20))
+table.cell(dash, 1, 38, trendState, text_color=trendCol, bgcolor=color.new(color.black, 20))
+table.cell(dash, 0, 39, "Trend Strength", text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 1, 39, na(trendStrength) ? "na" : str.tostring(trendStrength, "#.##"), text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 0, 40, "Trend Age", text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 1, 40, na(trendAge) ? "na" : str.tostring(trendAge, "#"), text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 0, 41, "Trend Direction", text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 1, 41, trendState, text_color=trendCol, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 0, 42, "Trend Engine", text_color=color.white, bgcolor=color.new(color.gray, 85))
+table.cell(dash, 1, 42, trendEngineVersion + " diagnostic", text_color=color.white, bgcolor=color.new(color.gray, 85))
 
 // ─────────────────────────────────────────────────────────────────────────────
 // RESEARCH MODE
@@ -686,6 +823,18 @@ researchText =
 "BarRangeATR: " + f_fmt(riskDiagExtBarRangeAtr) + "\n" +
 "LastSwingATR: " + f_fmt(riskDiagStructLastSwingAtr) + "\n" +
 "RiskInsufficientData: " + str.tostring(riskDiagInsufficientData) + "\n" +
+"TrendEngineVersion: " + trendEngineVersion + "\n" +
+"TrendState: " + trendState + "\n" +
+"TrendStrength: " + (na(trendStrength) ? "na" : str.tostring(trendStrength, "#.##")) + "\n" +
+"TrendAge: " + (na(trendAge) ? "na" : str.tostring(trendAge, "#")) + "\n" +
+"TrendDiagEmaSlope: " + (na(trendDiagEmaSlope) ? "na" : str.tostring(trendDiagEmaSlope, "#.######")) + "\n" +
+"TrendDiagAgreement: " + (na(trendDiagAgreement) ? "na" : str.tostring(trendDiagAgreement, "#.##")) + "\n" +
+"TrendDiagHigherHigh: " + str.tostring(trendDiagHigherHigh) + "\n" +
+"TrendDiagHigherLow: " + str.tostring(trendDiagHigherLow) + "\n" +
+"TrendDiagLowerHigh: " + str.tostring(trendDiagLowerHigh) + "\n" +
+"TrendDiagLowerLow: " + str.tostring(trendDiagLowerLow) + "\n" +
+"TrendDiagStateConfirmBars: " + str.tostring(trendDiagStateConfirmBars) + "\n" +
+"TrendDiagInsufficientData: " + str.tostring(trendDiagInsufficientData) + "\n" +
 "Close: " + str.tostring(close, "#.##")
 table.cell(research, 0, 0, researchText, text_color=color.white, bgcolor=color.new(color.black, 10), text_size=size.small)
 // ─────────────────────────────────────────────────────────────────────────────

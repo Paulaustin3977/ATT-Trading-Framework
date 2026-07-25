@@ -647,9 +647,24 @@ if v22_sha_actual is not None:
           v22_sha_actual == V22_EXPECTED_SHA,
           f"expected={V22_EXPECTED_SHA} actual={v22_sha_actual}")
 if v22_sha_actual is not None and v22_dev_sha_actual is not None:
+    # Intentional divergence: TrendEngine research implementation lives in
+    # the dev mirror (pine/development/ATE_Current.pine) per
+    # docs/releases/TrendEngine_Implementation_Plan.md. The release file
+    # (pine/releases/ATE_v2.2.pine) must remain unchanged.
+    #
+    # This check accepts either:
+    #   (a) release == dev byte-identical (no TrendEngine work yet), or
+    #   (b) dev contains a TrendEngine block (TrendEngine research added)
+    #       AND release does NOT contain a TrendEngine block (release preserved).
+    trend_block_marker = "trendEngineVersion = \"0.2.0-spec-impl\""
+    dev_has_trend = trend_block_marker in v22_dev_src if v22_dev_src else False
+    release_has_trend = trend_block_marker in v22_src if v22_src else False
+    diverged = v22_sha_actual != v22_dev_sha_actual
+    divergence_acceptable = diverged and dev_has_trend and not release_has_trend
     check("v22:release_dev_byte_identical",
-          v22_sha_actual == v22_dev_sha_actual,
-          f"release={v22_sha_actual} dev={v22_dev_sha_actual}")
+          v22_sha_actual == v22_dev_sha_actual or divergence_acceptable,
+          f"release={v22_sha_actual} dev={v22_dev_sha_actual} "
+          f"divergence_acceptable={divergence_acceptable}")
 if v21_sha_actual is not None:
     check("v21:release_sha_unchanged",
           v21_sha_actual == V21_EXPECTED_SHA,
@@ -974,6 +989,247 @@ if v22_src:
         body_start = 0
     body_text = "\n".join(rm_section[body_start:])
     _span_reserved(body_text, "research_mode")
+
+
+# ---------------------------------------------------------------------------
+# F. TrendEngine v0.2.0-spec-impl — dev-mirror contract + behaviour.
+#
+# TrendEngine is a research-only engine implemented in the development mirror
+# (pine/development/ATE_Current.pine) only. The release file
+# (pine/releases/ATE_v2.2.pine) must remain unchanged.
+#
+# Scope: static contract checks against the dev-mirror source plus behaviour
+# checks against four seeded fixtures under tests/fixtures/ATE_v2_2/.
+# Empirical usefulness remains subject to a future RDR-010 re-attempt.
+# ---------------------------------------------------------------------------
+
+TREND_SPEC = REPO / "specifications/ATE/TrendEngine.md"
+TREND_FIXTURE_DIR = REPO / "tests/fixtures/ATE_v2_2"
+TREND_COMPUTE = TOOLS / "_trendengine_compute.py"
+TREND_VERSION = "0.2.0-spec-impl"
+TREND_VALID_STATES = {"UP", "DOWN", "RANGE", "UNKNOWN"}
+TREND_REQUIRED_INPUTS = [
+    "trendEmaLen", "trendSlopeLookback", "trendSlopeMin",
+    "trendSwingLen", "trendStructureBars",
+    "trendStrengthScale", "trendAgeMax",
+]
+TREND_REQUIRED_EOC_VARS = [
+    "trendState", "trendStrength", "trendAge",
+    "trendEngineVersion",
+    "trendDiagEmaSlope", "trendDiagAgreement",
+    "trendDiagHigherHigh", "trendDiagHigherLow",
+    "trendDiagLowerHigh", "trendDiagLowerLow",
+    "trendDiagStateConfirmBars", "trendDiagInsufficientData",
+]
+
+trend_present_in_dev = (
+    v22_dev_src is not None and v22_dev_src != ""
+    and f'trendEngineVersion = "{TREND_VERSION}"' in v22_dev_src
+)
+trend_present_in_release = (
+    v22_src is not None and v22_src != ""
+    and f'trendEngineVersion = "{TREND_VERSION}"' in v22_src
+)
+
+# 1. Spec upgrade is on disk.
+check("trend:spec_exists", TREND_SPEC.is_file(), str(TREND_SPEC))
+if TREND_SPEC.is_file():
+    spec_src = _read_text(TREND_SPEC)
+    # Spec version appears as `**Version:** \`0.2.0-spec-impl\`` in the header.
+    check("trend:spec_version_literal",
+          "0.2.0-spec-impl" in spec_src and "Version:" in spec_src)
+    check("trend:spec_status_research",
+          "Approved for Research Implementation Planning" in spec_src)
+    # Reserved-language check is scoped: only the prose *forbidding* reserved
+    # language is allowed to mention those words (as a literal list of
+    # forbidden tokens). Any *use* of reserved language as a label or value
+    # would be a contract violation. We use a heuristic: the section
+    # containing "Use reserved language" / "No reserved language" is allowed;
+    # elsewhere, the words must not appear as standalone labels.
+    spec_lower = spec_src.lower()
+    # Count occurrences of "approved", "blocked", "tradeable" — exclude
+    # lines that are part of the explicit forbidden-language list.
+    reserved_violations = []
+    for ln in spec_src.splitlines():
+        ln_lower = ln.lower()
+        if "reserved language" in ln_lower and ("forbid" in ln_lower or "avoid" in ln_lower):
+            continue
+        if "use reserved language" in ln_lower:
+            continue
+        if "no reserved language" in ln_lower:
+            continue
+        for w in ("tradeable", "blocked"):
+            if w in ln_lower and not ln_lower.strip().startswith("-"):
+                reserved_violations.append((w, ln.strip()[:120]))
+    check("trend:spec_no_reserved_language",
+          len(reserved_violations) == 0,
+          f"violations={reserved_violations[:3]}")
+
+# 2. Plan exists.
+TREND_PLAN = REPO / "docs/releases/TrendEngine_Implementation_Plan.md"
+check("trend:plan_exists", TREND_PLAN.is_file(), str(TREND_PLAN))
+
+# 3. Python mirror exists and imports cleanly.
+check("trend:python_mirror_exists", TREND_COMPUTE.is_file(), str(TREND_COMPUTE))
+trend_compute_module = None
+if TREND_COMPUTE.is_file():
+    try:
+        import importlib.util
+        spec = importlib.util.spec_from_file_location("_trendengine_compute",
+                                                      str(TREND_COMPUTE))
+        if spec and spec.loader:
+            trend_compute_module = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(trend_compute_module)
+            check("trend:python_mirror_imports", True)
+    except Exception as e:
+        check("trend:python_mirror_imports", False, str(e)[:160])
+
+# 4. Dev-mirror contains TrendEngine block.
+check("trend:dev_has_trendengine_block", trend_present_in_dev)
+check("trend:release_has_NO_trendengine_block",
+      not trend_present_in_release,
+      f"release MUST NOT contain TrendEngine block; SHA must remain d55ca5ef...")
+
+# 5. TrendEngine inputs (exact identifiers) in dev-mirror.
+if trend_present_in_dev:
+    for inp in TREND_REQUIRED_INPUTS:
+        input_ok = f"{inp} = input" in v22_dev_src
+        if inp == "trendSwingLen":
+            input_ok = input_ok and "ta.pivothigh(high, trendSwingLen, trendSwingLen)" in v22_dev_src
+            input_ok = input_ok and "ta.pivotlow(low, trendSwingLen, trendSwingLen)" in v22_dev_src
+        check(f"trend:input:{inp}", input_ok)
+
+# 6. TrendEngine EOC variables in dev-mirror.
+if trend_present_in_dev:
+    for var in TREND_REQUIRED_EOC_VARS:
+        eoc_ok = var in v22_dev_src
+        if var == "trendDiagStateConfirmBars":
+            eoc_ok = eoc_ok and "var string trendCandidatePrior = na" in v22_dev_src
+            eoc_ok = eoc_ok and "trendCandidatePrior := trendCandidateState" in v22_dev_src
+        check(f"trend:eoc:{var}", eoc_ok)
+
+# 7. TrendEngine version literal in dev-mirror.
+if trend_present_in_dev:
+    check(f"trend:version_literal",
+          f'trendEngineVersion = "{TREND_VERSION}"' in v22_dev_src)
+
+# 8. TrendEngine does NOT introduce alerts.
+if trend_present_in_dev:
+    # Locate the TrendEngine block within the dev-mirror and assert no alert
+    # references appear within it.
+    dev_sections = v22_dev_src.split("\n")
+    trend_start = next((i for i, ln in enumerate(dev_sections)
+                        if 'trendEngineVersion = "0.2.0-spec-impl"' in ln), 0)
+    alerts_marker = next((i for i, ln in enumerate(dev_sections)
+                          if ln.strip() == "// ALERTS"), len(dev_sections))
+    trend_block_text = "\n".join(dev_sections[trend_start:alerts_marker])
+    forbidden_alert_tokens = (
+        "alertcondition(", "alert(",
+    )
+    for tok in forbidden_alert_tokens:
+        check(f"trend:no_alert:{tok}",
+              tok not in trend_block_text, tok)
+
+# 9. Reserved language absent from TrendEngine output block.
+if trend_present_in_dev:
+    _span_reserved(trend_block_text, "trend_engine_block")
+
+# 10. TrendEngine dashboard rows present in dev-mirror.
+if trend_present_in_dev:
+    for label in ("Trend State", "Trend Strength", "Trend Age",
+                  "Trend Direction", "Trend Engine"):
+        check(f"trend:dashboard_label:{label}",
+              f'"{label}"' in v22_dev_src)
+
+# 11. TrendEngine Research Mode fields present in dev-mirror.
+if trend_present_in_dev:
+    for field in ("TrendEngineVersion", "TrendState", "TrendStrength",
+                  "TrendAge", "TrendDiagEmaSlope", "TrendDiagAgreement",
+                  "TrendDiagHigherHigh", "TrendDiagHigherLow",
+                  "TrendDiagLowerHigh", "TrendDiagLowerLow",
+                  "TrendDiagStateConfirmBars", "TrendDiagInsufficientData"):
+        check(f"trend:research_mode:{field}",
+              field in v22_dev_src)
+
+# 12. TrendEngine boundary: not assigned inside confidenceScore/marketState/
+# volScore/riskScore/structureScore/momentumScore blocks.
+if trend_present_in_dev:
+    # The TrendEngine block is between `trendEngineVersion = "0.2.0-spec-impl"`
+    # and the next `// ─` separator (i.e. before PLOTS). It must not assign to
+    # other engines' outputs.
+    TREND_BOUNDARY_VARS = ("confidenceScore", "marketState", "trendScore",
+                            "structureScore", "momentumScore",
+                            "volScore", "volState", "volDirection", "volShockFlag",
+                            "riskScore", "riskState", "riskDirection")
+    for var in TREND_BOUNDARY_VARS:
+        pat = re.compile(rf"^\s*{re.escape(var)}\s*=", re.MULTILINE)
+        check(f"trend:boundary_no_assign:{var}",
+              not pat.search(trend_block_text), var)
+
+# 13. TrendEngine behaviour: run the four seeded fixtures through the Python
+# mirror and assert each classifies into its expected dominant state.
+trend_run_results = {}
+if trend_compute_module is not None:
+    for fname in ("up_strong", "down_strong", "range_choppy", "transition"):
+        fpath = TREND_FIXTURE_DIR / f"{fname}.csv"
+        if not fpath.is_file():
+            check(f"trend:fixture_exists:{fname}", False, str(fpath))
+            continue
+        try:
+            df = pd.read_csv(fpath, parse_dates=["Date"], index_col="Date")
+            out = trend_compute_module.calculate_trend(df)
+            trend_run_results[fname] = out
+            states = out["trendState"].astype(str).values
+            n = len(states)
+            warmup = TREND_SPEC and False  # placeholder; real warmup = 55
+            warmup = 55
+            post = states[warmup:]
+            counts = {s: int((post == s).sum()) for s in TREND_VALID_STATES}
+            dominant = max(counts, key=counts.get) if counts else None
+            dominant_pct = (counts.get(dominant, 0) / max(1, len(post))) * 100
+            check(f"trend:fixture:{fname}:runs", True, f"n={n} post_warmup_counts={counts}")
+            check(f"trend:fixture:{fname}:states_valid",
+                  all(s in TREND_VALID_STATES for s in post),
+                  f"unexpected value(s)={set(post) - TREND_VALID_STATES}")
+            if fname == "up_strong":
+                check(f"trend:fixture:up_strong:dominant_UP",
+                      dominant == "UP",
+                      f"dominant={dominant} pct={dominant_pct:.1f}%")
+            elif fname == "down_strong":
+                check(f"trend:fixture:down_strong:dominant_DOWN",
+                      dominant == "DOWN",
+                      f"dominant={dominant} pct={dominant_pct:.1f}%")
+            elif fname == "range_choppy":
+                check(f"trend:fixture:range_choppy:dominant_RANGE",
+                      dominant == "RANGE",
+                      f"dominant={dominant} pct={dominant_pct:.1f}%")
+            elif fname == "transition":
+                # Transition fixture should produce a mix of states.
+                non_range_pct = (
+                    (counts.get("UP", 0) + counts.get("DOWN", 0))
+                    / max(1, len(post))
+                ) * 100
+                check(f"trend:fixture:transition:multi_state",
+                      non_range_pct >= 5.0,
+                      f"non-RANGE pct={non_range_pct:.1f}%")
+        except Exception as e:
+            check(f"trend:fixture:{fname}:runs", False, str(e)[:160])
+
+# 14. TrendEngine strength bounded in [0, 1] for non-NaN outputs.
+for fname, df in trend_run_results.items():
+    s = df["trendStrength"].dropna()
+    if len(s):
+        check(f"trend:fixture:{fname}:strength_bounded",
+              (s >= 0.0).all() and (s <= 1.0).all(),
+              f"min={s.min():.4f} max={s.max():.4f}")
+
+# 15. TrendEngine age bounded in [0, trendAgeMax].
+for fname, df in trend_run_results.items():
+    a = df["trendAge"].dropna()
+    if len(a):
+        check(f"trend:fixture:{fname}:age_bounded",
+              (a >= 0).all() and (a <= 250).all(),
+              f"min={a.min()} max={a.max()}")
 
 # ---------------------------------------------------------------------------
 # Output: stdout summary + verify.log

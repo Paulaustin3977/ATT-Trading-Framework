@@ -1,36 +1,55 @@
-# ConfidenceEngine
-
-## Purpose
-
-Aggregate the reads from Trend, Structure, Momentum, and Volatility engines into a single confidence value that downstream layers can consume.
+# ConfidenceEngine — ATE v2.2 As-Built Diagnostic Specification
 
 ## Status
 
-Specification draft. Implementation pending.
+Implemented in the immutable `pine/releases/ATE_v2.2.pine` baseline and covered by release verification. No dedicated ConfidenceEngine RDR classification or approval for action use is recorded. This document describes the immutable source exactly; it does not authorise new consumers.
+
+## Purpose
+
+ConfidenceEngine combines three existing 0–100 diagnostics into a weighted score. In ATE v2.2 it consumes only `trendScore`, `structureScore`, and `momentumScore`. VolatilityEngine and RiskEngine are explicitly excluded.
 
 ## Inputs
 
-- `trendRead` from TrendEngine
-- `structureRead` from StructureEngine
-- `momentumRead` from MomentumEngine
-- `volatilityRead` from VolatilityEngine
-- Configurable weighting per engine
+| Input | Default | Pine range |
+|---|---:|---:|
+| `showConfidence` | `true` | boolean |
+| `trendWeight` | 40 | 0–100 |
+| `structureWeight` | 30 | 0–100 |
+| `momentumWeight` | 30 | 0–100 |
 
-## Outputs
+`totalWeight` is the sum of the three weights. Each normalised weight is its input weight divided by `totalWeight`, or `0.0` when the total is zero.
 
-- `confidenceValue`: numeric in `[0, 1]`
-- `agreementMap`: per-engine contribution breakdown
+## Method and outputs
 
-## Method (placeholder)
+When enabled and `totalWeight > 0`:
 
-A weighted aggregation of directional agreement across the analytical engines, modulated by the volatility regime. Weightings are tuned via Hermes validation.
+```text
+confidenceScore =
+    trendScore     * (trendWeight / totalWeight) +
+    structureScore * (structureWeight / totalWeight) +
+    momentumScore  * (momentumWeight / totalWeight)
+```
 
-## Constraints
+When disabled or all weights are zero, `confidenceScore = 50`.
 
-- No repainting.
-- Bar-close only.
-- Pure function of inputs and bar index.
+| Score condition | `confidenceState` |
+|---|---|
+| `>= 80` | `HIGH CONFIDENCE` |
+| `>= 60` | `GOOD CONFIDENCE` |
+| `> 40` | `LOW / MIXED` |
+| `> 20` | `BEARISH CONFIDENCE` |
+| Otherwise | `STRONG BEARISH` |
 
-## Version
+The implementation exposes `confidenceScore`, `confidenceState`, and a score-derived colour. It has no separate version literal, direction field, reason field, agreement map, or diagnostics object. Its numeric scale is 0–100, not the placeholder-era `[0,1]` contract.
 
-`0.1.0-spec`
+## Consumption and presentation
+
+- RiskEngine snapshots `confidenceScore` only for its own diagnostic conflict component; RiskEngine does not write back to confidence.
+- Dashboard shows Confidence Score and Confidence State.
+- Research Mode emits `ConfidenceScore`.
+- Chart background colour is derived from `confidenceScore` when enabled by the visual setting.
+- Existing events: `confidenceBull` crosses upward through `75`; `confidenceBear` crosses downward through `30`. Alert titles are `ATE High Confidence Bull` and `ATE Low Confidence Bear`.
+
+## Boundaries
+
+Confidence is evidence aggregation, not probability, risk approval, or permission to act. ConfidenceEngine does not consume `volScore`, `riskScore`, any `riskApproved` value, or development-only TrendEngine outputs. It does not place orders, size positions, set stops, or activate DecisionEngine.

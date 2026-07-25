@@ -1,0 +1,16 @@
+{
+  "name": "composite_T50_C50_Rmax15",
+  "require_risk_filter": true,
+  "T_enter": 50.0,
+  "C_enter": 50.0,
+  "R_max": 15.0,
+  "robustness_score": 0.2,
+  "n_symbols": 6,
+  "n_pos_oos_sharpe": 0,
+  "n_pos_oos_return": 0,
+  "n_dd_under_35pct": 6,
+  "mean_oos_sharpe": -0.9232998366528123,
+  "median_oos_sharpe": -0.9372294178604419,
+  "mean_oos_return": -0.09571950929300384,
+  "mean_oos_dd": -0.12599470739390436
+}

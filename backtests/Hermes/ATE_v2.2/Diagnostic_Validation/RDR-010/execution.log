@@ -1,0 +1,15 @@
+RDR-010 deterministic TrendEngine validation execution log
+command: python3 backtests/Hermes/ATE_v2.2/Diagnostic_Validation/RDR-010/run_rdr010_validation.py
+python: 3.9.6
+pandas: 2.3.3
+numpy: 2.0.2
+matplotlib: 3.9.4
+network_calls: 0
+parameter_search: none
+trading_or_execution_logic: none
+datasets: 6
+bar_rows: 9118
+directional_metric_rows: 288
+charts: 4
+Research_Findings.json sha256: db7ec6d6e411cfaee335f9baa7094fc678b0ccfee62f968933c81ae8ead87b81
+exit_code: 0
