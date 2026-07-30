@@ -1,67 +1,67 @@
 # ATT Trading Framework
 
-**Austin Trading Engine (ATE)**
+## Austin Trading Engine (ATE)
 
-The Austin Trading Engine is a modular, explainable, evidence-based market analysis framework designed to support TradingView indicators, strategies, Hermes research validation, AI-assisted analysis, and future trading dashboards.
+ATE is a Pine Script v6 market-diagnostics indicator and a local research/verification framework. The current immutable release baseline is [`pine/releases/ATE_v2.2.pine`](pine/releases/ATE_v2.2.pine). It displays explainable trend, structure, momentum, volatility, confidence, and risk diagnostics; it is not an order, execution, position-management, or trade-management system.
 
-## Project Identity
+## Current status
 
-- **Project name:** Austin Trading Engine (ATE)
-- **Repository:** ATT-Trading-Framework
-- **Maintainer:** Austin Trading Team
-- **Primary language:** Pine Script v6
-- **Validation engine:** Hermes (local-first research)
-- **Status:** Active development
+| Artefact or engine | Implemented | Verified | Empirically validated | Approved |
+|---|---|---|---|---|
+| ATE v2.2 release baseline | Yes | Yes — canonical source checks; Paul Austin confirmed the immutable release compiled in TradingView | Engine-specific evidence varies below | Approved only as the stored diagnostic rollback/release baseline |
+| Existing trend score / market state | Yes, in v2.2 | Covered by release verification | No dedicated RDR classification recorded | No downstream action authority |
+| StructureEngine | Yes, in v2.2 | Covered by release verification | No dedicated RDR classification recorded | No downstream action authority |
+| MomentumEngine | Yes, in v2.2 | Covered by release verification | No dedicated RDR classification recorded | No downstream action authority |
+| VolatilityEngine `1.0.0-draft` | Yes, diagnostic-only | Covered by release verification | RDR-002 and RDR-002W: **Weakly Supported** | Diagnostic display/research only; downstream integration not approved |
+| ConfidenceEngine | Yes, in v2.2 | Covered by release verification | No dedicated RDR classification recorded | Uses only trend score, structure, and momentum in v2.2 |
+| RiskEngine `1.0.0-draft` | Yes, diagnostic-only | Covered by release verification | RDR-003 daily: **Weakly Supported**; RDR-003W weekly: **Supported** | Diagnostic display/research only; DecisionEngine and ConfidenceEngine integration remain deferred |
+| DashboardEngine and Research Mode | Yes, in v2.2 | Covered by release verification | Presentation/export surfaces are not evidence of engine usefulness | Presentation only |
+| DecisionEngine | No | No | No | Deferred and outside the current research-only scope |
+| TrendEngine `0.2.0-spec-impl` in `pine/development/ATE_Current.pine` | Yes, development mirror only | Canonical verifier/fixtures cover the research implementation | RDR-010 re-attempt: **Mixed, instrument- and timeframe-dependent evidence** | Research/diagnostic only; not promoted to v2.2 release or coupled downstream |
 
-## Goals
+These terms are intentionally distinct:
 
-- Pine Script v6
-- Daily timeframe first
-- Non-repainting
-- Modular architecture
-- Optimizer friendly
-- Professional risk management
-- Version controlled with Git
+- **Implemented** means code exists in the named Pine artefact.
+- **Verified** means deterministic contract, boundary, fixture, or integrity checks passed; it does not prove usefulness.
+- **Validated** means an RDR evaluated empirical diagnostic behaviour and assigned an evidence classification.
+- **Approved** means Paul Austin authorised the stated scope. Approval for a diagnostic baseline or research plan does not authorise downstream decisions or execution.
 
-## Current Version
+No TradingView compile claim is made for the development-only TrendEngine. The TradingView compile evidence applies to the immutable ATE v2.2 release baseline before the development mirror intentionally diverged.
 
-v2.0 (placeholder — see `pine/releases/`)
+## Diagnostic boundaries
 
-## Repository Structure
+- Daily-first research, with weekly companion studies where recorded.
+- Bar-close, deterministic, non-lookahead intent.
+- No broker connectivity, automated or manual order placement, paper/live execution, position sizing, stop placement, or trade management.
+- No DecisionEngine or action logic is implemented or active.
+- RiskEngine publishes diagnostic scores, states, directions, reasons, and component evidence. It does **not** publish `riskApproved` and does not approve or reject trades.
+- The ten preserved TradingView alerts report indicator events only; none is a RiskEngine alert or an execution instruction.
 
-| Folder           | Purpose                                                                |
-|------------------|------------------------------------------------------------------------|
-| `docs/`          | Project charter, architecture, standards, methodology, process notes   |
-| `specifications/`| Per-engine specifications defining each analytical module             |
-| `pine/`          | Pine Script source — development branch and released versions          |
-| `laboratory/`    | Experimental features under active research, not yet promoted         |
-| `research/`      | Asset-class research notes and reports                                 |
-| `backtests/`     | Hermes-generated backtest outputs, organised by asset class            |
-| `tests/`         | Regression and validation test definitions                            |
-| `tools/`         | Helper scripts and automation                                          |
+## Repository map
 
-## Getting Started
+| Path | Purpose |
+|---|---|
+| `pine/releases/` | Immutable Pine release baselines |
+| `pine/development/` | Research/development Pine work; may intentionally differ from the release baseline |
+| `specifications/ATE/` | Engine specifications and as-built diagnostic descriptions |
+| `docs/` | Architecture, governance, release records, journal, and user documentation |
+| `research/Reports/RDR/` | Human-readable Research Decision Records |
+| `backtests/Hermes/` | Machine-readable validation artefacts and manifests |
+| `tests/fixtures/` | Deterministic verifier fixtures |
+| `tools/scripts/verify_ate.py` | Canonical ATE contract and behaviour verifier |
 
-1. Read [`docs/Project_Charter.md`](docs/Project_Charter.md) for mission and scope.
-2. Read [`docs/Architecture.md`](docs/Architecture.md) for the engine layout.
-3. Read [`docs/Coding_Standards.md`](docs/Coding_Standards.md) before writing Pine.
-4. Open the latest release from `pine/releases/` in TradingView.
+## Start here
 
-## Roadmap
+1. Read [`docs/Project_Charter.md`](docs/Project_Charter.md) and [`docs/Architecture.md`](docs/Architecture.md) for governance and target architecture.
+2. Read [`docs/releases/ATE_v2.2_Release_Manifest.md`](docs/releases/ATE_v2.2_Release_Manifest.md) with the later RDR reports and [`CHANGELOG.md`](CHANGELOG.md); the manifest records the release-time state, while later RDRs record subsequent validation.
+3. Open [`pine/releases/ATE_v2.2.pine`](pine/releases/ATE_v2.2.pine) for the immutable release baseline.
+4. Run `python3 tools/scripts/verify_ate.py` for the current canonical verification gate.
+5. See [`ROADMAP.md`](ROADMAP.md) for remaining diagnostic research work.
 
-See [`ROADMAP.md`](ROADMAP.md) for the long-term development plan and [`CHANGELOG.md`](CHANGELOG.md) for release history.
+## Governance and contributing
 
-## ATOS Governance Drafts
+Draft ATOS material remains draft unless explicitly marked approved. See [`CONTRIBUTING.md`](CONTRIBUTING.md), [`CHANGELOG.md`](CHANGELOG.md), and [`docs/knowledge/ATT_Knowledge_Base.md`](docs/knowledge/ATT_Knowledge_Base.md).
 
-- [`docs/ATOS_Operational_Readiness_Review.md`](docs/ATOS_Operational_Readiness_Review.md) — ATOS-001 independent readiness audit.
-- [`docs/ATOS_v1.1_Draft.md`](docs/ATOS_v1.1_Draft.md) — draft ATOS v1.1 amendments for review, not approved governance.
-- [`docs/governance/`](docs/governance/) — draft governance standards recommended by the readiness review.
-- [`docs/knowledge/ATT_Knowledge_Base.md`](docs/knowledge/ATT_Knowledge_Base.md) — draft permanent knowledge entries.
+## Licence
 
-## Contributing
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for contribution workflow, evidence requirements, and review process.
-
-## License
-
-Internal — Austin Trading Team. Not yet released under an open-source licence.
+Internal — Austin Trading Team. Not released under an open-source licence.

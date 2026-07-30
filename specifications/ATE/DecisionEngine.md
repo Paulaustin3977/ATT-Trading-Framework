@@ -1,36 +1,30 @@
-# DecisionEngine
-
-## Purpose
-
-Produce the final actionable signal from the upper stack: a direction, a level, or a no-action.
+# DecisionEngine — Deferred Scope Notice
 
 ## Status
 
-Specification draft. Implementation pending.
+**Deferred — not implemented, not verified, not validated, and not approved for implementation.**
 
-## Inputs
+DecisionEngine is outside the current ATE diagnostic/research-only scope. The immutable `pine/releases/ATE_v2.2.pine` source contains no DecisionEngine compute block, no decision output, and no action pathway. The development-only TrendEngine work does not change this status.
 
-- `confidenceValue` from ConfidenceEngine
-- `riskApproved` from RiskEngine
-- Current `trendState` and `structureState`
-- Minimum confidence threshold
+## Current contract
 
-## Outputs
+There is no active DecisionEngine input, output, threshold, state model, or Pine version. In particular:
 
-- `decision`: one of `LONG`, `SHORT`, `NEUTRAL`
-- `decisionConfidence`: numeric in `[0, 1]`
-- `rationale`: short human-readable string
+- RiskEngine does **not** publish `riskApproved`.
+- RiskEngine classifies diagnostic environment risk only; it does not approve, reject, block, qualify, or authorise a trade.
+- ConfidenceEngine publishes evidence aggregation only; it does not publish permission to act.
+- Existing indicator alerts describe chart conditions and do not constitute DecisionEngine output.
 
-## Method (placeholder)
+The previous placeholder proposal for `LONG`, `SHORT`, or `NEUTRAL` action logic is not an as-built capability and is intentionally removed from the current specification.
 
-Decision is taken when confidence exceeds the threshold, the engines agree on direction, and RiskEngine approves the candidate. Otherwise, decision is `NEUTRAL`.
+## Out of current scope
 
-## Constraints
+- Decision/action logic or trade permission.
+- Long/short/no-action recommendations.
+- Entries, exits, orders, broker connectivity, paper/live execution.
+- Position sizing, stop placement, exposure control, or trade management.
+- Consumption of RiskEngine diagnostics as an approval gate.
 
-- No repainting.
-- Bar-close only.
-- Pure function of inputs and bar index.
+## Future change gate
 
-## Version
-
-`0.1.0-spec`
+Any future DecisionEngine proposal must begin as a separate governance and research initiative. It would require an approved specification amendment, explicit inputs/outputs and boundary rules, validation evidence, canonical verifier changes, release planning, and explicit Product Owner approval. No such proposal or approval is implied by ATE v2.2 or by this notice.

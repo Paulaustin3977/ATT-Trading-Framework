@@ -1,0 +1,11 @@
+{
+  "arm": "vol_long",
+  "long_thr": 50.0,
+  "exit_thr": 40.0,
+  "robustness_score": 0.6000000000000001,
+  "n_symbols": 6,
+  "n_pos_oos_sharpe": 3,
+  "mean_oos_sharpe": -0.07035706430266413,
+  "mean_oos_return": -0.0016834905353270656,
+  "mean_oos_dd": -0.03620820426517315
+}

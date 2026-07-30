@@ -1,0 +1,340 @@
+{
+  "artifact_sha256": {
+    "bar_outputs.csv": "47fb2dfd85509362ef3ad5db3a301bc6a1112feb95e979745b5ca1f09a8aa8b4",
+    "charts/daily_stability_transitions.png": "d5b483de9f814b36502e97c6f322b38510e110ab2485d2af39f8f5dde381cfda",
+    "charts/pooled_directional_metrics.png": "08fdf9d253e67947cb4e2ee812913604b21dff8180a41b91aee1b6e49f68e4c5",
+    "charts/state_distribution_daily.png": "ea30e9df8095b139a8b683a4cd325d253e14b1d964c93d557322ca6a43646420",
+    "charts/state_distribution_weekly.png": "4454a5d4b49fddeea26f8124930c2e59309a5ce778cc60e3693a3f8b94134fbc",
+    "daily_weekly_comparison.csv": "8764ed59722986d01fc06962be6ae40389e4e224c7a7ce5dbaa66f53f3781611",
+    "directional_metrics.csv": "1e498c45132a71a934cf956b67cfce15e1ca80b5630ec7c0b8c019130d6ba111",
+    "stability_summary.csv": "4aa58d3ac51d3c23730b355fcafcf8972818a1896b760d08a4fee175aaaec659",
+    "state_distribution.csv": "07cfdf1d985289a0b8e1d5505e1d3951dc0a0ac90621819809084fb8547b2a44",
+    "state_durations.csv": "c5c61dde535a8d19d832e36a68a3c2b20cfb555cdc6872e71952b7551800f0f4",
+    "state_transitions.csv": "b3d2406e4dbc99649cff6b2696c65aa328a280accd95e736113fd697cc47a035"
+  },
+  "definitions": {
+    "benchmark": "No-TrendEngine always-long observation on every post-warmup bar; same next-return target",
+    "early_late": "non-overlapping chronological halves of post-warmup rows per instrument/timeframe",
+    "expectancy": "arithmetic mean signed next return; no costs and no trade simulation",
+    "false_signal": "directional observation with signed next return <= 0; zero return is a miss",
+    "hit": "signed next return > 0",
+    "next_return": "Close[t+h]/Close[t]-1 using h in {1,5,20}; the signal uses only information through t",
+    "state_duration": "contiguous bars in the same diagnostic state",
+    "state_transition": "adjacent bar state change; same-state observations excluded",
+    "trend_direction": "UP=+1, DOWN=-1; RANGE and UNKNOWN excluded from TrendEngine directional samples",
+    "volatility_regime": "20-bar trailing close-return sample standard deviation split at in-sample 33.3% and 66.7% quantiles per instrument/timeframe; descriptive, not optimized"
+  },
+  "early_late_state_total_variation": [
+    {
+      "early_late_state_total_variation": 0.17982099267697316,
+      "instrument": "GC=F",
+      "timeframe": "Daily"
+    },
+    {
+      "early_late_state_total_variation": 0.1505288852725793,
+      "instrument": "SI=F",
+      "timeframe": "Daily"
+    },
+    {
+      "early_late_state_total_variation": 0.1234876773711725,
+      "instrument": "IGLT.L",
+      "timeframe": "Daily"
+    },
+    {
+      "early_late_state_total_variation": 0.1744616851912989,
+      "instrument": "GC=F",
+      "timeframe": "Weekly"
+    },
+    {
+      "early_late_state_total_variation": 0.12288617438832036,
+      "instrument": "SI=F",
+      "timeframe": "Weekly"
+    },
+    {
+      "early_late_state_total_variation": 0.49572649572649574,
+      "instrument": "IGLT.L",
+      "timeframe": "Weekly"
+    }
+  ],
+  "fixed_parameters": {
+    "trendAgeMax": 250,
+    "trendEmaLen": 50,
+    "trendSlopeLookback": 5,
+    "trendSlopeMin": 0.001,
+    "trendStrengthScale": 50.0,
+    "trendStructureBars": 3,
+    "trendSwingLen": 5
+  },
+  "horizons_bars": [
+    1,
+    5,
+    20
+  ],
+  "instruments": [
+    "GC=F",
+    "SI=F",
+    "IGLT.L"
+  ],
+  "limitations": [
+    "Descriptive diagnostics only; overlapping horizon returns are not independent.",
+    "No transaction costs, trades, drawdown, entries, exits, sizing, stops, alerts, or execution are modelled.",
+    "The always-long benchmark is transparent but not a matched-frequency random or investable strategy benchmark.",
+    "Volatility tertiles use full-sample descriptive quantiles and are not out-of-sample regime thresholds.",
+    "Three instruments and two timeframes do not establish broad external validity."
+  ],
+  "pooled_overall_metrics": [
+    {
+      "expectancy": 0.00028845258031436587,
+      "false_signal_rate": 0.48680272108843536,
+      "hit_rate": 0.5131972789115646,
+      "horizon": 1,
+      "instrument": "POOLED",
+      "median_signed_return": 0.00027065707279799733,
+      "model": "TrendEngine",
+      "n": 7350,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.0003709118041321457,
+      "false_signal_rate": 0.48456121343445285,
+      "hit_rate": 0.5154387865655471,
+      "horizon": 1,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0003088683173951834,
+      "model": "No-TrendEngine benchmark",
+      "n": 7384,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.0013759207024622098,
+      "false_signal_rate": 0.4836467702371218,
+      "hit_rate": 0.5163532297628781,
+      "horizon": 5,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0007587426897029959,
+      "model": "TrendEngine",
+      "n": 7338,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.0017834335338294844,
+      "false_signal_rate": 0.47300596852957133,
+      "hit_rate": 0.5269940314704287,
+      "horizon": 5,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0011959384373679827,
+      "model": "No-TrendEngine benchmark",
+      "n": 7372,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.0038532983472017975,
+      "false_signal_rate": 0.4959550253667901,
+      "hit_rate": 0.50404497463321,
+      "horizon": 20,
+      "instrument": "POOLED",
+      "median_signed_return": 0.00042913004932310095,
+      "model": "TrendEngine",
+      "n": 7293,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.007422532578912921,
+      "false_signal_rate": 0.4660843455711751,
+      "hit_rate": 0.5339156544288249,
+      "horizon": 20,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0027105443705333077,
+      "model": "No-TrendEngine benchmark",
+      "n": 7327,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Daily"
+    },
+    {
+      "expectancy": 0.0018270979847258228,
+      "false_signal_rate": 0.47032640949554894,
+      "hit_rate": 0.5296735905044511,
+      "horizon": 1,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0011561831035878933,
+      "model": "TrendEngine",
+      "n": 1348,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    },
+    {
+      "expectancy": 0.002037016145065997,
+      "false_signal_rate": 0.463519313304721,
+      "hit_rate": 0.5364806866952789,
+      "horizon": 1,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0011843327931914116,
+      "model": "No-TrendEngine benchmark",
+      "n": 1398,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    },
+    {
+      "expectancy": 0.009577209252126621,
+      "false_signal_rate": 0.45209580838323354,
+      "hit_rate": 0.5479041916167665,
+      "horizon": 5,
+      "instrument": "POOLED",
+      "median_signed_return": 0.004555696849206536,
+      "model": "TrendEngine",
+      "n": 1336,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    },
+    {
+      "expectancy": 0.010032034793534535,
+      "false_signal_rate": 0.46825396825396826,
+      "hit_rate": 0.5317460317460317,
+      "horizon": 5,
+      "instrument": "POOLED",
+      "median_signed_return": 0.0037662493188890256,
+      "model": "No-TrendEngine benchmark",
+      "n": 1386,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    },
+    {
+      "expectancy": 0.053809536791730804,
+      "false_signal_rate": 0.37335398915569323,
+      "hit_rate": 0.6266460108443067,
+      "horizon": 20,
+      "instrument": "POOLED",
+      "median_signed_return": 0.025099484096319236,
+      "model": "TrendEngine",
+      "n": 1291,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    },
+    {
+      "expectancy": 0.04678374263702,
+      "false_signal_rate": 0.4086502609992543,
+      "hit_rate": 0.5913497390007457,
+      "horizon": 20,
+      "instrument": "POOLED",
+      "median_signed_return": 0.01737938941913364,
+      "model": "No-TrendEngine benchmark",
+      "n": 1341,
+      "slice_type": "overall",
+      "slice_value": "all",
+      "timeframe": "Weekly"
+    }
+  ],
+  "release_sha256": {
+    "ATE_v2.1.pine": "7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893",
+    "ATE_v2.2.pine": "d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239"
+  },
+  "run_id": "RDR-010-deterministic-re-attempt",
+  "scope": "diagnostic research only",
+  "sources": {
+    "Daily:GC=F": {
+      "eligible_rows": 2458,
+      "end": "2026-07-03",
+      "path": "backtests/Hermes/ATE_v2.2/Daily/Diagnostic_Validation/RDR-003/data_cache/GC_F.csv",
+      "rows": 2513,
+      "sha256": "20df1df094686210db778ffea40b006a81e6ea123502e97cd7da88c0b60a228b",
+      "start": "2016-07-05",
+      "volatility_thresholds": {
+        "n": 2458,
+        "q33": 0.007286451916287952,
+        "q67": 0.009686384437268833,
+        "window": 20
+      }
+    },
+    "Daily:IGLT.L": {
+      "eligible_rows": 2471,
+      "end": "2026-07-03",
+      "path": "backtests/Hermes/ATE_v2.2/Daily/Diagnostic_Validation/RDR-003/data_cache/IGLT.L.csv",
+      "rows": 2526,
+      "sha256": "bef339e1ffaa86ff38fbc38a133b2e72ed8fcc2ae43358d4bd58acdcd49d2344",
+      "start": "2016-07-04",
+      "volatility_thresholds": {
+        "n": 2471,
+        "q33": 0.003866171151997687,
+        "q67": 0.0053001841540853386,
+        "window": 20
+      }
+    },
+    "Daily:SI=F": {
+      "eligible_rows": 2458,
+      "end": "2026-07-03",
+      "path": "backtests/Hermes/ATE_v2.2/Daily/Diagnostic_Validation/RDR-003/data_cache/SI_F.csv",
+      "rows": 2513,
+      "sha256": "c298335a2627262bc223a84cd0bdb7406a715ea437e1727b01a3c4093d50813a",
+      "start": "2016-07-05",
+      "volatility_thresholds": {
+        "n": 2458,
+        "q33": 0.013659627148898996,
+        "q67": 0.018922520285507418,
+        "window": 20
+      }
+    },
+    "Weekly:GC=F": {
+      "eligible_rows": 467,
+      "end": "2026-06-29",
+      "path": "backtests/Hermes/ATE_v2.2/Weekly/Diagnostic_Validation/RDR-003W/data_cache/GC_F_w.csv",
+      "rows": 522,
+      "sha256": "33d11460eebf56c8c528f73b6c8cdf92f0cef084f33cee3d5ca36dc84073c173",
+      "start": "2016-07-04",
+      "volatility_thresholds": {
+        "n": 467,
+        "q33": 0.01636196669055183,
+        "q67": 0.021367762992313948,
+        "window": 20
+      }
+    },
+    "Weekly:IGLT.L": {
+      "eligible_rows": 467,
+      "end": "2026-06-29",
+      "path": "backtests/Hermes/ATE_v2.2/Weekly/Diagnostic_Validation/RDR-003W/data_cache/IGLT.L_w.csv",
+      "rows": 522,
+      "sha256": "586d3fa9370af9741a62d314ec5219fbcd8268c06562d2224570741a3faf1860",
+      "start": "2016-07-04",
+      "volatility_thresholds": {
+        "n": 467,
+        "q33": 0.00890529680659852,
+        "q67": 0.011661974194840037,
+        "window": 20
+      }
+    },
+    "Weekly:SI=F": {
+      "eligible_rows": 467,
+      "end": "2026-06-29",
+      "path": "backtests/Hermes/ATE_v2.2/Weekly/Diagnostic_Validation/RDR-003W/data_cache/SI_F_w.csv",
+      "rows": 522,
+      "sha256": "d025b1a7ef5084685f945e86136b6413da58dc3c3bea97b7b69d7e10cc526a0a",
+      "start": "2016-07-04",
+      "volatility_thresholds": {
+        "n": 467,
+        "q33": 0.0311990193036839,
+        "q67": 0.04239990502401192,
+        "window": 20
+      }
+    }
+  },
+  "timeframes": [
+    "Daily",
+    "Weekly"
+  ],
+  "trendengine_version": "0.2.0-spec-impl"
+}

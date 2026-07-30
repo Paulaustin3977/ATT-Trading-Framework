@@ -1,135 +1,74 @@
-# ATT Trading Framework Pro
-## Development Journal
-
----
-
-# Project Information
-
-**Project:** ATT Trading Framework Pro
+# ATT Trading Framework — ATE Development Journal
 
 **Owner:** Paul Austin
 
-**Development Team:** Austin Trading Team
+**Repository:** `ATT-Trading-Framework`
 
-**Repository:** ATT-Trading-Framework
+**Primary implementation:** Pine Script v6
 
-**Primary Language:** Pine Script v6
+**Research orientation:** daily-first diagnostics, with governed weekly companion studies
 
-**Target Platform:** TradingView
+## Purpose
 
-**Primary Market:** Non-Crypto Markets
+This journal records the actual ATE diagnostic lineage. It distinguishes implementation, verification, empirical validation, and Product Owner approval. It does not treat a compiling indicator or a passing verifier as proof of diagnostic usefulness.
 
-**Primary Timeframe:** Daily
+## Historical foundation
 
-**Project Started:** 30 June 2026
+### 2026-06-30 — Milestone 1A / v0.1.0
 
----
+- Repository and development workflow established.
+- Initial EMA 50/200 framework created.
+- Paul Austin confirmed the initial Pine script compiled in TradingView.
 
-# Project Vision
+This milestone is retained as project history; it is no longer the current milestone.
 
-The ATT Trading Framework Pro aims to become a professional-grade, modular Pine Script framework capable of adapting to different market regimes while maintaining robust risk management and clean software architecture.
+## Diagnostic release lineage
 
-The framework will be developed incrementally, with every milestone producing a fully working and tested version.
+### ATE v2.1 — VolatilityEngine diagnostic baseline
 
----
+- VolatilityEngine `1.0.0-draft` implemented for dashboard and Research Mode output only.
+- Paul Austin confirmed the v2.1 Pine release compiled in TradingView.
+- RDR-002 daily and RDR-002W weekly both classified the engine **Weakly Supported** and recommended **Keep Diagnostic**.
+- ConfidenceEngine, RiskEngine, and DecisionEngine consumption was not approved by those studies.
 
-# Development Principles
+### ATE v2.2 — RiskEngine diagnostic baseline
 
-- Every version must compile successfully.
-- Every milestone must be committed to GitHub.
-- Every new feature must be documented.
-- No unnecessary complexity.
-- Prefer readable code over clever code.
-- Every important value should be configurable.
-- Avoid repainting.
-- Risk management takes priority over profit optimisation.
+- Immutable release: `pine/releases/ATE_v2.2.pine`.
+- RiskEngine `1.0.0-draft` added as diagnostic dashboard and Research Mode output.
+- The release preserves the existing trend score, StructureEngine, MomentumEngine, ConfidenceEngine, VolatilityEngine, visuals, and ten indicator-event alerts.
+- RiskEngine does not change confidence, create alerts, or publish `riskApproved`; it has no trade approval or rejection authority.
+- Paul Austin confirmed the immutable v2.2 release compiled cleanly in TradingView after the preserved confidence-bear alert was restored.
+- Canonical release verification covered source integrity, engine boundaries, output variables, dashboard/research fields, and preserved alert behaviour.
+- RDR-003 daily classified RiskEngine **Weakly Supported** and recommended **Keep Diagnostic**.
+- RDR-003W weekly classified it **Supported** for controlled weekly research use while retaining **Keep Diagnostic** and all downstream prohibitions.
+- Pine-versus-research-mirror parity remains a distinct evidence gate before stronger implementation-equivalence or downstream claims.
 
----
+### Development-only TrendEngine research cycle
 
-# Version History
+- TrendEngine `0.2.0-spec-impl` was specified and added only to `pine/development/ATE_Current.pine`.
+- It is additive and parallel to the immutable v2.2 `trendScore` / `marketState`; it does not replace or feed them.
+- Deterministic Python-mirror fixtures and canonical verifier checks cover its research contract and boundaries.
+- Empirical usefulness remains deferred to a future RDR-010 re-attempt.
+- No TradingView compile claim is recorded for this development-only implementation.
+- It is not promoted to `pine/releases/ATE_v2.2.pine` and has no ConfidenceEngine, RiskEngine, DecisionEngine, alert, or action coupling.
 
-## v0.1.0 – Milestone 1A
-**Date:** 30 June 2026
+## Current milestone — documentation and evidence alignment
 
-### Objectives
-- Create GitHub repository.
-- Configure development environment.
-- Create project folder structure.
-- Build first Pine Script framework.
-- Plot EMA 50 and EMA 200.
-- Verify Pine Script v6 compilation.
+Completed:
 
-### Result
-✅ Successful
+- [x] Immutable ATE v2.2 diagnostic baseline retained.
+- [x] Existing as-built Structure, Momentum, Confidence, and Dashboard behaviour documented.
+- [x] Volatility and Risk diagnostic RDR evidence recorded without overstating it.
+- [x] Development-only TrendEngine separated from release/compile claims.
+- [x] DecisionEngine explicitly deferred.
 
-### Notes
-The initial framework compiled successfully in TradingView with no errors. The development workflow using VS Code, GitHub and TradingView has been validated.
+Next governed research steps:
 
-### Lessons Learned
-Building the project incrementally will make debugging and future expansion significantly easier.
+- [ ] Complete any required Pine-versus-research-mirror parity study.
+- [ ] Re-attempt empirical TrendEngine validation when authorised.
+- [ ] Investigate weak/negative RiskEngine and VolatilityEngine findings before proposing any reclassification.
+- [ ] Keep implemented, verified, validated, and approved status separate in every release and research record.
 
----
+## Scope boundary
 
-# Current Roadmap
-
-## Milestone 1
-- [x] Repository created
-- [x] VS Code configured
-- [x] Git configured
-- [x] TradingView connected
-- [x] EMA framework completed
-- [ ] ATR engine
-- [ ] ADX engine
-- [ ] Dashboard
-- [ ] Debug Mode
-
----
-
-## Milestone 2
-- Regime Detection Engine
-
-## Milestone 3
-- Trend Engine
-
-## Milestone 4
-- Mean Reversion Engine
-
-## Milestone 5
-- Risk Engine
-
-## Milestone 6
-- Position Sizing Engine
-
-## Milestone 7
-- Trade Management
-
-## Milestone 8
-- Dashboard & Statistics
-
-## Version 1.0
-- Production Release
-
----
-
-# Future Ideas
-
-This section will capture ideas that arise during development without interrupting the current milestone.
-
----
-
-# Known Issues
-
-None.
-
----
-
-# Next Milestone
-
-**Milestone 1B**
-
-Objectives:
-- Add ATR calculations.
-- Add ADX calculations.
-- Add a basic dashboard.
-- Introduce Debug Mode.
-- Maintain zero compilation errors.
+ATE remains a diagnostic and research framework. The current milestone excludes DecisionEngine/action logic, trade approval, entries, exits, orders, broker connectivity, paper/live execution, position sizing, stop placement, and trade management. Any future scope change requires separate evidence, specification, governance review, and explicit approval.

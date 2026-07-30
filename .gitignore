@@ -1,3 +1,38 @@
 # Austin Trading data policy
 data/raw/*
 !data/raw/.gitkeep
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# Python build/runtime artefacts
+__pycache__/
+**/__pycache__/
+*.py[cod]
+.pytest_cache/
+**/.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local environments and editor state
+.venv/
+**/.venv/
+.env
+.env.*
+!.env.example
+.vscode/
+.idea/
+
+# Raw market-data caches and source captures are local and reproducible; derived evidence remains tracked
+backtests/**/data_cache/
+backtests/Hermes/ATE_v2.2/Parity/RDR-004/exports/
+
+# Local one-shot integration bundle already installed into tracked MT5 paths
+ATT_MT5_Subsystem_Integration/
+
+# Generated local verifier output
+tools/scripts/verify.log
+
+# Misplaced binary installer; never research evidence
+backtests/Hermes/ATE_v2.2/Parity/RDR-004/charts/*.dmg
