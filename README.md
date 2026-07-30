@@ -1,5 +1,8 @@
 # ATT Trading Framework
 
+[![CI](https://github.com/Paulaustin3977/ATT-Trading-Framework/actions/workflows/ci.yml/badge.svg)](https://github.com/Paulaustin3977/ATT-Trading-Framework/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 ## Austin Trading Engine (ATE)
 
 ATE is a Pine Script v6 market-diagnostics indicator and a local research/verification framework. The current immutable release baseline is [`pine/releases/ATE_v2.2.pine`](pine/releases/ATE_v2.2.pine). It displays explainable trend, structure, momentum, volatility, confidence, and risk diagnostics; it is not an order, execution, position-management, or trade-management system.
@@ -64,4 +67,6 @@ Draft ATOS material remains draft unless explicitly marked approved. See [`CONTR
 
 ## Licence
 
-Internal — Austin Trading Team. Not released under an open-source licence.
+Released under the [MIT Licence](LICENSE).
+
+Copyright (c) 2026 Austin Trading Team.

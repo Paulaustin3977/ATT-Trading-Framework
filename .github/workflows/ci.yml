@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: ATE Canonical Verifier
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Run canonical ATE verifier
+        run: python3 tools/scripts/verify_ate.py
+
+      - name: Verify release file integrity
+        run: |
+          echo "Checking ATE v2.2 release SHA-256..."
+          ACTUAL=$(sha256sum pine/releases/ATE_v2.2.pine | cut -d' ' -f1)
+          EXPECTED="d55ca5efe0c277edbac3596a0a7cb6548ba56c8e9eae085acdfda4b15fc19239"
+          if [ "$ACTUAL" != "$EXPECTED" ]; then
+            echo "FAIL: ATE v2.2 SHA-256 mismatch"
+            echo "  expected: $EXPECTED"
+            echo "  actual:   $ACTUAL"
+            exit 1
+          fi
+          echo "OK: ATE v2.2 SHA-256 matches manifest"
+
+          echo "Checking ATE v2.1 release SHA-256..."
+          ACTUAL21=$(sha256sum pine/releases/ATE_v2.1.pine | cut -d' ' -f1)
+          EXPECTED21="7dc704df87489811cf033841e3249a84dda352cf2b6f92a8d5c11c0a9a7cd893"
+          if [ "$ACTUAL21" != "$EXPECTED21" ]; then
+            echo "FAIL: ATE v2.1 SHA-256 mismatch"
+            echo "  expected: $EXPECTED21"
+            echo "  actual:   $ACTUAL21"
+            exit 1
+          fi
+          echo "OK: ATE v2.1 SHA-256 matches manifest"
+
+      - name: Check release and dev mirror integrity
+        run: |
+          V22_SHA=$(sha256sum pine/releases/ATE_v2.2.pine | cut -d' ' -f1)
+          DEV_SHA=$(sha256sum pine/development/ATE_Current.pine | cut -d' ' -f1)
+          if [ "$V22_SHA" != "$DEV_SHA" ]; then
+            echo "NOTE: Development mirror intentionally diverges from release (research in progress)"
+            echo "  release: $V22_SHA"
+            echo "  dev:     $DEV_SHA"
+          else
+            echo "OK: Release and dev mirror are byte-identical"
+          fi
