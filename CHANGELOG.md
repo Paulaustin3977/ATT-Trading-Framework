@@ -8,6 +8,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ### Added
 
+- Recognised TradingView as a governed ATT Trading Framework subsystem
+  (companion repository, `Paulaustin3977/OANDA-XAUUSD-Optimized-5m`).
+- Added OANDA XAUUSD Optimized 5m research strategy v1.0 in the companion
+  repository (v1.0 tag, 2026-07-31).
+- Added TradingView subsystem integration note at
+  `docs/subsystems/TradingView/Subsystem_Integration.md`.
+- Recorded the 60-day OANDA practice optimization results:
+  frozen development +$3,506.41 (PF 1.549, 53.0% win),
+  untouched test +$322.51 (PF 1.094, 47.1% win) on selected UTC hours,
+  untouched test all hours -$2,424.19 (PF 0.851).
+- Classified the v1.0 strategy as research-only and not approved for live
+  trading.
 - Recognised MetaTrader 5 as a governed ATT Trading Framework subsystem.
 - Added Austin M15 Scalper v1.0 research release and byte-identical development alias.
 - Added MT5 specification, acceptance criteria, research journal, and XAUUSD backtest evidence structure.
