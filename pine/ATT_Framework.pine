@@ -1,0 +1,121 @@
+//@version=6
+strategy(
+     title = "ATT Trading Framework Pro",
+     shorttitle = "ATT Framework",
+     overlay = true,
+     initial_capital = 10000,
+     pyramiding = 0,
+     default_qty_type = strategy.percent_of_equity,
+     default_qty_value = 1,
+     commission_type = strategy.commission.percent,
+     commission_value = 0.05)
+
+//══════════════════════════════════════════════════════════════
+// VERSION
+//══════════════════════════════════════════════════════════════
+
+FRAMEWORK_VERSION = "0.2.0"
+
+//══════════════════════════════════════════════════════════════
+// INPUT GROUPS
+//══════════════════════════════════════════════════════════════
+
+grpTrend = "Trend"
+
+grpRisk = "Risk"
+
+grpDisplay = "Display"
+
+//══════════════════════════════════════════════════════════════
+// INPUTS
+//══════════════════════════════════════════════════════════════
+
+inpFastEMA = input.int(50, "Fast EMA", minval = 1, group = grpTrend)
+
+inpSlowEMA = input.int(200, "Slow EMA", minval = 1, group = grpTrend)
+
+inpATRLength = input.int(14, "ATR Length", minval = 1, group = grpRisk)
+
+inpADXLength = input.int(14, "ADX Length", minval = 5, group = grpTrend)
+
+inpShowDashboard = input.bool(true, "Show Dashboard", group = grpDisplay)
+
+inpDebug = input.bool(false, "Debug Mode", group = grpDisplay)
+
+//══════════════════════════════════════════════════════════════
+// COLOURS
+//══════════════════════════════════════════════════════════════
+
+COLOR_BULL = color.lime
+COLOR_BEAR = color.red
+COLOR_NEUTRAL = color.orange
+
+//══════════════════════════════════════════════════════════════
+// INDICATORS
+//══════════════════════════════════════════════════════════════
+
+emaFast = ta.ema(close, inpFastEMA)
+
+emaSlow = ta.ema(close, inpSlowEMA)
+
+atr = ta.atr(inpATRLength)
+
+[diPlus, diMinus, adx] = ta.dmi(inpADXLength, inpADXLength)
+
+//══════════════════════════════════════════════════════════════
+// BASIC TREND
+//══════════════════════════════════════════════════════════════
+
+trendBull = emaFast > emaSlow
+
+trendBear = emaFast < emaSlow
+
+trendText = trendBull ? "Bullish" : "Bearish"
+
+trendColour = trendBull ? COLOR_BULL : COLOR_BEAR
+
+//══════════════════════════════════════════════════════════════
+// PLOTS
+//══════════════════════════════════════════════════════════════
+
+plot(emaFast, title="EMA 50", color=COLOR_BULL, linewidth=2)
+
+plot(emaSlow, title="EMA 200", color=COLOR_BEAR, linewidth=2)
+
+//══════════════════════════════════════════════════════════════
+// DASHBOARD
+//══════════════════════════════════════════════════════════════
+
+var table dash = table.new(position.top_right, 2, 6)
+
+if barstate.islast and inpShowDashboard
+
+    table.cell(dash, 0, 0, "ATT Framework")
+    table.cell(dash, 1, 0, FRAMEWORK_VERSION)
+
+    table.cell(dash, 0, 1, "Trend")
+    table.cell(dash, 1, 1, trendText, text_color = trendColour)
+
+    table.cell(dash, 0, 2, "ADX")
+    table.cell(dash, 1, 2, str.tostring(adx, "#.0"))
+
+    table.cell(dash, 0, 3, "ATR")
+    table.cell(dash, 1, 3, str.tostring(atr, "#.00"))
+
+    table.cell(dash, 0, 4, "Debug")
+    table.cell(dash, 1, 4, inpDebug ? "ON" : "OFF")
+
+    table.cell(dash, 0, 5, "State")
+    table.cell(dash, 1, 5, trendText)
+
+//══════════════════════════════════════════════════════════════
+// DEBUG
+//══════════════════════════════════════════════════════════════
+
+plot(inpDebug ? atr : na,
+     title="ATR Debug",
+     display=display.data_window)
+
+plot(inpDebug ? adx : na,
+     title="ADX Debug",
+     display=display.data_window)
