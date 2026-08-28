@@ -1,0 +1,184 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import ArchitectureDiagram from '~/components/ArchitectureDiagram.astro';
+import { SITE } from '~/data/content';
+---
+<Base
+  title="Austin Trading Engine"
+  description={`The ${SITE.product} (${SITE.productAbbr}) is a Pine Script v6 diagnostics framework: trend, structure, momentum, volatility, confidence, and risk engines — diagnostic, RDR-validated, never an execution system.`}
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Engine · diagnostic · research</span>
+      <h1>The <span class="accent">Austin Trading Engine</span>.</h1>
+      <p class="lede">
+        A Pine Script v6 indicator and a local research/verification framework. ATE displays explainable trend, structure, momentum, volatility, confidence, and risk diagnostics — it is not an order, execution, position-management, or trade-management system.
+      </p>
+
+      <div class="page-hero__meta">
+        <div>
+          <span class="eyebrow eyebrow--inline">Current release</span>
+          <span class="mono">ATE v2.2 · pine/releases/ATE_v2.2.pine</span>
+        </div>
+        <div>
+          <span class="eyebrow eyebrow--inline">Status</span>
+          <span>Compiles cleanly in TradingView (verified by Paul Austin).</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Purpose"
+        title="Explainable market diagnostics, on TradingView."
+        lede="ATE helps researchers and traders inspect market state — trend, structure, momentum, volatility, confidence, and risk — using a documented contract and reproducible pipelines. It does not trade. It does not promise. It diagnoses."
+      />
+
+      <div class="grid cols-3">
+        <div class="card hover">
+          <h3>Daily-first research</h3>
+          <p>The primary horizon is daily, with weekly companion studies where documented (RDR-002W, RDR-003W, RDR-010).</p>
+        </div>
+        <div class="card hover">
+          <h3>Multi-asset philosophy</h3>
+          <p>Gold, Silver, Gilts, Forex, equities, commodities. The same diagnostic methodology applied consistently across instrument classes.</p>
+        </div>
+        <div class="card hover">
+          <h3>Bar-close methodology</h3>
+          <p>No intra-bar decisions. The decision for bar <em>t</em> is finalised at the close of bar <em>t</em>. No silent defaults.</p>
+        </div>
+        <div class="card hover">
+          <h3>Non-lookahead intent</h3>
+          <p>No future-data references. No peeking. The Pine implementation uses only `barstate.ishistory` / close-of-bar inputs.</p>
+        </div>
+        <div class="card hover">
+          <h3>Non-repainting principles</h3>
+          <p>All indicator state is computed at close and not reshown retroactively. Verifier checks for repainting tokens.</p>
+        </div>
+        <div class="card hover">
+          <h3>Explainability</h3>
+          <p>Each engine publishes a standardised contract: <code>score</code>, <code>state</code>, <code>direction</code>, <code>reason</code>, <code>diagnostics</code>, <code>version</code>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Architecture"
+        title="Eight engines. One-way data flow. Bar-close only."
+        lede="The architecture baseline approved by Paul Austin preserves independent engines, one-way flow, pure functions, no silent defaults, and semantic versioning."
+      />
+      <ArchitectureDiagram />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Engine Output Contract"
+        title="Every engine publishes the same six fields."
+        lede="The contract is preserved across every engine — and the canonical verifier checks each field."
+      />
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Field</th>
+              <th>Requirement</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono"><code>score</code></td><td>Numeric score from 0–100 where applicable. Use <code>na</code> or an explicitly documented null value where a score is not meaningful.</td></tr>
+            <tr><td class="mono"><code>state</code></td><td>Human-readable state label, e.g. <code>trending</code>, <code>ranging</code>, <code>expanding volatility</code>, <code>risk elevated</code>, <code>no action</code>.</td></tr>
+            <tr><td class="mono"><code>direction</code></td><td>Direction label where applicable: <code>bullish</code>, <code>bearish</code>, <code>neutral</code>, or <code>none</code>.</td></tr>
+            <tr><td class="mono"><code>reason</code></td><td>Short explanation of the main cause of the engine output.</td></tr>
+            <tr><td class="mono"><code>diagnostics</code></td><td>Optional supporting values used for audit, debugging, and dashboard display.</td></tr>
+            <tr><td class="mono"><code>version</code></td><td>Semantic engine version matching the engine specification.</td></tr>
+          </tbody>
+        </table>
+
+        <ul class="contract-rules">
+          <li>Every engine output must be reproducible from the same inputs and bar.</li>
+          <li>Downstream engines may consume contract fields but must not mutate upstream values.</li>
+          <li>Missing or unavailable values must be explicit; silent defaults are not permitted.</li>
+          <li>Breaking changes to contract fields require a major version bump and migration note.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Diagnostic boundaries"
+        title="What ATE does not do."
+        lede="These boundaries are not negotiable features — they are written into the architecture baseline and enforced by the canonical verifier."
+      />
+      <div class="boundaries">
+        <span class="pill amber">No execution</span>
+        <span class="pill amber">No broker connectivity</span>
+        <span class="pill amber">No DecisionEngine activity</span>
+        <span class="pill amber">No <code>riskApproved</code></span>
+        <span class="pill amber">No reserved language (safe / approved / blocked)</span>
+        <span class="pill amber">No risk alerts</span>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero {
+    position: relative; overflow: hidden;
+    padding-block: clamp(80px, 10vw, 130px) clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner {
+    position: relative; z-index: 1;
+    max-width: 820px;
+  }
+  .page-hero h1 { margin-bottom: 18px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .page-hero__meta {
+    margin-top: 28px;
+    display: grid; gap: 12px;
+    padding: 18px 22px;
+    background: rgba(7, 9, 13, 0.6);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+  }
+  .page-hero__meta div { display: grid; gap: 4px; }
+  .eyebrow--inline { margin-bottom: 0; }
+  .page-hero__meta span.mono { font-size: 0.92rem; }
+
+  .section--alt {
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .contract-rules {
+    margin: 18px 0 0; padding-left: 18px;
+    display: grid; gap: 8px;
+  }
+  .contract-rules li { font-size: 0.92rem; color: var(--ink-2); }
+
+  .boundaries {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    padding: 22px;
+    background: rgba(217, 166, 74, 0.04);
+    border: 1px dashed rgba(217, 166, 74, 0.32);
+    border-radius: var(--radius);
+  }
+  .boundaries .pill { font-size: 0.78rem; }
+  .boundaries code { background: transparent; border: 0; padding: 0; font-size: 0.78rem; color: inherit; }
+</style>

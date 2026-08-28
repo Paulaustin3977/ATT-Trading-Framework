@@ -1,0 +1,73 @@
+---
+/**
+ * A run-of-ticker tape · illustrative, clearly labelled.
+ * Tick data is mocked and obviously finite; it animates for visual depth only.
+ */
+---
+<div class="ticker" aria-label="Illustrative ticker tape (design only)">
+  <span class="ticker__notice mono">Illustrative only · not real market data</span>
+  <div class="ticker__viewport">
+    <div class="ticker__track">
+      {[
+        ['GC=F',  '+0.32%', 'gold'],
+        ['SI=F',  '+0.78%', 'gold'],
+        ['IGLT.L','-0.04%', 'gilt'],
+        ['TLT',   '-0.11%', 'gilt'],
+        ['EURUSD','+0.05%', 'fx'],
+        ['GBPUSD','-0.06%', 'fx'],
+        ['JPY=X', '+0.27%', 'fx'],
+        ['CL=F',  '-0.41%', 'energy'],
+        ['HG=F',  '+0.18%', 'base'],
+        ['NQ=F',  '+0.55%', 'index'],
+        ['SPY',   '+0.22%', 'index'],
+        ['NVDA',  '+1.21%', 'equity'],
+        ['MSFT',  '+0.34%', 'equity'],
+        ['AAPL',  '-0.12%', 'equity'],
+        ['AMZN',  '+0.66%', 'equity'],
+        ['GOOGL', '+0.41%', 'equity'],
+      ].map(([s, p, c]) => (
+        <span class={`ticker__item asset-${c}`}>
+          <span class="ticker__sym mono">{s}</span>
+          <span class={`ticker__pct mono ${p.startsWith('+') ? 'bull' : 'bear'}`}>{p}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<style>
+  .ticker {
+    position: relative; overflow: hidden;
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018));
+    border-block: 1px solid var(--line-1);
+    padding: 10px 0;
+  }
+  .ticker__notice {
+    position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
+    font-size: 0.7rem; color: var(--ink-3);
+    z-index: 2;
+    background: rgba(7, 9, 13, 0.8);
+    padding: 4px 8px; border-radius: 4px;
+    border: 1px dashed var(--line-2);
+  }
+  .ticker__viewport { overflow: hidden; }
+  .ticker__track {
+    display: inline-flex; gap: 28px;
+    padding-left: 140px;
+    white-space: nowrap;
+    animation: marquee 60s linear infinite;
+  }
+  .ticker__item { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; }
+  .ticker__sym { color: var(--ink-3); font-weight: 500; }
+  .ticker__pct { font-weight: 600; }
+  .ticker__pct.bull { color: var(--bull); }
+  .ticker__pct.bear { color: var(--bear); }
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .ticker__track { animation: none; flex-wrap: wrap; }
+  }
+</style>

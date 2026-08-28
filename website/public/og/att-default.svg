@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b0f17"/>
+      <stop offset="100%" stop-color="#07090d"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e6c585"/>
+      <stop offset="100%" stop-color="#876f3f"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Brand mark -->
+  <g transform="translate(80, 80)">
+    <path fill="url(#gold)" d="M48 6 L87 27 V69 L48 90 L9 69 V27 Z"/>
+    <path fill="#0b0f17" d="M48 18 L75 33 V63 L48 78 L21 63 V33 Z"/>
+    <path fill="url(#gold)" d="M33 57 L40.5 40.5 L48 54 L55.5 33 L63 57 Z"/>
+  </g>
+
+  <!-- Eyebrow -->
+  <text x="80" y="240" fill="#c8a45a" font-family="Inter, sans-serif"
+        font-size="22" letter-spacing="6" font-weight="600">AUSTIN TRADING ENGINE</text>
+
+  <!-- Main title -->
+  <text x="80" y="320" fill="#f4f6fb" font-family="Inter, sans-serif"
+        font-size="76" font-weight="700" letter-spacing="-2">Evidence-based</text>
+  <text x="80" y="400" fill="url(#gold)" font-family="Inter, sans-serif"
+        font-size="76" font-weight="700" letter-spacing="-2">market intelligence.</text>
+
+  <!-- Subtitle -->
+  <text x="80" y="470" fill="#8c96aa" font-family="Inter, sans-serif"
+        font-size="26" font-weight="400">Spec-driven · RDR-validated · non-repainting · research-grade.</text>
+
+  <!-- Footer -->
+  <text x="80" y="572" fill="#5a6478" font-family="JetBrains Mono, monospace"
+        font-size="16" letter-spacing="2">github.com/Paulaustin3977/ATT-Trading-Framework</text>
+</svg>

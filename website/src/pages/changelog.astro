@@ -1,0 +1,114 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import { CHANGELOG_HIGHLIGHTS } from '~/data/content';
+---
+<Base
+  title="Changelog"
+  description="The release cadence of the Austin Trading Engine — from initial structure to ATE v2.2. Meaningful milestones only; not every commit."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Changelog · release & research milestones</span>
+      <h1>Development timeline.</h1>
+      <p class="lede">
+        We highlight the meaningful releases and research milestones — not every minor commit. The full Keep-a-Changelog log lives at <a href="https://github.com/Paulaustin3977/ATT-Trading-Framework/blob/main/CHANGELOG.md" target="_blank" rel="noopener">CHANGELOG.md</a> on GitHub.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader eyebrow="Milestones" title="Highlights." />
+      <ol class="timeline">
+        {CHANGELOG_HIGHLIGHTS.map((m) => (
+          <li class="timeline__item">
+            <div class="timeline__dot" aria-hidden="true">
+              <span></span>
+            </div>
+            <div class="timeline__body">
+              <div class="timeline__head">
+                <span class="timeline__version mono">{m.version}</span>
+                <h3>{m.title}</h3>
+              </div>
+              <p>{m.summary}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader eyebrow="Full change history" title="Every entry ever recorded." />
+      <p>The complete log is on GitHub.</p>
+      <a class="btn gold" href="https://github.com/Paulaustin3977/ATT-Trading-Framework/blob/main/CHANGELOG.md" target="_blank" rel="noopener">
+        Open CHANGELOG.md →
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .page-hero a { color: var(--gold-1); }
+
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .timeline {
+    list-style: none; padding: 0; margin: 0;
+    position: relative;
+  }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 26px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(180deg, var(--gold-1), transparent 70%);
+    opacity: 0.4;
+  }
+  .timeline__item {
+    position: relative;
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 18px;
+    padding-bottom: 24px;
+  }
+  .timeline__dot {
+    display: flex; flex-direction: column; align-items: center; padding-top: 8px;
+  }
+  .timeline__dot span {
+    width: 14px; height: 14px; border-radius: 50%;
+    background: var(--gold-1);
+    box-shadow: 0 0 12px rgba(200, 164, 90, 0.5);
+    border: 3px solid var(--bg-0);
+  }
+  .timeline__body {
+    background: var(--bg-1); border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .timeline__head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 6px; }
+  .timeline__version {
+    color: var(--gold-1);
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    padding: 2px 8px;
+    background: rgba(200, 164, 90, 0.08);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .timeline__body h3 { margin: 0; font-size: 1.02rem; color: var(--ink-1); }
+  .timeline__body p { margin: 0; font-size: 0.9rem; color: var(--ink-2); line-height: 1.6; }
+</style>

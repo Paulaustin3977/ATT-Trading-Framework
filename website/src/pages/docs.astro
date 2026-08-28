@@ -1,0 +1,313 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import { DOCS } from '~/data/content';
+import fs from 'node:fs';
+import path from 'node:path';
+
+const REPO = process.env.ATT_REPO_PATH ?? '/Users/paul/Code/repos/development-att-framework/ATT-Trading-Framework';
+
+// Render Markdown into HTML (very small manual processor — headings, lists, paragraphs, code fences only).
+// This keeps the site dependency-free for the doc renderer and lets us surface real repo content.
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+function slugify(s: string): string {
+  return s
+    .toLowerCase()
+    .replace(/[^\w\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/^-+|-+$/g, '');
+}
+function renderMarkdown(md: string): string {
+  const lines = md.split('\n');
+  let html = '';
+  let i = 0;
+  let inList: 'ul' | 'ol' | null = null;
+
+  function flushList() {
+    if (inList) {
+      html += `</${inList}>`;
+      inList = null;
+    }
+  }
+
+  while (i < lines.length) {
+    const line = lines[i];
+    if (line.trim() === '') { flushList(); i++; continue; }
+
+    // Fenced code block
+    if (line.startsWith('```')) {
+      flushList();
+      const lang = line.replace(/^```/, '').trim();
+      i++;
+      let buf = '';
+      while (i < lines.length && !lines[i].startsWith('```')) {
+        buf += lines[i] + '\n';
+        i++;
+      }
+      i++; // skip closing fence
+      html += `<pre><code class="lang-${lang}">${escapeHtml(buf.replace(/\n$/, ''))}</code></pre>`;
+      continue;
+    }
+
+    // Table detection (very simple): row starting with | and next line a separator
+    if (line.startsWith('|') && i + 1 < lines.length && /^\|[\s:|-]+\|$/.test(lines[i + 1])) {
+      flushList();
+      const headerCells = line.split('|').slice(1, -1).map((c) => c.trim());
+      i += 2; // skip header + separator
+      const rows: string[][] = [];
+      while (i < lines.length && lines[i].startsWith('|') && lines[i].trim()) {
+        rows.push(lines[i].split('|').slice(1, -1).map((c) => c.trim()));
+        i++;
+      }
+      html += '<table class="table"><thead><tr>';
+      for (const h of headerCells) html += `<th>${inline(h)}</th>`;
+      html += '</tr></thead><tbody>';
+      for (const r of rows) {
+        html += '<tr>';
+        for (const c of r) html += `<td>${inline(c)}</td>`;
+        html += '</tr>';
+      }
+      html += '</tbody></table>';
+      continue;
+    }
+
+    // Headings
+    const h = /^(#{1,6})\s+(.+)$/.exec(line);
+    if (h) {
+      flushList();
+      const level = h[1].length;
+      const text = h[2].trim();
+      const id = slugify(text);
+      html += `<h${level} id="${id}">${inline(text)}</h${level}>`;
+      i++;
+      continue;
+    }
+
+    // Unordered list
+    if (/^\s*[-*]\s+/.test(line)) {
+      if (inList !== 'ul') { flushList(); html += '<ul>'; inList = 'ul'; }
+      const text = line.replace(/^\s*[-*]\s+/, '');
+      html += `<li>${inline(text)}</li>`;
+      i++;
+      continue;
+    }
+    // Ordered list
+    if (/^\s*\d+\.\s+/.test(line)) {
+      if (inList !== 'ol') { flushList(); html += '<ol>'; inList = 'ol'; }
+      const text = line.replace(/^\s*\d+\.\s+/, '');
+      html += `<li>${inline(text)}</li>`;
+      i++;
+      continue;
+    }
+
+    // Blockquote
+    if (line.startsWith('> ')) {
+      flushList();
+      html += `<blockquote>${inline(line.slice(2))}</blockquote>`;
+      i++;
+      continue;
+    }
+
+    // Paragraph
+    flushList();
+    let buf = line;
+    i++;
+    while (i < lines.length && lines[i].trim() !== '' && !/^(#{1,6}\s|\s*[-*]\s|\s*\d+\.\s|```|\|)/.test(lines[i])) {
+      buf += ' ' + lines[i];
+      i++;
+    }
+    html += `<p>${inline(buf)}</p>`;
+  }
+  flushList();
+  return html;
+
+  function inline(s: string): string {
+    let t = escapeHtml(s);
+    t = t.replace(/`([^`]+)`/g, (_, c) => `<code>${c}</code>`);
+    t = t.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+    t = t.replace(/(^|[^*])\*([^*]+)\*(?!\*)/g, '$1<em>$2</em>');
+    t = t.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>');
+    return t;
+  }
+}
+
+type Doc =
+  (typeof DOCS)[number] & { html?: string; error?: string; size?: number; remoteUrl?: string };
+
+const docs: Doc[] = DOCS.map((d) => {
+  const localPath = path.join(REPO, d.path);
+  if (!fs.existsSync(localPath)) {
+    return { ...d, error: 'file not found at build time', remoteUrl: `https://github.com/Paulaustin3977/ATT-Trading-Framework/blob/main/${d.path}` };
+  }
+  const text = fs.readFileSync(localPath, 'utf8');
+  return { ...d, html: renderMarkdown(text), size: text.length };
+});
+
+// Group by category, preserve order
+const grouped = docs.reduce<Record<string, typeof docs>>((acc, d) => {
+  if (!d.includeInDocs) return acc;
+  acc[d.category] = acc[d.category] ?? [];
+  acc[d.category].push(d);
+  return acc;
+}, {});
+
+const categoryOrder = [
+  'Getting Started',
+  'Charter & Governance',
+  'Architecture',
+  'Engine Specifications',
+  'Research',
+  'Releases',
+  'Operational',
+  'Coding Standards',
+  'Security',
+  'Hermes Integration',
+  'MT5',
+];
+---
+<Base
+  title="Documentation Centre"
+  description="Project Charter, Architecture, Engine Specifications, Methodology, Releases, Governance, MT5 Integration, Hermes Integration — every markdown document rendered live from the repository."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Documentation · live from repo</span>
+      <h1>Every document, <span class="accent">one centre.</span></h1>
+      <p class="lede">
+        These pages are rendered from the actual markdown in the ATT-Trading-Framework repository at build time. The source is canonical, the renderer is small, and the source path is always visible.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <SectionHeader eyebrow="Index" title="By category." />
+
+      <nav class="doc-toc" aria-label="Documentation table of contents">
+        <ul>
+          {categoryOrder.filter((c) => grouped[c]?.length).map((c) => (
+            <li><a href={`#cat-${c.replace(/\W+/g, '-')}`}>{c}</a><span class="badge mono">{grouped[c].length}</span></li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </section>
+
+  {categoryOrder.filter((c) => grouped[c]?.length).map((cat) => (
+    <section class="section section--alt" id={`cat-${cat.replace(/\W+/g, '-')}`}>
+      <div class="container narrow">
+        <SectionHeader eyebrow={cat} title={cat} />
+        <div class="docs-list">
+          {grouped[cat].map((d) => (
+            <details class="doc" open>
+              <summary>
+                <span class="doc__name">
+                  <span class="mono doc__path">{d.path}</span>
+                  <span class="doc__title">{d.title}</span>
+                </span>
+                <span class="doc__meta mono">
+                  {d.size ? `${(d.size / 1024).toFixed(1)} KB` : ''}
+                </span>
+              </summary>
+              {d.error ? (
+                <p class="doc__error">
+                  File not available locally at build time. Read the canonical source on GitHub: <a href={d.remoteUrl} target="_blank" rel="noopener">{d.path}</a>
+                </p>
+              ) : (
+                <article class="doc__body prose" set:html={d.html}></article>
+              )}
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .doc-toc ul {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 10px;
+  }
+  .doc-toc li {
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg-1); border: 1px solid var(--line-1);
+    border-radius: 8px; padding: 12px 14px;
+    color: var(--ink-2);
+  }
+  .doc-toc a { flex: 1; }
+  .doc-toc .badge {
+    font-size: 0.74rem; color: var(--gold-1);
+    background: rgba(200, 164, 90, 0.06);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 999px; padding: 2px 8px;
+  }
+
+  .docs-list { display: grid; gap: 14px; }
+  .doc {
+    background: var(--bg-1); border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .doc summary {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 18px;
+    cursor: pointer; list-style: none; gap: 16px;
+    transition: background 160ms ease;
+  }
+  .doc summary::-webkit-details-marker { display: none; }
+  .doc summary:hover { background: var(--bg-2); }
+  .doc__name { display: grid; gap: 2px; min-width: 0; }
+  .doc__path { color: var(--ink-3); font-size: 0.78rem; }
+  .doc__title { font-weight: 600; color: var(--ink-1); font-size: 1rem; }
+  .doc__meta { color: var(--ink-3); font-size: 0.78rem; }
+  .doc__error {
+    padding: 18px;
+    border-top: 1px solid var(--line-1);
+    color: var(--ink-3); font-size: 0.86rem;
+  }
+  .doc__body { padding: 22px 24px; border-top: 1px solid var(--line-1); }
+  .prose { line-height: 1.7; }
+  .prose h1, .prose h2, .prose h3, .prose h4 { color: var(--ink-1); }
+  .prose h1 { font-size: 1.6rem; margin: 24px 0 12px; }
+  .prose h2 { font-size: 1.3rem; margin: 22px 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line-1); }
+  .prose h3 { font-size: 1.1rem; margin: 18px 0 8px; }
+  .prose h4 { font-size: 1rem; margin: 14px 0 6px; }
+  .prose p { margin: 12px 0; color: var(--ink-2); }
+  .prose ul, .prose ol { padding-left: 22px; margin: 12px 0; color: var(--ink-2); }
+  .prose li { margin: 4px 0; }
+  .prose blockquote {
+    margin: 14px 0; padding: 10px 14px;
+    background: var(--bg-2); border-left: 3px solid var(--gold-1);
+    color: var(--ink-2); border-radius: 0 6px 6px 0;
+  }
+  .prose table { width: 100%; }
+  .prose code { background: var(--bg-3); border: 1px solid var(--line-2); padding: 2px 5px; border-radius: 4px; font-size: 0.85em; color: var(--ink-1); }
+  .prose pre { background: var(--bg-2) !important; border: 1px solid var(--line-1); border-radius: var(--radius); padding: 16px; overflow-x: auto; }
+  .prose pre code { background: transparent; border: 0; padding: 0; font-size: 0.84rem; line-height: 1.7; color: var(--ink-2); }
+  .prose a { color: var(--gold-1); }
+  .prose a:hover { color: var(--ink-1); }
+</style>

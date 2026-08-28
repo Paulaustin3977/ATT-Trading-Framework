@@ -1,0 +1,105 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import ArchitectureDiagram from '~/components/ArchitectureDiagram.astro';
+---
+<Base
+  title="Architecture"
+  description="The Austin Trading Engine architecture baseline: independent engines, one-way data flow, pure functions, no silent defaults, bar-close only, semantic versioning."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Architecture baseline · approved by Paul Austin</span>
+      <h1>Independent engines. One-way flow. <span class="accent">Zero action authority.</span></h1>
+      <p class="lede">
+        The architecture baseline (status: Active, approved) preserves eight independent engines. Each engine owns one analytical concern and exposes only its output contract.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Engine map"
+        title="How data flows through ATE."
+      />
+      <ArchitectureDiagram />
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Constraints"
+        title="Five architectural rules that never bend."
+      />
+      <div class="grid cols-2">
+        <div class="card hover">
+          <h3>Independent engines</h3>
+          <p>Each engine owns one analytical concern and exposes only its output contract. No reaching into peers.</p>
+        </div>
+        <div class="card hover">
+          <h3>One-way data flow</h3>
+          <p>Engines do not call back into their predecessors. Decisions flow forward; feedback is post-hoc only.</p>
+        </div>
+        <div class="card hover">
+          <h3>Pure functions</h3>
+          <p>Given the same inputs and the same bar, an engine must produce the same output.</p>
+        </div>
+        <div class="card hover">
+          <h3>No silent defaults</h3>
+          <p>Every tunable has a documented default and range. Missing outputs are explicit.</p>
+        </div>
+        <div class="card hover">
+          <h3>Bar-close only</h3>
+          <p>No intra-bar decisions. The decision for bar <em>t</em> is finalised at the close of bar <em>t</em>.</p>
+        </div>
+        <div class="card hover">
+          <h3>Versioned interfaces</h3>
+          <p>Breaking changes to an engine's interface require a major version bump and a migration note.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Promote with care"
+        title="Confidence is an evidence-strength assessment. Risk is a safety assessment applied after confidence."
+        lede="Risk must adjust decisions; it must not create confidence. Dashboard is presentation-only and must never rewrite engine values."
+      />
+
+      <div class="grid cols-2">
+        <div class="card">
+          <h3>Confidence vs Risk</h3>
+          <p>Confidence is an evidence-strength assessment. Risk is a safety and suitability assessment applied after confidence. They are distinct concerns — the architecture baseline preserves this distinction at every layer.</p>
+        </div>
+        <div class="card">
+          <h3>Dashboard as presentation-only</h3>
+          <p>Dashboard display transformations are clearly labelled as presentation. They never rewrite, normalise, smooth, or overwrite engine values.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+</style>

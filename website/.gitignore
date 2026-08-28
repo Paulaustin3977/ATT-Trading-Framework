@@ -1,0 +1,30 @@
+# Build artefacts
+dist/
+.astro/
+
+# Dependency lockfiles (the parent repo's lockfile is the canonical one)
+node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Generated OG image (regenerated on `npm run build`)
+public/og/att-default.png
+public/og/twitter/
+
+# Build-time content-snapshot
+src/data/sync-meta.json
+
+# Local env
+.env
+.env.local
+.env.*.local
+
+# Editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# OS
+Thumbs.db

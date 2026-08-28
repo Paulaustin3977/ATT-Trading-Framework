@@ -1,0 +1,95 @@
+---
+import '../styles/global.css';
+import Header from '~/components/Header.astro';
+import Footer from '~/components/Footer.astro';
+import { SITE, REPO } from '~/data/content';
+
+export interface Props {
+  title?: string;
+  description?: string;
+  ogImage?: string;
+  canonical?: string;
+  pageType?: 'website' | 'article' | 'docs';
+}
+
+const {
+  title,
+  description = SITE.description,
+  ogImage = '/og/att-default.png',
+  canonical,
+  pageType = 'website',
+} = Astro.props;
+
+const fullTitle = title ? `${title} — ${SITE.organisation}` : `${SITE.organisation} — ${SITE.tagline}`;
+const canonicalUrl = canonical ?? new URL(Astro.url.pathname, Astro.site ?? SITE.url).toString();
+---
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07090d">
+<title>{fullTitle}</title>
+<meta name="description" content={description}>
+<link rel="canonical" href={canonicalUrl}>
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+
+<!-- OpenGraph -->
+<meta property="og:type" content={pageType}>
+<meta property="og:title" content={fullTitle}>
+<meta property="og:description" content={description}>
+<meta property="og:url" content={canonicalUrl}>
+<meta property="og:site_name" content={SITE.organisation}>
+<meta property="og:image" content={new URL(ogImage, Astro.site ?? SITE.url).toString()}>
+
+<!-- Twitter / X -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content={fullTitle}>
+<meta name="twitter:description" content={description}>
+<meta name="twitter:image" content={new URL(ogImage, Astro.site ?? SITE.url).toString()}>
+
+<!-- Performance hints -->
+<link rel="preconnect" href="https://github.com" crossorigin>
+<link rel="dns-prefetch" href="https://raw.githubusercontent.com">
+<link rel="dns-prefetch" href="https://shiki.matsu.io">
+
+<!-- Inter + JetBrains Mono from Google Fonts (subsetted via display=swap). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap">
+
+<!-- JSON-LD: organisation + software source code + breadcrumb -->
+<script type="application/ld+json" is:inline set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.organisation,
+  url: SITE.url,
+  sameAs: [REPO.url],
+  logo: new URL('/favicon.svg', Astro.site ?? SITE.url).toString(),
+  description: SITE.description,
+})}></script>
+
+<script type="application/ld+json" is:inline set:html={JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: SITE.product,
+  alternateName: SITE.productAbbr,
+  description: SITE.description,
+  codeRepository: REPO.url,
+  license: `https://opensource.org/licenses/${SITE.license}`,
+  programmingLanguage: ['Pine Script', 'Python'],
+  author: { '@type': 'Organization', name: SITE.organisation },
+})}></script>
+
+<slot name="head" />
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to main content</a>
+<Header />
+<main id="main" tabindex="-1">
+  <slot />
+</main>
+<Footer />
+</body>
+</html>

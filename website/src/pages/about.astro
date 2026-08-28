@@ -1,0 +1,118 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import { SITE } from '~/data/content';
+---
+<Base
+  title="About Austin Trading Team"
+  description="Austin Trading Team is an evidence-first quantitative research and engineering organisation. The Austin Trading Engine (ATE) is its diagnostic and research framework."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">About · Austin Trading Team</span>
+      <h1>Evidence-first. <span class="accent">Engineering-led.</span></h1>
+      <p class="lede">
+        Austin Trading Team is the organisation behind the Austin Trading Engine ({SITE.productAbbr}). It is an evidence-first quantitative research and engineering team — not a signals service, not a broker, not an execution platform.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <SectionHeader
+        eyebrow="What we are"
+        title="The mission is research, not returns."
+        lede="ATE exists to make market diagnostics more reproducible, more explainable, and more honest — not to promise returns and not to compete with execution platforms."
+      />
+
+      <div class="card">
+        <p>
+          The current ATE framework is focused on market diagnostics, research, validation, and decision support. It does not place orders, route trades, or manage positions. Its outputs are designed for human inspection on TradingView and for downstream, evidence-based research questions — never as trading instructions.
+        </p>
+        <p>
+          A future capability is just that: a future capability. We mark it in the roadmap or omit it; we do not market it.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader eyebrow="Principles" title="What guides the work." />
+      <div class="grid cols-3">
+        <div class="card hover">
+          <h3>Market research</h3>
+          <p>We treat market behaviour as a domain to investigate, not a target to predict. RDRs record evidence; they do not sell conclusions.</p>
+        </div>
+        <div class="card hover">
+          <h3>Quantitative methodology</h3>
+          <p>Quantitative does not mean marketing-flavoured. It means: fixed parameters, pre-registered scope, reproducible runs, multi-asset coverage.</p>
+        </div>
+        <div class="card hover">
+          <h3>Engineering</h3>
+          <p>Pine v6 source, Python mirrors, a deterministic verifier, CI gates. We treat research code as production code.</p>
+        </div>
+        <div class="card hover">
+          <h3>Evidence-based analysis</h3>
+          <p>Engine status, RDR classification, and release boundaries are all answers backed by the repository — not by mood.</p>
+        </div>
+        <div class="card hover">
+          <h3>Reproducible research</h3>
+          <p>Hermes runs can be re-executed from any supported commit. CSV artefacts are emitted, not hand-edited.</p>
+        </div>
+        <div class="card hover">
+          <h3>Open development</h3>
+          <p>Public MIT-licensed repository. The same Pine source the verifier sees is the same Pine source the TradingView chart uses.</p>
+        </div>
+        <div class="card hover">
+          <h3>Risk awareness</h3>
+          <p>Reserved language is forbidden in diagnostic outputs. <code>safe</code>, <code>approved</code>, <code>blocked</code>, <code>tradeable</code> never appear.</p>
+        </div>
+        <div class="card hover">
+          <h3>Human decision support</h3>
+          <p>ATE surfaces evidence. It does not decide. The trader is the decision-maker — and the trader knows their own risk better than any model.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container narrow">
+      <SectionHeader eyebrow="What we are not" title="So that there's no confusion." />
+      <ul class="bullets">
+        <li>A signals service. We do not sell, post, or broadcast buy/sell calls.</li>
+        <li>A broker or trading platform. There is no account, no order, no execution.</li>
+        <li>A crypto signal group. We do not optimise altcoin entries.</li>
+        <li>A trading competition. There are no leaderboards.</li>
+        <li>A forecasting service. We present evidence, not predictions.</li>
+      </ul>
+      <p style="margin-top:18px;">
+        If you came here looking for any of the above, please look elsewhere — there are many credible providers for each. If you came here to read a real research framework's source, you are exactly where you should be.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .bullets { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+  .bullets li { font-size: 0.95rem; color: var(--ink-2); line-height: 1.6; }
+  code { background: transparent; border: 0; padding: 0; color: var(--ink-1); }
+</style>

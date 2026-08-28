@@ -1,0 +1,81 @@
+# ATT — Website · Build & Deploy to GitHub Pages
+#
+# Builds the static Astro site under /website and publishes it to GitHub Pages.
+# Kept separate from the framework CI (.github/workflows/ci.yml in repo root) so
+# framework governance checks are not in the website hot path.
+
+name: Website
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'website/**'
+      - '.github/workflows/website.yml'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'website/**'
+      - '.github/workflows/website.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: pages-att-website
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: 'npm'
+          cache-dependency-path: 'website/package-lock.json'
+
+      - name: Install dependencies
+        working-directory: website
+        run: npm ci --no-audit --no-fund --prefer-offline
+
+      - name: Type-check (astro check)
+        working-directory: website
+        run: npm run check --silent
+
+      - name: Build (Astro static export)
+        working-directory: website
+        run: npm run build --silent
+        env:
+          # When running in CI the ATT repo is the current directory;
+          # the docs page reads live MD from ../ and the sync script
+          # points there by default. Override here if you move it.
+          ATT_REPO_PATH: ${{ github.workspace }}
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'website/dist'
+
+  deploy:
+    name: Deploy
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

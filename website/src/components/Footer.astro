@@ -1,0 +1,200 @@
+---
+import { SITE, REPO, NAV, DISCLAIMER } from '~/data/content';
+const year = new Date().getFullYear();
+---
+<footer class="site-footer">
+  <div class="container site-footer__inner">
+    <div class="site-footer__brand">
+      <div class="site-footer__mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="fg1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#d8b56a"/>
+              <stop offset="100%" stop-color="#876f3f"/>
+            </linearGradient>
+          </defs>
+          <path fill="url(#fg1)" d="M16 2 L29 9 V23 L16 30 L3 23 V9 Z"/>
+          <path fill="#0b0f17" d="M16 6 L25 11 V21 L16 26 L7 21 V11 Z"/>
+          <path fill="url(#fg1)" d="M11 19 L13.5 13.5 L16 18 L18.5 11 L21 19 Z"/>
+        </svg>
+      </div>
+      <div>
+        <p class="site-footer__name">Austin Trading Team</p>
+        <p class="site-footer__product">{SITE.product} ({SITE.productAbbr})</p>
+        <p class="site-footer__claim">{SITE.tagline}.</p>
+      </div>
+    </div>
+
+    <div class="site-footer__cols">
+      <div>
+        <h4>Navigate</h4>
+        <ul>
+          {NAV.slice(0, 8).map((n) => (
+            <li><a href={n.href}>{n.label}</a></li>
+          ))}
+        </ul>
+      </div>
+      <div>
+        <h4>Research</h4>
+        <ul>
+          <li><a href="/research">Research Centre</a></li>
+          <li><a href="/validation">Validation & Evidence</a></li>
+          <li><a href="/backtests">Backtest Centre</a></li>
+          <li><a href="/changelog">Changelog</a></li>
+          <li><a href="/roadmap">Roadmap</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Project</h4>
+        <ul>
+          <li><a href={REPO.url} target="_blank" rel="noopener">GitHub Repository</a></li>
+          <li><a href={`${REPO.url}#readme`} target="_blank" rel="noopener">README</a></li>
+          <li><a href={`${REPO.url}/blob/main/LICENSE`} target="_blank" rel="noopener">{SITE.license} Licence</a></li>
+          <li><a href={`${REPO.url}/blob/main/SECURITY.md`} target="_blank" rel="noopener">Security Policy</a></li>
+          <li><a href={`${REPO.url}/blob/main/CONTRIBUTING.md`} target="_blank" rel="noopener">Contributing</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Connect</h4>
+        <ul>
+          <li><a href={`https://github.com/${REPO.owner}`} target="_blank" rel="noopener">@{REPO.owner} on GitHub</a></li>
+          <li><a href={REPO.ciUrl} target="_blank" rel="noopener">CI Workflow</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="container site-footer__disclaimer">
+    <p><strong>Risk Disclaimer.</strong> {DISCLAIMER.intro}</p>
+    <ul>
+      {DISCLAIMER.bullets.map((b) => <li>{b}</li>)}
+    </ul>
+  </div>
+
+  <div class="container site-footer__legal">
+    <p>© {year} {SITE.organisation}. Released under the {SITE.license} licence.</p>
+    <p class="site-footer__meta">
+      Built with Astro · Static export · Hosted on GitHub Pages
+    </p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--line-1);
+    margin-top: 96px;
+    padding-block: 56px 40px;
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.025));
+  }
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line-1);
+  }
+  .site-footer__brand {
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  .site-footer__mark { margin-top: 4px; }
+  .site-footer__name {
+    margin: 0; font-weight: 700; font-size: 1.06rem;
+    color: var(--ink-1); letter-spacing: -0.01em;
+  }
+  .site-footer__product {
+    margin: 2px 0 0;
+    font-size: 0.86rem;
+    color: var(--gold-1);
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
+  }
+  .site-footer__claim {
+    margin: 12px 0 0;
+    font-size: 0.84rem;
+    color: var(--ink-3);
+    max-width: 36ch;
+  }
+
+  .site-footer__cols {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 28px;
+  }
+  .site-footer__cols h4 {
+    margin: 4px 0 14px;
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--ink-3);
+    font-weight: 600;
+  }
+  .site-footer__cols ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+  .site-footer__cols a {
+    font-size: 0.86rem;
+    color: var(--ink-2);
+    text-decoration: none;
+  }
+  .site-footer__cols a:hover { color: var(--gold-1); }
+
+  .site-footer__disclaimer {
+    padding-top: 24px;
+    padding-bottom: 18px;
+    color: var(--ink-3);
+    font-size: 0.82rem;
+    border-bottom: 1px solid var(--line-1);
+  }
+  .site-footer__disclaimer p { margin: 0; line-height: 1.6; }
+  .site-footer__disclaimer p strong { color: var(--ink-2); }
+  .site-footer__disclaimer ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 0;
+    display: grid;
+    gap: 6px;
+  }
+  .site-footer__disclaimer li {
+    padding-left: 16px;
+    position: relative;
+    color: var(--ink-3);
+  }
+  .site-footer__disclaimer li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 6px; height: 1px;
+    background: var(--ink-4);
+  }
+
+  .site-footer__legal {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 18px;
+    color: var(--ink-3);
+    font-size: 0.78rem;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .site-footer__legal p { margin: 0; }
+  .site-footer__meta { font-family: var(--font-mono); }
+
+  @media (max-width: 980px) {
+    .site-footer__inner { grid-template-columns: 1fr; }
+    .site-footer__cols { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 540px) {
+    .site-footer__cols { grid-template-columns: 1fr; }
+    .site-footer__legal { flex-direction: column; align-items: flex-start; }
+  }
+</style>

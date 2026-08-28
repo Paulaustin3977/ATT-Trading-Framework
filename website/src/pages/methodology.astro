@@ -1,0 +1,135 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+---
+<Base
+  title="Research Methodology"
+  description="Hypothesis-driven, pre-registered, reproducible research. The full lifecycle from hypothesis to evidence to promotion."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Methodology · reproducible · pre-registered</span>
+      <h1>How ATE validates a claim.</h1>
+      <p class="lede">
+        Every research thread begins with a written hypothesis. The data range, instruments, and parameters are fixed before the run. A null result is recorded as a finding, not a failure.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader eyebrow="Principles" title="Five rules of ATE research." />
+      <ol class="principles">
+        <li><strong>Hypothesis first.</strong> Every research thread begins with a written hypothesis.</li>
+        <li><strong>Pre-registered scope.</strong> The data range, instruments, and parameters are fixed before the run.</li>
+        <li><strong>No post-hoc cherry-picking.</strong> Parameters discovered to "work" after the fact are treated as suspect.</li>
+        <li><strong>Negative results count.</strong> A null result is recorded as a finding, not a failure.</li>
+        <li><strong>Reproducibility.</strong> Anyone with the same inputs must be able to reproduce the result.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader eyebrow="Lifecycle" title="Hypothesis → Specification → Data → Run → Evaluation → Record." />
+      <div class="lifecycle">
+        {[
+          { i: '01', tag: 'Hypothesis',    body: 'A written, falsifiable claim about diagnostic behaviour.' },
+          { i: '02', tag: 'Specification', body: 'Engine contract pinned: scope, inputs, states, score ranges, reserved-language list.' },
+          { i: '03', tag: 'Implementation',body: 'Pine development mirror + Python mirror for offline validation.' },
+          { i: '04', tag: 'Verification',  body: 'tools/scripts/verify_ate.py runs 442 contract, boundary, fixture, and integrity checks.' },
+          { i: '05', tag: 'Validation',    body: 'A Research Decision Record evaluates diagnostic behaviour across multi-asset daily/weekly bars.' },
+          { i: '06', tag: 'Classification',body: 'Supported · Weakly Supported · Mixed · Unsupported · Pending. Each comes with a recommendation.' },
+          { i: '07', tag: 'Approval',      body: 'Paul Austin authorises a precisely-stated scope. Diagnostic/research approval does not imply action authority.' },
+          { i: '08', tag: 'Promotion',     body: 'Eligible for an immutable release under docs/Release_Process.md — never edited in-place after.' },
+        ].map((s) => (
+          <div class="lifecycle__step">
+            <span class="lifecycle__index mono">{s.i}</span>
+            <div>
+              <h4>{s.tag}</h4>
+              <p>{s.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader eyebrow="What we don't do" title="Honesty is part of the methodology." />
+      <ul class="bullets">
+        <li>We do not overfit. Multiple-testing corrections are applied where appropriate.</li>
+        <li>We do not extrapolate beyond the data window without flagging it.</li>
+        <li>We do not present a single backtest as proof. We present a backtest as evidence within a body of work.</li>
+        <li>We do not edit Hermes outputs by hand. The right way to "fix" a result is to re-run with a documented correction.</li>
+        <li>We do not couple an engine downstream until its RDR has been classified and approved under ATOS governance.</li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .principles { list-style: none; padding: 0; counter-reset: p; display: grid; gap: 10px; }
+  .principles li {
+    position: relative; padding: 14px 16px 14px 60px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+    color: var(--ink-2);
+    counter-increment: p;
+    line-height: 1.6;
+  }
+  .principles li::before {
+    content: counter(p, decimal-leading-zero);
+    position: absolute; left: 16px; top: 50%;
+    transform: translateY(-50%);
+    font-family: var(--font-mono);
+    color: var(--gold-1); font-weight: 600;
+    background: rgba(200, 164, 90, 0.06);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 6px;
+    padding: 3px 8px;
+    font-size: 0.78rem;
+  }
+  .principles li strong { color: var(--ink-1); font-weight: 600; }
+
+  .lifecycle { display: grid; gap: 12px; }
+  .lifecycle__step {
+    display: grid; grid-template-columns: 48px 1fr; gap: 14px;
+    padding: 18px 20px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+  }
+  .lifecycle__index {
+    font-size: 0.74rem; letter-spacing: 0.06em;
+    color: var(--gold-1); font-weight: 700;
+    background: rgba(200, 164, 90, 0.05);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 6px;
+    padding: 4px 0; text-align: center;
+  }
+  .lifecycle__step h4 {
+    margin: 0 0 4px; font-size: 0.96rem;
+    color: var(--ink-1); text-transform: none; letter-spacing: 0;
+    font-family: var(--font-sans); font-weight: 600;
+  }
+  .lifecycle__step p { margin: 0; font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; }
+
+  .bullets { margin: 0; padding-left: 18px; display: grid; gap: 8px; }
+  .bullets li { font-size: 0.95rem; color: var(--ink-2); line-height: 1.6; }
+</style>

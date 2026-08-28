@@ -1,0 +1,16 @@
+---
+export interface Props {
+  variant?: 'gold' | 'green' | 'red' | 'blue' | 'amber' | 'gray';
+  withDot?: boolean;
+  className?: string;
+}
+const { variant = 'gray', withDot = true, className = '' } = Astro.props;
+---
+<span class={`pill ${variant} ${className}`}>
+  {withDot && <span class="dot" aria-hidden="true"></span>}
+  <slot />
+</span>
+
+<style>
+  .pill .dot { flex-shrink: 0; }
+</style>
