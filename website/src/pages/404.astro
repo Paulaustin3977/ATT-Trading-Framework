@@ -1,0 +1,37 @@
+---
+import Base from '~/layouts/Base.astro';
+---
+<Base title="404 · Page not found" description="The page you're looking for is not in this build.">
+  <section class="notfound">
+    <div class="container">
+      <div class="notfound__panel card featured">
+        <span class="mono notfound__code">404 · NOT FOUND</span>
+        <h1>That page is not on the chart.</h1>
+        <p>The link may have changed or the page may not be part of this build. Try one of the routes below.</p>
+        <div class="notfound__cta">
+          <a class="btn gold" href="/">Home</a>
+          <a class="btn ghost" href="/docs">Documentation</a>
+          <a class="btn ghost" href="/research">Research</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .notfound { padding-block: clamp(80px, 12vw, 160px); }
+  .notfound__panel {
+    max-width: 720px; margin: 0 auto; padding: 36px;
+    text-align: center;
+    display: flex; flex-direction: column; gap: 14px; align-items: center;
+  }
+  .notfound__code {
+    font-size: 0.78rem; color: var(--gold-1);
+    border: 1px solid rgba(200, 164, 90, 0.28);
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(200, 164, 90, 0.06);
+  }
+  .notfound h1 { font-size: clamp(1.6rem, 4vw, 2.4rem); }
+  .notfound p { color: var(--ink-3); max-width: 56ch; margin: 0; }
+  .notfound__cta { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin-top: 8px; }
+</style>

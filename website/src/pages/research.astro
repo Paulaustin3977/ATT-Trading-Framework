@@ -1,0 +1,206 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import RDRCard from '~/components/RDRCard.astro';
+import { RDRS } from '~/data/content';
+
+const engines = [...new Set(RDRS.map((r) => r.engine))];
+const timeframes = [...new Set(RDRS.map((r) => r.timeframe))];
+const classifications = [...new Set(RDRS.map((r) => r.classification))];
+---
+<Base
+  title="Research Centre"
+  description="Research Decision Records (RDRs) from the Austin Trading Engine. Every classification reflects what the repository evidence says — including weakly supported, mixed, and unsupported findings."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Research Centre · live from RDR/</span>
+      <h1><span class="accent">Research</span> Decision Records.</h1>
+      <p class="lede">
+        Each RDR is a hypothesis-locked, multi-asset empirical exercise designed to classify an engine's diagnostic behaviour. We do not hide weak or negative results — every classification is shown verbatim, with the source-document link.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Filter"
+        title="Five records · one discipline."
+        lede="Use the chips below to filter by engine, timeframe, or classification. Combinations are additive. Default view shows every record."
+      />
+
+      <div class="filters" role="region" aria-label="Research filters">
+        <fieldset>
+          <legend>Engine</legend>
+          <div class="chips" data-filter-group="engine">
+            <button type="button" class="chip active" data-value="">All</button>
+            {engines.map((e) => <button type="button" class="chip" data-value={e}>{e}</button>)}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Timeframe</legend>
+          <div class="chips" data-filter-group="timeframe">
+            <button type="button" class="chip active" data-value="">All</button>
+            {timeframes.map((t) => <button type="button" class="chip" data-value={t}>{t}</button>)}
+          </div>
+        </fieldset>
+        <fieldset>
+          <legend>Classification</legend>
+          <div class="chips" data-filter-group="classification">
+            <button type="button" class="chip active" data-value="">All</button>
+            {classifications.map((c) => <button type="button" class="chip" data-value={c}>{c}</button>)}
+          </div>
+        </fieldset>
+        <div class="filters__count mono" data-result-count></div>
+      </div>
+
+      <div class="grid cols-2 rdr-grid" id="rdr-grid">
+        {RDRS.map((r) => (
+          <div
+            class="rdr-cell"
+            data-engine={r.engine}
+            data-timeframe={r.timeframe}
+            data-classification={r.classification}
+          >
+            <RDRCard rdr={r} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="What RDRs mean"
+        title="Empirical validation is a gate, not a marketing story."
+        lede="A Research Decision Record is a hypothesis-driven empirical exercise. The classification it ends with is the bound decision — but reclassification requires new evidence, not enthusiasm."
+      />
+      <div class="grid cols-2">
+        <div class="card hover">
+          <h3>Supported</h3>
+          <p>The engine's diagnostic behaviour is empirically consistent with its spec across the tested multi-asset universe and cadence. The recommendation may still say "Keep Diagnostic" — supported diagnostic ≠ approved for downstream consumption.</p>
+        </div>
+        <div class="card hover">
+          <h3>Weakly Supported</h3>
+          <p>The signal is present, but thresholds, sample thickness, or stability concerns warrant repeated observation before re-classification.</p>
+        </div>
+        <div class="card hover">
+          <h3>Mixed</h3>
+          <p>Evidence is heterogeneous — by instrument, by timeframe, or by horizon. Keep as research-only output; do not couple downstream.</p>
+        </div>
+        <div class="card hover">
+          <h3>Unsupported</h3>
+          <p>The hypothesis is not supported by the recorded evidence. The result is still a finding, not a failure of the research — null results are recorded too.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script is:inline>
+  (function () {
+    const grid = document.getElementById('rdr-grid');
+    if (!grid) return;
+    const cells = Array.from(grid.querySelectorAll('.rdr-cell'));
+    const count = document.querySelector('[data-result-count]');
+    const groups = Array.from(document.querySelectorAll('[data-filter-group]'));
+    const state = { engine: '', timeframe: '', classification: '' };
+
+    function apply() {
+      let visible = 0;
+      for (const c of cells) {
+        const match =
+          (!state.engine || c.dataset.engine === state.engine) &&
+          (!state.timeframe || c.dataset.timeframe === state.timeframe) &&
+          (!state.classification || c.dataset.classification === state.classification);
+        c.style.display = match ? '' : 'none';
+        if (match) visible++;
+      }
+      if (count) {
+        count.textContent = `${visible} record${visible === 1 ? '' : 's'} shown`;
+      }
+    }
+
+    for (const g of groups) {
+      const key = g.dataset.filterGroup;
+      const chips = Array.from(g.querySelectorAll('.chip'));
+      for (const chip of chips) {
+        chip.addEventListener('click', () => {
+          state[key] = chip.dataset.value;
+          for (const c of chips) c.classList.toggle('active', c === chip);
+          apply();
+        });
+      }
+    }
+
+    apply();
+  })();
+</script>
+
+<style>
+  .page-hero {
+    position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section--alt {
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .filters {
+    margin: 18px 0 28px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+    padding: 18px 22px;
+    display: grid; gap: 14px;
+    position: relative;
+  }
+  .filters fieldset {
+    border: 0; padding: 0; margin: 0;
+    display: grid; gap: 8px;
+  }
+  .filters legend {
+    font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--ink-3); font-weight: 600;
+    padding: 0;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    appearance: none; border: 1px solid var(--line-2);
+    background: rgba(255, 255, 255, 0.02);
+    color: var(--ink-2);
+    border-radius: 999px;
+    padding: 5px 12px; font-size: 0.78rem; cursor: pointer;
+    font-family: var(--font-mono); letter-spacing: 0.02em;
+    transition: all 160ms ease;
+  }
+  .chip:hover { color: var(--ink-1); border-color: var(--line-3); }
+  .chip.active {
+    color: var(--gold-1); border-color: rgba(200, 164, 90, 0.32);
+    background: rgba(200, 164, 90, 0.08);
+  }
+  .filters__count {
+    position: absolute; right: 16px; top: 16px;
+    color: var(--ink-3); font-size: 0.78rem;
+  }
+
+  .rdr-grid { align-items: start; }
+
+  @media (max-width: 540px) {
+    .filters__count { position: static; }
+  }
+</style>

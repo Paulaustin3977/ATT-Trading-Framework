@@ -1,0 +1,498 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import EngineCard from '~/components/EngineCard.astro';
+import Pill from '~/components/Pill.astro';
+import DashboardMock from '~/components/DashboardMock.astro';
+import Ticker from '~/components/Ticker.astro';
+import RDRCard from '~/components/RDRCard.astro';
+import {
+  SITE,
+  ENGINES,
+  RELEASES,
+  RDRS,
+  VERIFIER,
+  WHAT_WE_DONT_DO,
+  CAPABILITIES,
+} from '~/data/content';
+
+const v22 = RELEASES.find((r) => r.version === 'v2.2')!;
+const featuredEngines = ENGINES.slice(0, 4);
+const topRDRs = RDRS.slice(0, 3);
+---
+<Base
+  title="Evidence-Based Market Intelligence"
+  description={`${SITE.description} The Austin Trading Engine combines research-grade diagnostics with deterministic verification — without autonomy, broker connectivity, or false claims of return.`}
+>
+  <section class="hero">
+    <div class="bg-aurora"></div>
+    <div class="container hero__inner">
+      <div class="hero__content">
+        <div class="hero__badges">
+          <Pill variant="gold">
+            <span>{SITE.productAbbr} v2.2</span>
+          </Pill>
+          <Pill variant="gray">Immutable release baseline</Pill>
+          <Pill variant="green">TradingView compile: clean</Pill>
+        </div>
+        <h1>
+          Evidence-based market <span class="hero__accent">intelligence</span>.
+        </h1>
+        <p class="lede hero__lede">
+          A spec-driven, audit-friendly, multi-engine diagnostics &amp; research framework — built for traders, researchers, and engineers who care about reproducibility over narrative.
+        </p>
+        <div class="hero__cta">
+          <a class="btn gold" href="/engine">Explore the Engine</a>
+          <a class="btn ghost" href="/research">View Research</a>
+          <a class="btn ghost" href="https://github.com/Paulaustin3977/ATT-Trading-Framework" target="_blank" rel="noopener">
+            View on GitHub →
+          </a>
+        </div>
+
+        <dl class="hero__stats">
+          <div class="stat">
+            <span class="value">{VERIFIER.totalChecks}</span>
+            <span class="label">verifier checks pass</span>
+          </div>
+          <div class="stat">
+            <span class="value">{RDRS.length}</span>
+            <span class="label">Research Decision Records</span>
+          </div>
+          <div class="stat">
+            <span class="value">8</span>
+            <span class="label">independent engines</span>
+          </div>
+          <div class="stat">
+            <span class="value">10</span>
+            <span class="label">preserved TradingView alerts</span>
+          </div>
+        </dl>
+      </div>
+
+      <aside class="hero__visual">
+        <DashboardMock />
+      </aside>
+    </div>
+  </section>
+
+  <Ticker />
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="What ATE actually is"
+        title="A modular diagnostics and research framework."
+        lede="ATE is an explainable, evidence-based, modular market diagnostics and research framework. It is intentionally not a trading system. It does not place orders, route trades, or manage positions."
+      />
+
+      <div class="grid cols-3 capability-grid">
+        {CAPABILITIES.map((c) => (
+          <div class="card hover">
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </div>
+        ))}
+      </div>
+
+      <div class="boundaries">
+        <Pill variant="amber">Diagnostic · not a system</Pill>
+        <p>
+          ATE does <strong>not</strong> {WHAT_WE_DONT_DO.map((s, i) => (
+            <>{i > 0 && (i === WHAT_WE_DONT_DO.length - 1 ? ' or ' : ', ')}<span>{s}</span></>
+          ))}.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Core principles"
+        title="Evidence first. Determinism always. Honesty by design."
+        lede="These are not slogans — they are operational rules enforced by the canonical verifier (442 checks) and the ATOS governance baseline."
+      />
+
+      <div class="grid cols-2">
+        <div class="card hover">
+          <h3>Explainability</h3>
+          <p>Every output can be traced back to its inputs and rules. Each engine has a documented concern, an output contract, and a documented range of possible values.</p>
+        </div>
+        <div class="card hover">
+          <h3>Evidence</h3>
+          <p>Claims are supported by data, not narrative. A claim without an RDR or canonical verifier pass is not a claim — it is a hypothesis.</p>
+        </div>
+        <div class="card hover">
+          <h3>Modularity</h3>
+          <p>Engines are independent and composable. They communicate through well-defined value interfaces; they never reach into each other's internals.</p>
+        </div>
+        <div class="card hover">
+          <h3>Non-repainting</h3>
+          <p>No future-data references, ever. Bar-close only. Decision for bar <em>t</em> is finalised at the close of bar <em>t</em>.</p>
+        </div>
+        <div class="card hover">
+          <h3>Versioned</h3>
+          <p>Every release is reproducible from a tagged commit. Versions are never edited in-place after release — corrections ship as new versions.</p>
+        </div>
+        <div class="card hover">
+          <h3>Honesty by design</h3>
+          <p>Mixed, weak, or null results are recorded as findings, not failures. Reserved language (<code>safe</code>, <code>approved</code>, <code>blocked</code>, …) is forbidden in diagnostic outputs.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Engine overview"
+        title="Eight engines. One-way data flow. Zero action authority."
+        lede="The architecture baseline (approved by Paul Austin) defines eight independent engines: four produce analytical evidence, Confidence aggregates it, Risk filters for safety, Decision is deferred, and Dashboard renders the result."
+      />
+      <div class="grid cols-3">
+        {featuredEngines.map((e) => <EngineCard engine={e} />)}
+      </div>
+      <div class="section__cta">
+        <a class="btn gold" href="/engines">Open Engine Explorer</a>
+        <a class="btn ghost" href="/architecture">See architecture diagram</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Current release"
+        title={`${SITE.productAbbr} v2.2 — Diagnostic RiskEngine release.`}
+      />
+
+      <div class="v22 card featured">
+        <div class="v22__head">
+          <div>
+            <h3>ATE v2.2 · {v22.name}</h3>
+            <p class="v22__file mono">{v22.baseline}</p>
+          </div>
+          <Pill variant="gold">Production baseline</Pill>
+        </div>
+        <p>{v22.headline}</p>
+
+        <ul class="bullets">
+          {v22.highlights.map((h) => <li>{h}</li>)}
+        </ul>
+
+        <dl class="v22__meta">
+          <div>
+            <dt>Release SHA-256</dt>
+            <dd class="mono small">{v22.sha256}</dd>
+          </div>
+          <div>
+            <dt>Status</dt>
+            <dd>{v22.status}</dd>
+          </div>
+          <div>
+            <dt>Approval</dt>
+            <dd>{v22.approval}</dd>
+          </div>
+        </dl>
+
+        <div class="v22__cta">
+          <a class="btn gold" href="/release/v2-2">Read the v2.2 release page</a>
+          <a class="btn ghost" href={`https://github.com/Paulaustin3977/ATT-Trading-Framework/blob/main/${v22.baseline}`} target="_blank" rel="noopener">View Pine source</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Research methodology"
+        title="Hypothesis → specification → implementation → verification → empirical validation → classification → approval."
+        lede="The research methodology is pre-registered: parameters are fixed before the run, results are recorded (including negatives), and reproducibility is non-negotiable."
+      />
+
+      <ol class="lifecycle">
+        {[
+          { tag: 'Hypothesis',   body: 'A written, falsifiable claim about diagnostic behaviour.' },
+          { tag: 'Specification', body: 'Engine contract pinned: scope, inputs, states, score ranges, reserved-language list.' },
+          { tag: 'Implementation', body: 'Pine implementation in pine/development/ + Python mirror for off-platform validation.' },
+          { tag: 'Verification',   body: '442/442 contract, boundary, fixture, and integrity checks via tools/scripts/verify_ate.py.' },
+          { tag: 'Validation',     body: 'A Research Decision Record (RDR) evaluates diagnostic behaviour across multi-asset daily or weekly bars.' },
+          { tag: 'Classification', body: 'Supported · Weakly Supported · Mixed · Unsupported · Pending. Each comes with a recommendation.' },
+          { tag: 'Approval',       body: 'Paul Austin authorises a precisely-stated scope. Diagnostic or research approval does not imply action authority.' },
+          { tag: 'Promotion',      body: 'Eligible for an immutable release under docs/Release_Process.md — never edited in-place after.' },
+        ].map((s, i) => (
+          <li class="lifecycle__step">
+            <span class="lifecycle__index mono">0{i + 1}</span>
+            <div>
+              <h4>{s.tag}</h4>
+              <p>{s.body}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Verification"
+        title="One source of truth: the canonical verifier."
+        lede="Every code change runs through tools/scripts/verify_ate.py, the same script that gates the immutable v2.2 release. Numbers below are the live RDR-003 verifier pre-flight."
+      />
+
+      <div class="grid cols-4 verifier-grid">
+        <div class="stat-card card">
+          <span class="value mono">{VERIFIER.totalChecks}</span>
+          <span class="label">total checks</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono green">{VERIFIER.passed}</span>
+          <span class="label">passed</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono green">0</span>
+          <span class="label">failed</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono green">Yes</span>
+          <span class="label">v2.2 SHA matches manifest</span>
+        </div>
+      </div>
+
+      <div class="card verifier-cmd">
+        <span class="verifier-cmd__label mono">$</span>
+        <code>{VERIFIER.command}</code>
+        <pre class="bash">
+{`total_checks   = ${VERIFIER.totalChecks}
+passed         = ${VERIFIER.passed}
+failed         = ${VERIFIER.failed}
+exit           = 0
+v22 release SHA matches manifest: ${VERIFIER.v22ReleaseShaMatches ? 'True' : 'False'}
+v22 release == dev byte-identical: ${VERIFIER.v22DevByteIdentical ? 'True' : 'False'}
+v21 SHA unchanged:                ${VERIFIER.v21ShaUnchanged ? 'True' : 'False'}`}</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Research Centre preview"
+        title="Five RDRs · four classifications · one research discipline."
+        lede="Every classification reflects what the repository evidence actually says, including the mixed and weakly supported. We do not hide weak or negative findings."
+      />
+      <div class="grid cols-3">
+        {topRDRs.map((r) => <RDRCard rdr={r} compact />)}
+      </div>
+      <div class="section__cta">
+        <a class="btn gold" href="/research">Enter the Research Centre</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="GitHub project"
+        title="MIT licensed · TradingView-native · open development."
+        lede="Everything on this site lives in one public repository. Every engine, specification, release manifest, verifier, RDR, and backtest artefact is on GitHub."
+      />
+
+      <div class="grid cols-3">
+        <div class="card hover">
+          <h3>Paulaustin3977/ATT-Trading-Framework</h3>
+          <p class="mono small">github.com/Paulaustin3977/ATT-Trading-Framework</p>
+          <p>MIT licence. Canonical verifier in CI. Pine v6 source under pine/releases/ and pine/development/. RDRs, backtests, and specifications alongside.</p>
+          <a class="btn small ghost" href="https://github.com/Paulaustin3977/ATT-Trading-Framework" target="_blank" rel="noopener">Open repository →</a>
+        </div>
+        <div class="card hover">
+          <h3>Releases</h3>
+          <p>Each immutable release has a designated Pine file, a verification gate, a release manifest, and a SHA-256 expected-value constant baked into the verifier.</p>
+          <a class="btn small ghost" href="/release/v2-2">See ATE v2.2</a>
+        </div>
+        <div class="card hover">
+          <h3>Contributing & security</h3>
+          <p>Draft ATOS material is clearly marked as draft. See CONTRIBUTING.md and SECURITY.md for the proper path before raising a PR or a vulnerability report.</p>
+          <a class="btn small ghost" href="/docs">Browse documentation</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Lightweight intersection observer for fade-ins.
+  const els = document.querySelectorAll('.hero, .section');
+  const io = new IntersectionObserver(
+    (entries) => entries.forEach((e) => e.target.classList.add('fade-in')),
+    { threshold: 0.08, rootMargin: '0px 0px -40px 0px' },
+  );
+  els.forEach((el) => io.observe(el));
+</script>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(56px, 7vw, 88px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .hero__inner {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(28px, 4vw, 56px);
+    align-items: center;
+    position: relative; z-index: 1;
+  }
+  .hero__content { max-width: 640px; }
+  .hero__badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 22px; }
+  .hero h1 { margin-bottom: 18px; }
+  .hero__accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero__lede { margin-bottom: 26px; }
+  .hero__cta {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 36px;
+  }
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 12px;
+    margin: 0;
+    padding: 18px 16px;
+    background: rgba(7, 9, 13, 0.6);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+  }
+
+  .hero__visual { position: relative; }
+
+  .section--alt {
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.02), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+  .capability-grid { margin-top: 12px; }
+  .capability-grid p { font-size: 0.92rem; line-height: 1.6; color: var(--ink-2); }
+
+  .boundaries {
+    margin-top: 36px;
+    display: flex; flex-wrap: wrap; align-items: center; gap: 14px;
+    padding: 18px 22px;
+    border: 1px dashed rgba(217, 166, 74, 0.32);
+    background: rgba(217, 166, 74, 0.04);
+    border-radius: var(--radius);
+  }
+  .boundaries p { margin: 0; color: var(--ink-2); font-size: 0.92rem; }
+
+  .section__cta {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-top: 28px;
+  }
+
+  .v22 {
+    display: flex; flex-direction: column; gap: 16px;
+  }
+  .v22__head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+  .v22__head h3 { margin-bottom: 4px; }
+  .v22__file { color: var(--ink-3); font-size: 0.84rem; }
+  .v22 .bullets { margin: 6px 0; padding-left: 18px; display: grid; gap: 6px; }
+  .v22 .bullets li { font-size: 0.92rem; color: var(--ink-2); }
+  .v22__meta {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    background: var(--bg-2); border: 1px solid var(--line-1); border-radius: 8px;
+    padding: 14px 16px; margin: 0;
+  }
+  .v22__meta dt {
+    font-size: 0.66rem; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-family: var(--font-mono); margin-bottom: 4px;
+  }
+  .v22__meta dd { margin: 0; font-size: 0.86rem; color: var(--ink-1); font-weight: 500; }
+  .v22__meta .small { font-size: 0.74rem; word-break: break-all; }
+  .v22__cta { display: flex; flex-wrap: wrap; gap: 10px; }
+
+  .lifecycle {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 14px;
+  }
+  .lifecycle__step {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+    padding: 18px 20px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+    align-items: start;
+    transition: border-color 200ms ease;
+  }
+  .lifecycle__step:hover { border-color: rgba(200, 164, 90, 0.32); }
+  .lifecycle__index {
+    font-size: 0.78rem; letter-spacing: 0.06em;
+    color: var(--gold-1); font-weight: 600;
+    background: rgba(200, 164, 90, 0.05);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 6px;
+    padding: 4px 0;
+    text-align: center;
+    align-self: start;
+  }
+  .lifecycle__step h4 {
+    margin: 0 0 4px; font-size: 0.96rem;
+    color: var(--ink-1); text-transform: none; letter-spacing: 0;
+    font-family: var(--font-sans); font-weight: 600;
+  }
+  .lifecycle__step p { margin: 0; font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; }
+
+  .verifier-grid .stat-card {
+    text-align: center;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+  }
+  .verifier-grid .stat-card .value {
+    font-family: var(--font-mono);
+    font-size: 2.2rem; display: block;
+    margin-bottom: 4px;
+  }
+  .verifier-grid .stat-card .value.green { color: var(--bull); }
+  .verifier-grid .stat-card .label {
+    font-size: 0.74rem; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+  }
+
+  .verifier-cmd {
+    margin-top: 24px;
+    padding: 18px;
+    display: grid;
+    grid-template-columns: 24px auto 1fr;
+    gap: 12px;
+    align-items: start;
+    background: var(--bg-1);
+  }
+  .verifier-cmd__label { color: var(--gold-1); padding-top: 4px; }
+  .verifier-cmd code {
+    background: transparent; border: 0; padding: 4px 0;
+    color: var(--ink-1); font-size: 0.86rem;
+  }
+  .verifier-cmd pre.bash {
+    grid-column: 1 / -1;
+    margin: 8px 0 0;
+    background: var(--bg-3) !important;
+    border: 1px solid var(--line-1); border-radius: 8px;
+    padding: 12px 14px;
+    font-size: 0.78rem;
+  }
+
+  @media (max-width: 980px) {
+    .hero__inner { grid-template-columns: 1fr; }
+    .hero__stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .v22__meta { grid-template-columns: 1fr; }
+  }
+</style>

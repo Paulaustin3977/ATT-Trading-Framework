@@ -1,0 +1,123 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import Pill from '~/components/Pill.astro';
+import { ROADMAP } from '~/data/content';
+---
+<Base
+  title="Roadmap"
+  description="Completed baseline, validation evidence, active research lineage, remaining diagnostic work, and explicitly deferred scope — every line is sourced from ROADMAP.md."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Roadmap · diagnostic research</span>
+      <h1>Where ATE is. <span class="accent">Where it is not.</span></h1>
+      <p class="lede">
+        Roadmap completion means documented, reproducible diagnostic evidence — it does not mean a trading system is ready for orders or execution. The boundary lines below are non-negotiable.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader eyebrow="Status vocabulary" title="Same vocabulary as the rest of the project." />
+      <div class="grid cols-4">
+        <div class="card">
+          <Pill variant="green">Implemented</Pill>
+          <p style="margin-top:8px; font-size:0.86rem; color:var(--ink-3);">Code exists in the named source artefact.</p>
+        </div>
+        <div class="card">
+          <Pill variant="green">Verified</Pill>
+          <p style="margin-top:8px; font-size:0.86rem; color:var(--ink-3);">Automated integrity / contract / fixture checks pass. Not empirical validation.</p>
+        </div>
+        <div class="card">
+          <Pill variant="amber">Validated</Pill>
+          <p style="margin-top:8px; font-size:0.86rem; color:var(--ink-3);">An RDR has tested diagnostic behaviour and assigned an evidence classification.</p>
+        </div>
+        <div class="card">
+          <Pill variant="gold">Approved</Pill>
+          <p style="margin-top:8px; font-size:0.86rem; color:var(--ink-3);">Product Owner authorised a precisely stated scope.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      {ROADMAP.map((track) => (
+        <div class="track">
+          <div class="track__head">
+            <Pill variant={
+              track.pill === 'Completed' ? 'green' :
+              track.pill === 'Active Research' ? 'blue' :
+              track.pill === 'Research' ? 'amber' :
+              track.pill === 'Deferred' ? 'red' : 'gray'
+            }>{track.pill}</Pill>
+            <h3>{track.label}</h3>
+          </div>
+          <ul class="track__items">
+            {track.items.map((item) => (
+              <li><span class="track__bullet" aria-hidden="true"></span>{item}</li>
+            ))}
+          </ul>
+          {track.note && <p class="track__note">{track.note}</p>}
+        </div>
+      ))}
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero { position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .section--alt {
+    background: linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .track {
+    padding: 22px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius-lg);
+    margin-bottom: 18px;
+    display: grid; gap: 12px;
+  }
+  .track__head { display: flex; align-items: center; gap: 14px; }
+  .track__head h3 { margin: 0; font-size: 1.1rem; }
+  .track__items {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 8px;
+  }
+  .track__items li {
+    display: grid;
+    grid-template-columns: 14px 1fr;
+    gap: 12px;
+    color: var(--ink-2);
+    font-size: 0.94rem;
+    line-height: 1.6;
+  }
+  .track__bullet {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold-1); margin-top: 7px;
+    box-shadow: 0 0 8px rgba(200, 164, 90, 0.45);
+  }
+  .track__note {
+    margin: 0; padding: 12px 14px;
+    background: rgba(200, 164, 90, 0.04);
+    border-left: 3px solid var(--gold-1);
+    border-radius: 0 6px 6px 0;
+    color: var(--ink-2);
+    font-size: 0.88rem;
+  }
+</style>

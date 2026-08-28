@@ -1,0 +1,253 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import Pill from '~/components/Pill.astro';
+import DashboardMock from '~/components/DashboardMock.astro';
+import { SITE, RELEASES } from '~/data/content';
+
+const release = RELEASES.find((r) => r.version === 'v2.2')!;
+---
+<Base
+  title="ATE v2.2 — Diagnostic RiskEngine Release"
+  description={`The current immutable release baseline. ${release.headline} Compiles cleanly in TradingView. SHA-256 ${release.sha256}.`}
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <div class="page-hero__badges">
+        <Pill variant="gold">Current immutable release</Pill>
+        <Pill variant="green">TradingView compile clean</Pill>
+        <Pill variant="amber">Diagnostic-only</Pill>
+      </div>
+      <span class="eyebrow">Release · v2.2 · 2026</span>
+      <h1>{SITE.productAbbr} <span class="accent">v2.2</span></h1>
+      <p class="lede">{release.headline}</p>
+      <div class="page-hero__cta">
+        <a class="btn gold" href={`https://raw.githubusercontent.com/Paulaustin3977/ATT-Trading-Framework/main/${release.baseline}`} target="_blank" rel="noopener">Open Pine source</a>
+        <a class="btn ghost" href={`https://raw.githubusercontent.com/Paulaustin3977/ATT-Trading-Framework/main/${release.manifest}`} target="_blank" rel="noopener">Release manifest</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Release overview"
+        title="A diagnostic, not an orchestrator."
+        lede="ATE v2.2 adds the RiskEngine as a diagnostic-only module. It changes exactly one engine's footprint. It does not change the engine map, and it does not change the alert count."
+      />
+
+      <div class="grid cols-4 release-grid">
+        <div class="stat-card card">
+          <span class="value mono">{release.version}</span>
+          <span class="label">release version</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono">10</span>
+          <span class="label">preserved alerts</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono">442</span>
+          <span class="label">verifier checks pass</span>
+        </div>
+        <div class="stat-card card">
+          <span class="value mono">YES</span>
+          <span class="label">research-mode output</span>
+        </div>
+      </div>
+
+      <div class="card highlight-card">
+        <h3>What this release is</h3>
+        <ul class="bullets">
+          <li>A <strong>diagnostic</strong> release — it provides read-only context for human inspection on TradingView.</li>
+          <li>A Pine Script v6 indicator published at <code>{release.baseline}</code>.</li>
+          <li>Open-source under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener">MIT licence</a>.</li>
+        </ul>
+
+        <h3>What this release is not</h3>
+        <ul class="bullets negation">
+          <li>Not an order-placement, execution, position-management, or trade-management system.</li>
+          <li>Not connected to any broker, paper-trading API, or strategy-routing interface.</li>
+          <li>Not a DecisionEngine — that layer is explicitly deferred.</li>
+          <li>Not a RiskEngine alert or trade instruction.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Release artefacts"
+        title="Every release ships with a manifest, an SHA-256, and a verifier pass."
+        lede="These three artefacts are the immutable identity of the release. They are baked into the canonical verifier."
+      />
+
+      <table class="table">
+        <tbody>
+          <tr><th>Release file</th><td class="mono">{release.baseline}</td></tr>
+          <tr><th>Manifest</th><td class="mono">{release.manifest}</td></tr>
+          <tr><th>Release SHA-256</th><td class="mono small">{release.sha256}</td></tr>
+          <tr><th>Approval</th><td>Paul Austin confirmed TradingView compile produced no errors.</td></tr>
+          <tr><th>Compatibility</th><td>ATE v2.1 baseline preserved unchanged. RiskEngine is additive and diagnostic-only.</td></tr>
+        </tbody>
+      </table>
+
+      <h3 class="section__h3">Pine-verifier gates</h3>
+      <table class="table">
+        <tbody>
+          <tr><th>v2.2 release SHA matches manifest</th><td><Pill variant="green">True</Pill></td></tr>
+          <tr><th>v2.2 release ↔ dev mirror byte-identical</th><td><Pill variant="green">True</Pill></td></tr>
+          <tr><th>v2.1 release SHA unchanged</th><td><Pill variant="green">True</Pill></td></tr>
+          <tr><th>Total verifier checks</th><td><span class="mono">442 / 442</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="What changed"
+        title="RiskEngine added. VolatilityEngine preserved. Alerts preserved."
+        lede="All updates are pinned at the boundary — no engine is asked to consume risk inputs in this release."
+      />
+
+      <table class="table">
+        <thead><tr><th>Area</th><th>Impact</th></tr></thead>
+        <tbody>
+          <tr><td>ConfidenceEngine impact</td><td><Pill variant="gray">None</Pill></td></tr>
+          <tr><td>DecisionEngine impact</td><td><Pill variant="gray">None</Pill></td></tr>
+          <tr><td>Entry / exit impact</td><td><Pill variant="gray">None</Pill></td></tr>
+          <tr><td>Position sizing impact</td><td><Pill variant="gray">None</Pill></td></tr>
+          <tr><td>Stop logic impact</td><td><Pill variant="gray">None</Pill></td></tr>
+          <tr><td>Alert impact</td><td>Existing 10 preserved. No RiskEngine alert added.</td></tr>
+          <tr><td>Dashboard display</td><td><Pill variant="green">YES</Pill></td></tr>
+          <tr><td>Research Mode output</td><td><Pill variant="green">YES</Pill></td></tr>
+          <tr><td>VolatilityEngine impact</td><td>None — v1.0.0-draft preserved unchanged.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Diagnostic preview"
+        title="RiskEngine dashboard band & components — illustrative."
+        lede="These component ranges and band labels match the ATE v2.2 spec verbatim. The numbers shown are illustrative, not real market output."
+      />
+      <DashboardMock />
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Validation status"
+        title="This release is verified by the canonical verifier — not yet empirically validated end-to-end."
+      />
+      <div class="callout">
+        <p>
+          RiskEngine <code>1.0.0-draft</code> is implemented in v2.2 and verified by the canonical contract/integrity checker. The empirical-validation evidence for RiskEngine lives in <strong>RDR-003</strong> (daily, Weakly Supported) and <strong>RDR-003W</strong> (weekly, Supported for controlled weekly research use). The Daily+Weekly records remain diagnostic-only and do not authorise downstream consumption.
+        </p>
+        <p style="margin-top:8px;">
+          <a class="btn small gold" href="/research">See Research Centre</a>
+        </p>
+      </div>
+
+      <h3 class="section__h3">Known limitations</h3>
+      <ul class="bullets">
+        <li>RiskEngine has been RDR-003/RDR-003W validated; Pine-vs-Python parity remains a separate prerequisite before any downstream consumption claim.</li>
+        <li>VolatilityEngine remains Weakly Supported (RDR-002 / RDR-002W classification); reclassification not authorised by this release.</li>
+        <li>No claims about drawdown control, false-signal filtering, confidence reliability, risk improvement, or trading performance.</li>
+        <li>Future consumption of RiskEngine by ConfidenceEngine, DecisionEngine, entry/exit logic, position sizing, stop placement, or trade-action alerts remains prohibited unless separately validated and approved under ATOS / RDR governance.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Alerts"
+        title="Ten preserved TradingView alertcondition calls — exactly as in v2.1."
+        lede="ATE v2.2 ships no RiskEngine alert and no execution instruction. The existing v2.1 alert titles are preserved."
+      />
+      <ul class="alerts">
+        <li><span class="mono">ATE Golden Cross</span><small>EMA crossover up</small></li>
+        <li><span class="mono">ATE Death Cross</span><small>EMA crossover down</small></li>
+        <li><span class="mono">ATE Strong Bull</span><small>Trend confirmed bullish</small></li>
+        <li><span class="mono">ATE Strong Bear</span><small>Trend confirmed bearish</small></li>
+        <li><span class="mono">ATE Bullish BOS</span><small>Break of structure up</small></li>
+        <li><span class="mono">ATE Bearish BOS</span><small>Break of structure down</small></li>
+        <li><span class="mono">ATE Momentum Bullish</span><small>Momentum read positive</small></li>
+        <li><span class="mono">ATE Momentum Bearish</span><small>Momentum read negative</small></li>
+        <li><span class="mono">ATE High Confidence Bull</span><small>Confidence state up</small></li>
+        <li><span class="mono">ATE Low Confidence Bear</span><small>Confidence state down</small></li>
+      </ul>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero {
+    position: relative; overflow: hidden;
+    padding-block: clamp(80px, 10vw, 130px) clamp(48px, 6vw, 80px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 920px; }
+  .page-hero h1 { margin-bottom: 14px; font-size: clamp(2.5rem, 6vw, 4.5rem); }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .page-hero__badges { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .page-hero__cta { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+
+  .section--alt {
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .release-grid .stat-card { background: var(--bg-1); text-align: center; }
+  .release-grid .stat-card .value { font-size: 2rem; display: block; margin-bottom: 4px; }
+  .release-grid .stat-card .label {
+    font-size: 0.74rem; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    font-family: var(--font-mono);
+  }
+  .highlight-card { display: flex; flex-direction: column; gap: 12px; }
+  .highlight-card h3 { margin-bottom: 8px; }
+  .bullets { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
+  .bullets.negation li::marker { color: var(--bear); }
+  .bullets li { font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; }
+  .bullets code { background: transparent; border: 0; padding: 0; color: var(--ink-1); font-size: 0.86rem; }
+  .section__h3 { margin: 36px 0 12px; font-size: 1.1rem; color: var(--ink-1); font-family: var(--font-sans); text-transform: none; letter-spacing: 0; font-weight: 600; }
+
+  .callout {
+    padding: 22px;
+    background: rgba(200, 164, 90, 0.04);
+    border: 1px solid rgba(200, 164, 90, 0.18);
+    border-radius: var(--radius);
+  }
+  .callout p { font-size: 0.94rem; color: var(--ink-2); margin: 0; line-height: 1.6; }
+  .callout code { background: transparent; border: 0; padding: 0; color: var(--ink-1); }
+
+  .alerts {
+    list-style: none; padding: 0; margin: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 10px;
+  }
+  .alerts li {
+    background: var(--bg-1); border: 1px solid var(--line-1);
+    border-radius: 8px; padding: 12px 14px;
+    display: grid; gap: 4px;
+  }
+  .alerts li span {
+    color: var(--ink-1); font-size: 0.86rem; font-weight: 500;
+  }
+  .alerts li small { color: var(--ink-3); font-size: 0.78rem; }
+</style>

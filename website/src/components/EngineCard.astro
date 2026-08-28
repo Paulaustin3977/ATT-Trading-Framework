@@ -1,0 +1,117 @@
+---
+import Pill from './Pill.astro';
+import type { Engine } from '~/data/content';
+import { classificationColor, statusVariant } from '~/data/content';
+export interface Props { engine: Engine; }
+const { engine } = Astro.props;
+const validationColor = engine.validated
+  ? classificationColor(engine.validated.classification)
+  : 'gray';
+---
+<article class="engine-card card hover">
+  <header class="engine-card__head">
+    <div class="engine-card__title">
+      <h3>{engine.name}</h3>
+      <span class="engine-card__version mono">{engine.versionLabel}</span>
+    </div>
+    <Pill variant={statusVariant(engine.status)}>{engine.status}</Pill>
+  </header>
+
+  <p class="engine-card__concern">{engine.concern}</p>
+
+  <ul class="engine-card__matrix">
+    <li>
+      <span class="lbl">Implemented</span>
+      <Pill variant={engine.implemented ? 'green' : 'gray'}>
+        {engine.implemented ? 'Yes' : 'No'}
+      </Pill>
+    </li>
+    <li>
+      <span class="lbl">Verified</span>
+      <Pill variant={engine.verified ? 'green' : 'gray'}>
+        {engine.verified ? 'Yes' : 'No'}
+      </Pill>
+    </li>
+    <li>
+      <span class="lbl">Validated</span>
+      {engine.validated ? (
+        <Pill variant={validationColor}>{engine.validated.classification}</Pill>
+      ) : (
+        <Pill variant="gray">No RDR</Pill>
+      )}
+    </li>
+  </ul>
+
+  <p class="engine-card__scope"><strong>Approved scope.</strong> {engine.approvedScope}</p>
+
+  <details class="engine-card__detail">
+    <summary>
+      <span>More detail</span>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </summary>
+    <div class="engine-card__detail-body">
+      <p class="mono small"><strong>Source.</strong> {engine.implementedWhere}</p>
+      <p class="small"><strong>Verification.</strong> {engine.verifiedNote}</p>
+      {engine.validated && (
+        <p class="small"><strong>RDR.</strong> {engine.validated.rdr} · {engine.validated.cadence} cadence</p>
+      )}
+      <ul class="bullets">
+        {engine.bullets.map((b) => <li>{b}</li>)}
+      </ul>
+    </div>
+  </details>
+</article>
+
+<style>
+  .engine-card { display: flex; flex-direction: column; gap: 14px; }
+  .engine-card__head {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+  }
+  .engine-card__title { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+  .engine-card__title h3 { font-size: 1.05rem; }
+  .engine-card__version { font-size: 0.7rem; color: var(--ink-3); letter-spacing: 0.04em; }
+
+  .engine-card__concern { margin: 0; font-size: 0.92rem; color: var(--ink-2); }
+
+  .engine-card__matrix {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px;
+  }
+  .engine-card__matrix li {
+    display: flex; flex-direction: column; gap: 6px;
+    background: var(--bg-2); border: 1px solid var(--line-1);
+    border-radius: 8px; padding: 10px 12px;
+  }
+  .engine-card__matrix .lbl {
+    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-3); font-family: var(--font-mono);
+  }
+
+  .engine-card__scope {
+    margin: 0; font-size: 0.84rem; color: var(--ink-3); line-height: 1.55;
+  }
+  .engine-card__scope strong { color: var(--ink-2); font-weight: 600; }
+
+  .engine-card__detail {
+    border-top: 1px solid var(--line-1);
+    padding-top: 12px;
+  }
+  .engine-card__detail summary {
+    display: inline-flex; align-items: center; gap: 8px;
+    cursor: pointer; font-size: 0.82rem;
+    color: var(--ink-2);
+    list-style: none;
+    transition: color 160ms ease;
+  }
+  .engine-card__detail summary::-webkit-details-marker { display: none; }
+  .engine-card__detail summary:hover { color: var(--gold-1); }
+  .engine-card__detail[open] summary svg { transform: rotate(180deg); }
+  .engine-card__detail summary svg { transition: transform 200ms ease; }
+  .engine-card__detail-body { padding-top: 12px; display: grid; gap: 8px; }
+  .engine-card__detail-body .small { font-size: 0.82rem; color: var(--ink-3); margin: 0; line-height: 1.55; }
+  .engine-card__detail-body .small strong { color: var(--ink-2); font-weight: 600; }
+  .bullets { margin: 6px 0 0; padding-left: 18px; display: grid; gap: 4px; }
+  .bullets li { font-size: 0.85rem; color: var(--ink-3); line-height: 1.55; }
+</style>

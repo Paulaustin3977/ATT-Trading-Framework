@@ -1,0 +1,173 @@
+---
+import Base from '~/layouts/Base.astro';
+import SectionHeader from '~/components/SectionHeader.astro';
+import EngineCard from '~/components/EngineCard.astro';
+import Pill from '~/components/Pill.astro';
+import { ENGINES } from '~/data/content';
+---
+<Base
+  title="Engine Explorer"
+  description="Eight independent engines, each with their own concern, status, validation, and approval scope. The truth in this table is taken from the repository's README status table — not invented."
+>
+  <section class="page-hero">
+    <div class="bg-aurora"></div>
+    <div class="container page-hero__inner">
+      <span class="eyebrow">Engine Explorer · live from README</span>
+      <h1>Eight engines. <span class="accent">One status table.</span></h1>
+      <p class="lede">
+        Every engine's status (Implemented / Verified / Validated / Approved) is sourced directly from the current <code>README.md</code> status table. Engine Output Contract is preserved across every engine.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Status vocabulary"
+        title="These four words are not interchangeable."
+        lede="They are operational gates enforced by the canonical verifier and the release process."
+      />
+      <div class="grid cols-4 status-grid">
+        <div class="status-card card">
+          <Pill variant="green">Implemented</Pill>
+          <h3>Code exists</h3>
+          <p>Code exists in the named Pine artefact (release or development).</p>
+        </div>
+        <div class="status-card card">
+          <Pill variant="green">Verified</Pill>
+          <h3>Deterministic checks</h3>
+          <p>Contract, boundary, fixture, or integrity checks passed. Verification is not empirical validation.</p>
+        </div>
+        <div class="status-card card">
+          <Pill variant="amber">Validated</Pill>
+          <h3>RDR-classified</h3>
+          <p>A Research Decision Record evaluated diagnostic behaviour and assigned an evidence classification.</p>
+        </div>
+        <div class="status-card card">
+          <Pill variant="gold">Approved</Pill>
+          <h3>Scoped authorisation</h3>
+          <p>Paul Austin authorised a precisely-stated scope. Diagnostic/research approval does not imply action authority.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Engine map"
+        title="All eight engines, one card each."
+        lede="Click into an engine for the source code path, the verification note, and the relevant Research Decision Record — if one exists. Engines that lack an RDR are clearly labelled."
+      />
+      <div class="grid cols-3">
+        {ENGINES.map((e) => <EngineCard engine={e} />)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <SectionHeader
+        eyebrow="Engine Output Contract"
+        title="Six fields, identical across every engine."
+        lede="Breaking changes to the contract require a major version bump and a documented migration note."
+      />
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr><th>Field</th><th>Type</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td class="mono"><code>score</code></td><td>0–100 / null</td><td>Always explicit. Silent defaults are not permitted.</td></tr>
+            <tr><td class="mono"><code>state</code></td><td>enum / label</td><td>Human-readable; engine-specific label set.</td></tr>
+            <tr><td class="mono"><code>direction</code></td><td>enum</td><td>RiskEngine is explicitly forbidden from emitting <code>bullish</code> / <code>bearish</code>.</td></tr>
+            <tr><td class="mono"><code>reason</code></td><td>string</td><td>Short, deterministic explanation of the engine output.</td></tr>
+            <tr><td class="mono"><code>diagnostics</code></td><td>named values</td><td>Optional supporting values for audit, debugging, dashboard display.</td></tr>
+            <tr><td class="mono"><code>version</code></td><td>semver</td><td>Semantic engine version matching the specification.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--alt">
+    <div class="container">
+      <SectionHeader
+        eyebrow="How promotion works"
+        title="Code → Verifier → RDR → Approval → Release."
+        lede="An engine only reaches the immutable release baseline after it passes each gate — in this order, with a corresponding artefact recorded at every step."
+      />
+      <ol class="promotion">
+        {[
+          ['Implementation', 'Code lives in `pine/development/ATE_Current.pine` only.'],
+          ['Verification',   '`tools/scripts/verify_ate.py` runs the contract, boundary, fixture, and integrity checks.'],
+          ['Empirical Validation', 'A Research Decision Record (RDR) evaluates diagnostic behaviour across multi-asset daily and/or weekly bars.'],
+          ['Classification', 'Supported · Weakly Supported · Mixed · Unsupported · Pending.'],
+          ['Approval',       'Paul Austin authorises a precisely stated scope.'],
+          ['Release',        'The verified Pine source is frozen into `pine/releases/ATE_vX.Y.pine` and SHA-pinned.'],
+        ].map(([k, v], i) => (
+          <li class="promotion__step">
+            <span class="promotion__index mono">0{i + 1}</span>
+            <div>
+              <h4>{k}</h4>
+              <p>{v}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .page-hero {
+    position: relative; overflow: hidden;
+    padding-block: clamp(72px, 9vw, 120px) clamp(36px, 5vw, 64px);
+    border-bottom: 1px solid var(--line-1);
+  }
+  .page-hero__inner { max-width: 820px; }
+  .page-hero h1 { margin-bottom: 16px; }
+  .accent {
+    background: linear-gradient(180deg, #f5e0ad, #b89856);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .section--alt {
+    background:
+      linear-gradient(180deg, transparent, rgba(200, 164, 90, 0.018), transparent);
+    border-block: 1px solid var(--line-1);
+  }
+
+  .status-grid .status-card { background: var(--bg-1); }
+  .status-grid .status-card h3 { font-size: 1rem; }
+  .status-grid .status-card p { font-size: 0.86rem; color: var(--ink-3); }
+
+  .promotion {
+    list-style: none; padding: 0; margin: 0;
+    display: grid; gap: 12px;
+  }
+  .promotion__step {
+    display: grid; grid-template-columns: 48px 1fr; gap: 14px;
+    padding: 18px 20px;
+    background: var(--bg-1);
+    border: 1px solid var(--line-1);
+    border-radius: var(--radius);
+    align-items: start;
+  }
+  .promotion__index {
+    font-size: 0.74rem; letter-spacing: 0.06em;
+    color: var(--gold-1); font-weight: 700;
+    background: rgba(200, 164, 90, 0.06);
+    border: 1px solid rgba(200, 164, 90, 0.2);
+    border-radius: 6px;
+    padding: 4px 0;
+    text-align: center;
+  }
+  .promotion__step h4 {
+    margin: 0 0 4px; font-size: 0.96rem;
+    color: var(--ink-1); text-transform: none; letter-spacing: 0;
+    font-family: var(--font-sans); font-weight: 600;
+  }
+  .promotion__step p { margin: 0; font-size: 0.92rem; color: var(--ink-2); line-height: 1.6; }
+</style>

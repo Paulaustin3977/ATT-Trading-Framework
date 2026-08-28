@@ -1,0 +1,26 @@
+---
+export interface Props {
+  eyebrow?: string;
+  title?: string;
+  lede?: string;
+  align?: 'left' | 'center';
+}
+const { eyebrow, title, lede, align = 'left' } = Astro.props;
+---
+<header class={`section-header ${align === 'center' ? 'center' : ''}`}>
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+  {title && <h2>{title}</h2>}
+  {lede && <p class="lede">{lede}</p>}
+  <slot />
+</header>
+
+<style>
+  .section-header { margin-bottom: 36px; max-width: 920px; }
+  .section-header.center { margin-inline: auto; text-align: center; }
+  .section-header.center .eyebrow { justify-content: center; }
+  .section-header.center .eyebrow::before {
+    background: linear-gradient(90deg, transparent, var(--gold-1), transparent);
+  }
+  .section-header h2 { margin-bottom: 16px; }
+  .section-header .lede { margin-bottom: 0; }
+</style>

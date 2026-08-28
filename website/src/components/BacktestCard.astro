@@ -1,0 +1,80 @@
+---
+import Pill from './Pill.astro';
+export interface Props {
+  bt: {
+    id: string;
+    engine: string;
+    cadence: 'Daily' | 'Weekly' | 'Daily + Weekly' | string;
+    assets: number;
+    bars: string;
+    span: string;
+    classification: string;
+    recommendation: string;
+    manifest: string;
+  };
+}
+const { bt } = Astro.props;
+---
+<article class="bt-card card hover">
+  <header class="bt-card__head">
+    <div>
+      <span class="bt-card__id mono">{bt.id}</span>
+      <h3>{bt.engine} — {bt.cadence} validation</h3>
+    </div>
+    <Pill variant={bt.classification === 'Supported' ? 'green' : bt.classification.startsWith('Weakly') ? 'amber' : bt.classification === 'Mixed' ? 'amber' : 'gray'}>
+      {bt.classification}
+    </Pill>
+  </header>
+
+  <dl class="bt-card__grid">
+    <div>
+      <dt>Assets tested</dt>
+      <dd class="mono">{bt.assets}</dd>
+    </div>
+    <div>
+      <dt>Bars</dt>
+      <dd class="mono small">{bt.bars}</dd>
+    </div>
+    <div>
+      <dt>Span</dt>
+      <dd class="mono small">{bt.span}</dd>
+    </div>
+  </dl>
+
+  <p class="bt-card__rec">
+    <strong>Recommendation.</strong> {bt.recommendation}
+  </p>
+
+  <footer class="bt-card__foot">
+    <span class="mono small">{bt.manifest}</span>
+    <a class="btn small ghost" href={`https://github.com/Paulaustin3977/ATT-Trading-Framework/tree/main/${bt.manifest}`} target="_blank" rel="noopener">
+      Browse artefacts →
+    </a>
+  </footer>
+</article>
+
+<style>
+  .bt-card { display: flex; flex-direction: column; gap: 14px; }
+  .bt-card__head { display: flex; justify-content: space-between; gap: 14px; align-items: flex-start; }
+  .bt-card__id { color: var(--gold-1); font-size: 0.78rem; letter-spacing: 0.06em; display: block; margin-bottom: 4px; }
+  .bt-card__head h3 { font-size: 0.96rem; line-height: 1.3; }
+
+  .bt-card__grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+    background: var(--bg-2); border: 1px solid var(--line-1); border-radius: 8px;
+    margin: 0; padding: 12px;
+  }
+  .bt-card__grid dt {
+    font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--ink-3); font-family: var(--font-mono); margin-bottom: 4px;
+  }
+  .bt-card__grid dd { font-size: 0.86rem; color: var(--ink-1); margin: 0; font-weight: 500; }
+  .bt-card__grid .small { font-size: 0.78rem; }
+
+  .bt-card__rec { font-size: 0.86rem; color: var(--ink-2); margin: 0; line-height: 1.55; }
+  .bt-card__rec strong { color: var(--ink-1); font-weight: 600; }
+
+  .bt-card__foot { display: flex; justify-content: space-between; align-items: center; gap: 10px; border-top: 1px solid var(--line-1); padding-top: 12px; flex-wrap: wrap; }
+  .bt-card__foot .small { font-size: 0.74rem; color: var(--ink-3); word-break: break-all; }
+</style>
