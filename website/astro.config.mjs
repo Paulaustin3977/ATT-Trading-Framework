@@ -6,7 +6,9 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 // ATT website — Austin Trading Team / Austin Trading Engine
 // Static output, suitable for GitHub Pages (free tier).
 export default defineConfig({
-  site: 'https://att.trading',
+  // Public site hosted on GitHub Pages. To use a custom domain later,
+  // change this to e.g. 'https://att.trading' and configure the CNAME.
+  site: process.env.ATT_SITE_URL ?? 'https://paulaustin3977.github.io/ATT-Trading-Framework',
   output: 'static',
   trailingSlash: 'ignore',
   build: {

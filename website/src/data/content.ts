@@ -23,7 +23,7 @@ export const SITE = {
     'A modular, explainable, evidence-based market diagnostics and research framework.',
   description:
     'Austin Trading Engine (ATE) is a research-grade market diagnostics framework: spec-driven, immutable-released, RDR-validated, and TradingView-native.',
-  url: 'https://att.trading',
+  url: 'https://paulaustin3977.github.io/ATT-Trading-Framework',
   github: 'https://github.com/Paulaustin3977/ATT-Trading-Framework',
   license: 'MIT',
   copyright: '© 2026 Austin Trading Team',
