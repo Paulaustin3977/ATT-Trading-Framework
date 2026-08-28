@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /404
 
-Sitemap: https://att.trading/sitemap-index.xml
+Sitemap: https://paulaustin3977.github.io/ATT-Trading-Framework/sitemap-index.xml

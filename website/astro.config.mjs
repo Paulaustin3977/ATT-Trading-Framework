@@ -7,8 +7,10 @@ import rehypeAutolinkHeadings from 'rehype-autolink-headings';
 // Static output, suitable for GitHub Pages (free tier).
 export default defineConfig({
   // Public site hosted on GitHub Pages. To use a custom domain later,
-  // change this to e.g. 'https://att.trading' and configure the CNAME.
-  site: process.env.ATT_SITE_URL ?? 'https://paulaustin3977.github.io/ATT-Trading-Framework',
+  // change `site` to e.g. 'https://att.trading' and remove the `base` field
+  // (or set it to '/').
+  site: process.env.ATT_SITE_URL ?? 'https://paulaustin3977.github.io',
+  base: '/ATT-Trading-Framework',
   output: 'static',
   trailingSlash: 'ignore',
   build: {
